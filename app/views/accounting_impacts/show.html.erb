@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Afectacion contable</h3>
+                  <%= link_to 'Regresar', accounting_impacts_path , class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+      <div class="card-body">
+        <p>
+          <strong>Cedis:</strong>
+          <%= @accounting_impact.catalog_branch.decripcion %>
+        </p>
+
+        <p>
+          <strong>Nombre:</strong>
+          <%= @accounting_impact.nombre %>
+        </p>
+
+        <p>
+          <strong>Cuenta contable:</strong>
+          <%= @accounting_impact.cuenta_contable%>
+        </p>
+
+        <p>
+          <strong>Status:</strong>
+          <%= @accounting_impact.get_status %>
+        </p>
+
+        <%= link_to 'Editar', edit_accounting_impact_path(@accounting_impact),class:"btn btn-default" %>
+        <br><br>                  
+    </div>
+  </div>
+</div>

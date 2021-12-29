@@ -1,0 +1,52 @@
+
+#Catálogos
+#Empresa
+rails g scaffold catalog_company clave nombre status:boolean
+
+#Centro de distribución
+rails g scaffold branch_office catalog_company:references clave_clasificacion clave_jd descripcion unidad_negocio status:boolean
+
+#** Responsable
+rails g scaffold responsable nombre status:boolean
+
+#Linea
+rails g scaffold vehicle_brand descripcion status:boolean
+
+#Catálogo de modelos
+rails g scaffold vehicle_model clave:integer descripcion status:boolean
+
+#Catálogo de empresas a donde se facturó el vehículo
+rails g scaffold billed_company clave_jd nombre status:boolean 
+
+#
+rails g scaffold order_service_type nombre descripcion origen status:boolean
+
+#
+rails g scaffold budget_concept clave descripcion status:boolean
+
+#Catálogo de rutas
+rails g scaffold catalog_route clave descripcion status:boolean 
+
+#Catálogo de cobertura de pólizas
+rails g scaffold policy_coverage clave descripcion status:boolean
+
+#Catálogo de beneficiarios del seguro
+rails g scaffold insurance_beneficiary clave descripcion status:boolean
+
+#Catálogo de estados de plaqueo
+rails g scaffold plate_state clave descripcion status:boolean 
+
+#Tipo de vehiculo
+rails g scaffold vehicle_type clave descripcion status:boolean  
+
+#Status del vehiculo
+rails g scaffold vehicle_status nombre descripcion status:boolean 
+
+#Catálogo de reparaciones
+rails g scaffold catalog_repair clave categoria subcategoria status:boolean 
+
+#Catálogo de centros de costos
+rails g scaffold cost_center clave descripcion status:boolean 
+
+#Catálogo maestro de vehículos
+rails g scaffold vehicle clave numero_economico:integer catalog_company:references branch_office:references cost_center:references responsable:references vehicle_status:references vehicle_type:references vehicle_brand:references vehicle_model:references numero_serie numero_motor transmision billed_company:references numero_factura fecha_compra:date valor_compra:decimal numero_factura_adapt numero_serie_adapt valor_adapt:decimal catalog_route:references numero_poliza inciso policy_coverage:references insurance_beneficiary:references numero_placa plate_state:references permiso_federal_carga permiso_fisico_mecanico permiso_ambiental litros_autorizados:decimal status:boolean

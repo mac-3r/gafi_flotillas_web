@@ -1,0 +1,58 @@
+<%= form_with(model: purchase_order, local: true) do |form| %>
+<% if purchase_order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(purchase_order.errors.count, "error") %> prohibited this purchase_order from being saved:</h2>
+
+      <ul>
+        <% purchase_order.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Terminar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+   <br><br><br>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Clave:&nbsp;<%=@purchase_order.clave %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Empresa:&nbsp;<%=@purchase_order.catalog_company.nombre %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">CEDIS:&nbsp;<%=@purchase_order.catalog_branch_id ? @purchase_order.catalog_branch.decripcion : "N/A"%></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-6 col-form-label" style="font-family: Arial; font-size:18px;">Proveedor:&nbsp;<%=@purchase_order.catalog_vendor.razonsocial%></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Centro de costos:&nbsp;<%=@purchase_order.cost_center.descripcion %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Concepto:&nbsp;<%= @purchase_order.tipo %></label>
+   </div>
+   <div class="row">
+     <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Condición de pago:&nbsp;<%= @purchase_order.condicion %></label>
+    </div>
+    <% if @purchase_order.condicion == "Plazo días" %>
+    <div class="row">
+      <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Días:&nbsp;<%= @purchase_order.plazo_dias %></label>
+     </div>
+    <% end %>
+    <% if @purchase_order.condicion == "En parcialidades" %>
+    <div class="row">
+      <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Meses:&nbsp;<%= @purchase_order.plazo_dias %></label>
+    </div>
+    <div class="row">
+      <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Última fecha de pago:&nbsp;<%= @purchase_order.ultima_fecha_pago %></label>
+    </div>
+    <% end %>
+    <div class="row">
+      <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha:&nbsp;<%=l @purchase_order.fecha %></label>
+   </div>
+   <div id="contenedor_partidas">
+    <%= render "partidas" %>
+  </div>
+ 
+<% end %>

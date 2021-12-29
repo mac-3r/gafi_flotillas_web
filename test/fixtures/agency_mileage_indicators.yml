@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  km_actual: 9.99
+  vehicle: one
+  fecha: 2021-02-19 14:31:38
+  tipo: MyString
+
+two:
+  km_actual: 9.99
+  vehicle: two
+  fecha: 2021-02-19 14:31:38
+  tipo: MyString

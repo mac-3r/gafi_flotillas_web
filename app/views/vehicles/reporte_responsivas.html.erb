@@ -1,0 +1,142 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="card-label">Reporte
+                    <span class="text-muted pt-2 font-size-sm d-block">Reporte anual acumulado de responsivas</span>
+                </h3>
+            </div>
+            <div class="card-toolbar"> 
+                <br>
+                  <div class="dropdown dropdown-inline mr-2">
+                    <%= link_to  "Exportar a excel", generar_excel_responsivas_path, target: "_blank", class: "btn btn-primary float-right" %>
+                  </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container">
+
+                <%= form_tag reporte_responsivas_path, :method => :get do %>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Empresa:</label>
+                        <%= collection_select('', :catalog_company_id, CatalogCompany.listado_empresas,:id, :nombre, {prompt:"Escribe el nombre de la empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">CEDIS:</label>
+                        <select name="catalog_branch_id" id="catalog_branch_id" class="form-control m-input m-input--air uneditable-input chosen-select">
+                            <option value="">Seleccione el cedis</option>
+                        </select>
+                        <%#= collection_select('',:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Área:</label>
+                        <%= collection_select('',:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Seleccione la área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Responsable:</label>
+                        <%= collection_select('',:responsable_id ,Responsable.listado_responsables.order('nombre ASC'), :id, :nombre, {prompt:"Seleccione el responsable"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <br><br>
+                        <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                      <% end %>
+                     </div>
+                </div>
+            </div><br>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                    <th>CEDIS</th>
+                    <th>Área</th>
+                    <th>No. vehículos asignados</th>
+                    <th>Responsable</th>
+                    <th colspan="3"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% 
+                    total_vehiculos = 0
+                    @cedis.each do |ced| 
+                        if ced.responsable
+                            responsable_branch = ced.responsable_id
+                        else
+                            responsable_branch = "0"
+                        end
+
+                    %>
+                        <tr>
+                            <% if ced.catalog_branch != nil %>    
+                                <td><%=ced.catalog_branch.decripcion %></td>
+                            <% else %>
+                                <td>Sin asignar</td>
+                            <% end %>
+                            <% if ced.catalog_area != nil %>    
+                                <td><%=ced.catalog_area.descripcion %></td>
+                            <% else %>
+                                <td>Sin asignar</td>
+                            <% end %>
+                            <td><%=ced.total%></td>
+                            <%  total_vehiculos += ced.total %>
+                            <td id="ced_responsable_<%= responsable_branch %>_<%= ced.catalog_branch_id %>">
+                                <%= ced.responsable.nombre if ced.responsable %>
+                            </td>
+                            <% if ced.responsable %>
+                                <td>
+                                    <% if ced.catalog_branch != nil %>
+                                        <div class="dropdown dropdown-inline">
+                                            <%= link_to reporte_responsivas_detalle_path(ced.catalog_branch_id,ced.responsable_id,ced.catalog_area_id), title: "Ver detalle" do %>
+                                            <span class='fas fa-eye' style='font-size:16px;color:#A6ACAF'></span>
+                                            </span>
+                                            <% end %>
+                                        </div>
+                                    <% end %>
+                                </td>
+                                <td>
+                                    <% if ced.catalog_branch != nil %>
+                                        <div class="dropdown dropdown-inline">
+                                            <%= link_to imprimir_reporte_path(ced.catalog_branch_id,ced.responsable_id,ced.catalog_area_id), title: "Generar PDF",:target => "_blank" do %>
+                                            <span class="far fa-file-alt" style='font-size:16px;color:#A6ACAF'></span>
+                                            </span>
+                                            <% end %>
+                                        </div>
+                                    <% end %>
+                                </td>    
+                            <% end %>
+                            <td>
+                                <% if ced.catalog_branch != nil %>
+                                    <div class="dropdown dropdown-inline">
+                                        <%= link_to reasignar_responsables_modal_path(ced.catalog_branch_id, responsable_branch,ced.catalog_area_id), title: "Reasignar",remote: true do %>
+                                        <span class="far flaticon-refresh" style='font-size:16px;color:#A6ACAF'></span>
+                                        </span>
+                                        <% end %>
+                                    </div>
+                                <% end %>
+                            </td>
+                        </tr>
+                    <% end %>    
+                </tbody>
+                <tr> 
+                    <th colSpan="2">Total de vehículos</th>
+                    <td><b><%=total_vehiculos%></b></td>
+                </tr>
+            </table>
+        </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.input-group.date').datetimepicker({
+                locale: 'es',
+            });
+            $("#catalog_company_id").change(function(){
+                var empresa = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    url: "<%= cedis_x_empresa_siniestralidad_path %>",
+                    data: {empresa: empresa, authenticity_token: $('meta[name=csrf-token]').attr('content')}
+                })
+            })
+        });
+    </script>

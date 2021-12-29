@@ -1,0 +1,31 @@
+<%= form_with(model: user_vehicle, local: true) do |form| %>
+  <% if user_vehicle.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user_vehicle.errors.count, "error") %> Error al registrar:</h2>
+
+      <ul>
+        <% user_vehicle.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+  </div>
+ <br>
+ <br>
+ <div class="form-group row">
+  <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Usuario*</label>
+  <div class="col-sm-0">
+    <%= collection_select(:user_vehicle,:user_id ,User.listado_usuarios, :id, :datoscombo, {prompt:"Usuario"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+  </div>
+</div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Número económico*</label>
+    <div class="col-sm-0">
+      <%= collection_select(:user_vehicle,:vehicle_id ,Vehicle.listado_vehiculos, :id, :numero_economico, {prompt:"Vehículo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+<% end %>

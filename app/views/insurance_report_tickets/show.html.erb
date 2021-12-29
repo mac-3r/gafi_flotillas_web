@@ -1,0 +1,134 @@
+<br><br>
+<div class="container">
+	<div class="card card-custom gutter-b">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card-header">
+				<div class="card-title">
+					<h3 class="card-label float-left ">Ticket de siniestralidad</h3>
+					<div class="float-right">
+						<% if @insurance_report_ticket.estatus == "Abierto" %>
+							<%= link_to "Generar ticket", generar_ticket_siniestrabilidad_path(@insurance_report_ticket.id), data: {confirm: "Se generará el ticket de siniestro R#{@numero_sig} y será enviado al administrador de flotillas de GAFI, ¿Desea continuar?"}, class:"btn btn-default" %>
+						<% end %>
+						<%= link_to 'Regresar', insurance_report_tickets_path, class:"btn btn-default" %>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body">
+			<p>
+				<strong>No. Siniestro:</strong>
+				<%= @insurance_report_ticket.numero_siniestro %>
+			</p>
+
+			<p>
+				<strong>Inciso:</strong>
+				<%= @insurance_report_ticket.inciso %>
+			</p>
+
+			<p>
+				<strong>Fecha ocurrió:</strong>
+				<%= @insurance_report_ticket.fecha_ocurrio.strftime("%d/%m/%y %I:%M %p") %>
+			</p>
+
+			<p>
+				<strong>Fecha reporte:</strong>
+				<%= @insurance_report_ticket.fecha_reporte.strftime("%d/%m/%y %I:%M %p") %>
+			</p>
+			<p>
+				<strong>No. Serie:</strong>
+				<%= @insurance_report_ticket.numero_serie %>
+			</p>
+
+			<p>
+				<strong>No. Póliza:</strong>
+				<%= @insurance_report_ticket.numero_poliza %>
+			</p>
+
+			<p>
+				<strong>CEDIS:</strong>
+				<%= @insurance_report_ticket.cedis %>
+			</p>
+
+			<p>
+				<strong>No. Económico:</strong>
+				<%= @insurance_report_ticket.numero_economico %>
+			</p>
+
+			<p>
+				<strong>Vehículo:</strong>
+				<%= @insurance_report_ticket.vehiculo %>
+			</p>
+
+			<p>
+				<strong>Modelo:</strong>
+				<%= @insurance_report_ticket.modelo %>
+			</p>
+
+			<p>
+				<strong>Estatus vehículo:</strong>
+				<%= @insurance_report_ticket.estatus_vehiculo %>
+			</p>
+
+			<p>
+				<strong>Tipo siniestro:</strong>
+				<%= @insurance_report_ticket.tipo_siniestro %>
+			</p>
+
+			<p>
+				<strong>Ubicación siniestro:</strong>
+				<%= @insurance_report_ticket.ubicacion_siniestro %>
+			</p>
+
+			<p>
+				<strong>Responsable:</strong>
+				<%= @insurance_report_ticket.responsable %>
+			</p>
+
+			<p>
+				<strong>Estatus:</strong>
+				<%= @insurance_report_ticket.estatus %>
+			</p>
+
+			<p>
+				<strong>Monto siniestro:</strong>
+				<%=number_to_currency(@insurance_report_ticket.monto_siniestro) %>
+			</p>
+
+			<p>
+				<strong>Cargo deducible empresa:</strong>
+				<%= number_to_currency(@insurance_report_ticket.cargo_deducible_empresa)%>
+			</p>
+
+			<p>
+				<strong>Cargo deducible empleado:</strong>
+				<%= number_to_currency(@insurance_report_ticket.cargo_deducible_empleado) %>
+
+			<p>
+				<strong>Declaración:</strong>
+				<%= @insurance_report_ticket.declaracion %>
+			</p>
+
+			<p>
+				<strong>Estatus responsabilidad gafi:</strong>
+				<%= @insurance_report_ticket.estatus_responsabilidad_gafi %>
+			</p>
+
+			<p>
+				<strong>Estatus responsabilidad aseguradora:</strong>
+				<%= @insurance_report_ticket.estatus_responsabilidad_aseguradora %>
+			</p>
+
+			<p>
+				<strong>Coincide:</strong>
+				<%= @insurance_report_ticket.coincide %>
+			</p>
+
+			<p>
+				<strong>Comentarios adicionales:</strong>
+				<%= @insurance_report_ticket.comentarios_adicionales %>
+			</p>
+		</div>
+		</div>
+	</div>
+</div>

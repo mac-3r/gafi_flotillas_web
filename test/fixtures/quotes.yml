@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle: one
+  service_order: one
+  estatus: 1
+  catalog_workshop: one
+  numero_economico: MyString
+  cedis: MyString
+  empresa: MyString
+  usuario: MyString
+  responsable: MyString
+  taller_nombre: MyString
+  fecha: 2021-07-21
+
+two:
+  vehicle: two
+  service_order: two
+  estatus: 1
+  catalog_workshop: two
+  numero_economico: MyString
+  cedis: MyString
+  empresa: MyString
+  usuario: MyString
+  responsable: MyString
+  taller_nombre: MyString
+  fecha: 2021-07-21

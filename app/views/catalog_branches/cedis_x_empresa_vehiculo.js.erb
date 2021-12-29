@@ -1,0 +1,15 @@
+<% if @comparacion%>
+    $("#catalog_branch_id2").empty();
+    $('<option>').val('').text('Seleccione el cedis').appendTo('#catalog_branch_id2');
+    <% @cedis.each do |cedis| %>
+        $('<option>').val('<%= cedis.id %>').text('<%= cedis.decripcion %>').appendTo('#catalog_branch_id2');
+    <% end %>
+    $('#catalog_branch_id2').trigger("chosen:updated");
+<% else %>
+    $("#vehicle_catalog_branch_id").empty();
+    $('<option>').val('').text('Seleccione el cedis').appendTo('#vehicle_catalog_branch_id');
+    <% @cedis.each do |cedis| %>
+        $('<option>').val('<%= cedis.id %>').text('<%= cedis.decripcion %>').appendTo('#vehicle_catalog_branch_id');
+    <% end %>
+    $('#vehicle_catalog_branch_id').trigger("chosen:updated");
+<% end %>

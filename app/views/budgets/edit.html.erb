@@ -1,0 +1,25 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Agregar conceptos al presupuesto</h3>
+                        <div class="float-right">
+                            <%# if can? :request_budget, Budget %>
+                                <%# if @budget.estatus == "Pendiente" %> 
+                                    <%#= link_to 'Solicitar autorización', request_budget_path(@budget.id), class:"btn btn-primary font-weight-bolder", data: {confirm: "¿Deseas solicitar la autorización para este presupuesto? Después de esta acción el presupuesto ya no podrá ser modificado."}%>&nbsp;
+                                <%# end %>
+                            <%# end %>
+                            <%= link_to 'Regresar', budgets_path, class: "btn btn-default" %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <%= render 'form' %>
+        </div>
+    </div>
+</div>

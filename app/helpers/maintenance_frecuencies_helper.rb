@@ -1,0 +1,2 @@
+module MaintenanceFrecuenciesHelper
+end

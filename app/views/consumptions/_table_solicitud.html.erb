@@ -1,0 +1,58 @@
+<table class="table table-bordered table-sm text-center">
+    <thead>
+        <tr>
+        <th>Folio</th>
+        <th>Fecha de carga</th>
+        <th>Periodo de semana</th>
+        <th>CEDIS</th>
+        <th>Proveedor</th>
+        <th>Cargas</th>
+        <th>Factura</th>
+        <th>Monto</th>
+        <th>Estatus</th>
+        <th colspan="3"></th>
+        <th colspan="3"></th>
+        <th colspan="3"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% @consumptions.each do |cons| %>
+        <tr>
+            <td><%= cons.folio %></td>
+            <td><%= cons.fecha_descripcion%></td>
+            <td><%= "Del: #{cons.fecha_inicio.strftime("%d/%m/%Y")} al: #{cons.fecha_fin.strftime("%d/%m/%Y")}" %></td>
+            <td><%= cons.catalog_branch.decripcion %></td>
+            <td><%= cons.catalog_vendor_id ? cons.catalog_vendor.razonsocial : "No se asignó" %></td>
+            <td><%= cons.cargas %></td>
+            <td><%= cons.factura.attached? ? cons.n_factura : "N/A" %></td>
+            <td><%= number_to_currency(cons.monto) %></td>
+            <td><%= cons.estatus %></td>
+            <td>
+                <div class="dropdown dropdown-inline">
+                    <%= link_to ver_solicitud_path(cons.id), title:"Ver detalle " do%>
+                    <span class='fas fa-eye' style='font-size:16px;color:#A6ACAF'></span>
+                    </span>
+                    <% end %>
+                </div>
+            </td>
+            <td>
+                <div class="dropdown dropdown-inline">
+                <%= link_to descargar_factura_path(cons.id), remote: true, title:"Descargar factura " do%>
+                    <span class='fas fa-file-archive' style='font-size:16px;color:#A6ACAF'></span>
+                    </span>
+                <% end %>
+                </div>
+            </td>
+            <td>
+                <div class="dropdown dropdown-inline">
+                <%= link_to descargar_pdf_path(cons.id), remote: true, title:"Descargar pdf" do%>
+                    <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>
+                    </span>
+                <% end %>
+                </div>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
+    </table>

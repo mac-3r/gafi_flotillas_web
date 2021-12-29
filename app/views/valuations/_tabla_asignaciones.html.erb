@@ -1,0 +1,26 @@
+<table class="table table-bordered table-striped table-sm text-center table-hover">
+    <thead>
+        <tr>
+            <th>Empresa</th>
+            <th>CEDIS</th>
+            <th>Proveedor</th>
+            <th colspan="1"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @asignaciones.each do |asignacion| %>
+            <tr>
+                <td><%= asignacion.catalog_branch.catalog_company.nombre %></td>
+                <td><%= asignacion.catalog_branch.decripcion %></td>
+                <td><%= asignacion.catalog_vendor.razonsocial %></td>
+                <td>
+                    <div class="dropdown dropdown-inline">
+                        <%= link_to delete_valuation_assignation_path(asignacion.id), title:"Eliminar", method: :delete, data: { confirm: '¿Deseas eliminar esta asignación?' }, remote: true do %>
+                            <span class='fas fa-times' style='font-size:16px;color:#A6ACAF'></span>
+                        <% end %>
+                    </div>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

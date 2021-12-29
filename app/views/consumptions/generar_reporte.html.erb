@@ -1,0 +1,358 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Acumulado Mensual de Combustible</h3>
+                        <div class="float-right">
+                            <% if @encabezado.es_detallado %>
+                                <% if @encabezado.estatus == "Pendiente" %>    
+                                    <% if @registros.count > 0 %>
+                                        <button type="button" class="btn btn-outline-success mr-2 " style="text-decoration:none" data-toggle="modal" data-target="#exampleModalCenter" disabled>
+                                            Enviar solicitud
+                                        </button>    
+                                    <% else %>
+                                        <button type="button" class="btn btn-outline-success mr-2 " style="text-decoration:none" data-toggle="modal" data-target="#exampleModalCenter">
+                                            Enviar solicitud
+                                        </button> 
+                                    <% end %>
+                                <% end %>
+                            <% else %>
+                                <button type="button" class="btn btn-outline-success mr-2 " style="text-decoration:none" data-toggle="modal" data-target="#exampleModalCenter">
+                                    Enviar solicitud
+                                </button> 
+                            <% end %>
+                            <%= link_to 'Regresar', vehicle_consumptions_path, class: "btn btn-default" %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div><br>
+            <div class="col-lg-10"><br>
+                <div Align="left">
+                <!--<h2 style="color: black;">Clientes</h2>-->
+                </div>
+                <% if !@encabezado.factura.attached?%>
+                    <div class="bg-danger text-white" role="alert" style="padding: 1%; border-radius: 10px;">
+                        <center>
+                            No se ha cargado la factura.
+                        </center>
+                    </div>
+                <% end %>
+                <br>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" style="color: black;" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Reporte de consumo combustible</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Solicitud de pago</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="card">
+                            <div class="card-body">
+                                <%= link_to  "Generar Excel", consumo_excel_path, class: "btn btn-outline-success mr-2 float-right ", style:"border-radius: 0.42rem;",target: '_blank' %>
+                                <br>
+                                <br>
+                                <div style="max-width: 100%;">
+                                    <div style="max-width: 100%; overflow:auto;">
+                                        <table class="table table-responsive-md table-hover" style=" text-align: center; " >
+                                            <thead>
+                                                <tr style="text-align: center;">
+                                                    <th>Fecha de carga del ticket</th>
+                                                    <th>Periodo factura</th>
+                                                    <th>No. Cheque</th>
+                                                    <th>No. Factura</th>
+                                                    <th>No. Económico</th>
+                                                    <th>CEDIS</th>
+                                                    <th>Área</th>
+                                                    <th>Tipo</th>
+                                                    <th>Modelo</th>
+                                                    <th>Responsable</th>
+                                                    <th>Lts cargados</th>
+                                                    <th>Importe total</th>
+                                                    <th>Despacho</th>
+                                                    <th>Base $</th>
+                                                    <th>Km solo almacén</th>
+                                                    <th>Rendimiento</th>
+                                                    <th>Impuesto</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <%
+                                                @encabezado.vehicle_consumptions.each do |enc| 
+                                                %>            
+                                                
+                                                    <tr style= "text-align: center;">
+                                                        <td><%= enc.fecha.strftime("%d/%m/%Y") if enc.fecha %></td>
+                                                        <td><%="DEL: #{enc.consumption.fecha_inicio.strftime("%d/%m/%Y")} AL: #{enc.consumption.fecha_fin.strftime("%d/%m/%Y")}"%></td>
+                                                        <td><%#=enc.tarjeta%></td>
+                                                        <td><%=enc.consumption.n_factura ? enc.consumption.n_factura : "No se asignó factura" %></td>
+                                                        <% if enc.vehicle_id != nil %>
+                                                        <td><%=enc.vehicle ? enc.vehicle.numero_economico : "No se asignó"%></td>
+                                                        <td><%=enc.vehicle ? enc.vehicle.catalog_branch.decripcion : "No se asignó"%></td>
+                                                        <td><%=enc.vehicle ? enc.vehicle.catalog_area.descripcion : "No se asignó"%></td>
+                                                        <td><%=enc.vehicle.vehicle_type ? enc.vehicle.vehicle_type.descripcion : "No se asignó"%></td>
+                                                        <td><%=enc.vehicle.catalog_brand ? enc.vehicle.catalog_brand.descripcion : "No se asignó"%></td>
+                                                        <td><%=enc.vehicle.responsable ? enc.vehicle.responsable.nombre : "No se asignó"%></td>
+                                                        <% else %>
+                                                        <td>No se asigno</td>
+                                                        <td>No se asigno</td>
+                                                        <td>No se asigno</td>
+                                                        <td>No se asigno</td>
+
+                                                        <% end %>
+                                                        <td><%=number_with_precision(enc.cantidad, :precision => 2)%></td>
+                                                        <td><%=number_with_precision(enc.monto, :precision => 2)%></td>
+                                                        <td><%= enc.despacho %></td>
+                                                        <td><%#=enc.odometro%></td>
+                                                        <td><%=enc.odometro%></td>
+                                                        <td><%=number_with_precision(enc.rendimiento, :precision => 2)%></td>
+                                                        <td><%=number_to_currency(enc.impuestos)%></td>
+                                                        <% if can? :edit, VehicleConsumption %>
+                                                            <% if @encabezado.estatus == "Pendiente"%> 
+                                                                <td>
+                                                                    <div class="dropdown dropdown-inline">
+                                                                        <%= link_to edit_vehicle_consumption_path(enc.id), title: "Editar impuesto" do %>
+                                                                        <span class="svg-icon svg-icon-md"> 
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                                                        viewBox="0 0 24 24" version="1.1">
+                                                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                        <rect x="0" y="0" width="24" height="24"></rect>
+                                                                        <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
+                                                                        fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
+                                                                        </path>
+                                                                        <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+                                                                        </g>
+                                                                        </svg> 
+                                                                        </span>
+                                                                        <% end %>
+                                                                    </div>  
+                                                                </td>
+                                                            <% end %>
+                                                        <% end %>
+                                                    </tr>
+                                                <% end %>        
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="tab-pane fade show " id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="card">
+                            <div class="card-body">
+                                
+                                <%= link_to "Generar PDF", imprimir_solicitud_path(@encabezado.id), class: "btn btn-outline-success mr-2 float-right", target: "_blank" %>
+                                <br>
+                                <br>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <h3>Solicitud de pago de combustible</h3><br>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <h6 class="solid">Periodo: <%="DEL: #{@encabezado.fecha_inicio.strftime("%d/%m/%Y")} AL: #{@encabezado.fecha_fin.strftime("%d/%m/%Y")}"%></h6>
+                                                <p style="color: red; font-size: 15px;"><strong>Nota:</strong> Incluir todas las facturas de una semana.</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <p>Última modificación:</p>
+                                        <p><%=@encabezado.created_at.strftime("%d/%m/%Y %H:%M:%S")%></p><br>
+                                        <h6>Cedis:<p><%=@encabezado.catalog_branch.decripcion %></p></h6>
+                                        <% if @monto_competencia != nil %>
+                                        <h6>Competencia (con IVA): <p><%=number_to_currency(@monto_competencia.monto)%></p></h6>
+                                        <% else %>
+                                        <p>No se encontro la competencia </p>
+                                        <% end %>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div style="max-width: 150%;">
+                                            <div style="max-width: 150%; overflow:auto;">
+                                                <table class="table table-responsive-md table-hover solid" style=" text-align: center; " >
+                                                    <thead>
+                                                        <tr style="text-align: center;">
+                                                            <th>No. Factura</th>
+                                                            <th>Área</th>
+                                                            <th>No. Económico</th>
+                                                            <th>Usuario</th>                                                
+                                                            <th>Litros</th>
+                                                            <th>Base $</th>
+                                                            <th>Total con IVA</th>
+                                                            <th>Rendimiento</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody> 
+                                                        <%
+                                                        suma_cantidad = 0
+                                                        suma_base = 0
+                                                        suma_total = 0
+                                                        suma_prom = 0 
+                                                        @ventas.each do |venta| 
+
+                                                        suma_cantidad += venta["cantidad"]
+                                                        suma_total += venta["monto"]
+                                                        suma_prom += venta["promedio"]
+                                                        suma_base += venta["base"]
+                                                        %>            
+                                                            <tr style= "text-align: center;">
+                                                                <td><%=venta["factura"] %></td>
+                                                                <td><%=venta["area"]%></td>
+                                                                <td><%=venta["vehiculo"]%></td>
+                                                                <td><%=venta["personal"]%></td>
+                                                                <td><%=number_with_precision(venta["cantidad"],precision:2)%></td>
+                                                                <td><%=number_to_currency(venta["base"])%></td>
+                                                                <td><%=number_to_currency(venta["monto"])%></td>
+                                                                <td><%=number_with_precision(venta["promedio"],precision:2)%></td>                                                            
+                                                            </tr>
+                                                        <% end %>        
+                                                    </tbody>
+                                                    <tr>
+                                                        <td colspan="1"></td>
+                                                        <td style="text-align: right;"><strong>Total Ventas:</strong></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td style="text-align: center;" ><strong><%=number_with_precision(suma_cantidad,precision:2)%></strong></td>
+                                                        <td style="text-align: center;" ><strong><%=number_to_currency(suma_base)%></strong></td>
+                                                        <td style="text-align: center;" ><strong><%=number_to_currency(suma_total)%></strong></td>
+                                                        <td style="text-align: center;" ><strong><%=number_with_precision(suma_prom,precision:2)%></strong></td>
+                                                    </tr>       
+                                                    <tbody>
+                                                        <%
+                                                        suma_cantidad = 0
+                                                        suma_base = 0
+                                                        suma_total = 0
+                                                        suma_prom = 0 
+                                                        @admin.each do |admin| 
+
+                                                        suma_cantidad += admin["cantidad"]
+                                                        suma_total += admin["monto"]
+                                                        suma_prom += admin["promedio"]
+                                                        suma_base += admin["base"]
+                                                        %>            
+                                                            <tr style= "text-align: center;">
+                                                                <td><%=admin["factura"] %></td>
+                                                                <td><%=admin["area"]%></td>
+                                                                <td><%=admin["vehiculo"]%></td>
+                                                                <td><%=admin["personal"]%></td>
+                                                                <td><%=number_with_precision(admin["cantidad"],precision:2)%></td>
+                                                                <td><%=number_to_currency(admin["base"])%></td>
+                                                                <td><%=number_to_currency(admin["monto"])%></td>
+                                                                <td><%=number_with_precision(admin["promedio"],precision:2 )%></td>                                                           
+                                                            </tr>
+                                                        <% end %>        
+                                                    </tbody>
+                                                    <tr style="">
+                                                        <td colspan="1"></td>
+                                                        <td style="text-align: right;"><strong>Total Administración:</strong></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td style="text-align: center;" ><strong><%=number_with_precision(suma_cantidad,precision:2)%></strong></td>
+                                                        <td style="text-align: center;" ><strong><%=number_to_currency(suma_base)%></strong></td>
+                                                        <td style="text-align: center;" ><strong><%=number_to_currency(suma_total)%></strong></td>
+                                                        <td style="text-align: center;" ><strong><%=number_with_precision(suma_prom, precision: 2)%></strong></td>
+                                                    </tr>       
+                                                    
+                                                    <tbody>
+                                                        <%
+                                                        suma_cantidad = 0
+                                                        suma_base = 0
+                                                        suma_total = 0
+                                                        suma_prom = 0 
+                                                        @almacen.each do |almacen| 
+
+                                                        suma_cantidad += almacen["cantidad"]
+                                                        suma_total += almacen["monto"]
+                                                        suma_prom += almacen["promedio"]
+                                                        suma_base += almacen["base"]
+                                                        %>            
+                                                            <tr style= "text-align: center;">
+                                                                <td><%=almacen["factura"] %></td>
+                                                                <td><%=almacen["area"]%></td>
+                                                                <td><%=almacen["vehiculo"]%></td>
+                                                                <td><%=almacen["personal"]%></td>
+                                                                <td><%=number_with_precision(almacen["cantidad"],precision:2)%></td>
+                                                                <td><%=number_to_currency(almacen["base"])%></td>
+                                                                <td><%=number_to_currency(almacen["monto"])%></td>
+                                                                <td><%=number_with_precision(almacen["promedio"],precision:2)%></td>                                                           
+                                                            </tr>
+                                                        <% end %>        
+                                                    </tbody>
+                                                    <tr style="">
+                                                        <td colspan="1"></td>
+                                                        <td style="text-align: right;"><strong>Total Almacén:</strong></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td style="text-align: center;" ><strong><%=number_with_precision(suma_cantidad,precision:2)%></strong></td>
+                                                        <td style="text-align: center;" ><strong><%=number_to_currency(suma_base)%></strong></td>
+                                                        <td style="text-align: center;" ><strong><%=number_to_currency(suma_total)%></strong></td>
+                                                        <td style="text-align: center;" ><strong><%=number_with_precision(suma_prom,precision:2)%></strong></td>
+                                                    </tr>       
+                                                </table>
+                                               <h6><p>Total: <%=number_to_currency(@monto)%></p></h6> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header"> 
+          <h5 class="modal-title" id="exampleModalLabel">Envío de solicitud</h5>
+          <button type="button" class="close float-right" data-dismiss="modal">&times;</button>   
+        </div>
+        <div class="modal-body">
+            <%= form_tag solicitar_autorizacion_path(@encabezado.folio), multipart: true do %>
+                <div class="form-group">
+                    
+                    <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha de aplicación: </label>
+                    <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="fecha_aplicacion" id="fecha_aplicacion" style="width: 50px !important;">
+                        <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group float-right">
+                    <%= submit_tag "Enviar solicitud", :class => "btn btn-primary font-weight-bolder" %>
+                </div>
+            <%end%>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<style>
+.solid {border-style: solid;}
+}
+</style>
+<style>
+@media print {
+   .example-screen {
+       display: none;
+    }
+
+}
+</style>

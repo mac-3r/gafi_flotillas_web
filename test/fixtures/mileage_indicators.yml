@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle: one
+  km_actual: 9.99
+  fecha: 2020-12-22 12:11:50
+
+two:
+  vehicle: two
+  km_actual: 9.99
+  fecha: 2020-12-22 12:11:50

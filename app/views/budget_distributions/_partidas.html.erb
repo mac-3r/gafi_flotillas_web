@@ -1,0 +1,176 @@
+<% if action_name != "show" %>
+<div class="float-right">
+<%= link_to "Agregar detalle", formulario_agregar_detalle_reparto_path, class: "btn btn-outline-success mr-2 float-right", style:"border-radius: 0.42rem;", data: { turbolinks: false }, remote: true %>
+<br><br>
+</div>
+<% end %>
+<table id="table" class="table table-bordered">
+  <br>
+    <thead>
+      <tr>
+        <th>Cantidad</th>
+        <th>Tipo de vehículo</th>
+        <th>Línea</th>
+        <th>Modelo</th>
+        <th>Motivo</th>
+        <th>Importe con I.V.A</th>
+        <th>Plaqueo</th>
+        <th>Seguro</th>
+        <th>Muelle</th>
+        <th>Caja</th>
+        <th>Rotulacion</th>
+        <th>Lona</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @budget_distribution_details.each do |budget_distribution_detail| %>
+        <tr>
+          <td><%= budget_distribution_detail.cantidad %></td>
+          <td><%= budget_distribution_detail.vehicle_type_id  ? budget_distribution_detail.vehicle_type.descripcion  : "No se asignó"  %></td>
+          <td><%= budget_distribution_detail.catalog_brand_id ? budget_distribution_detail.catalog_brand.descripcion  : "No se asignó"  %></td>
+          <td><%= budget_distribution_detail.catalog_model_id ? budget_distribution_detail.catalog_model.descripcion  : "No se asignó"  %></td>
+          <td><%= budget_distribution_detail.reason.descripcion %></td>
+          <td ><%=  number_to_currency(budget_distribution_detail.importe) %></td>
+          <td ><%= number_to_currency(budget_distribution_detail.plaqueo) %></td>
+          <td ><%= number_to_currency(budget_distribution_detail.seguro) %></td>
+          <td ><%= number_to_currency(budget_distribution_detail.muelle) %></td>
+          <td ><%= number_to_currency(budget_distribution_detail.caja) %></td>
+          <td ><%= number_to_currency(budget_distribution_detail.rotulacion) %></td>
+          <td><%= number_to_currency(budget_distribution_detail.lona) %></td>
+          <td>
+            <% if action_name != "show" %>
+            <%= link_to "Eliminar", eliminar_partida_reparto_path(budget_distribution_detail.id), data: { confirm: "¿Deseas eliminar esta partida?" }, class: "btn btn-outline-danger float-right", style:"border-radius: 0.42rem;", remote: true %>
+            <% end %>
+         <td>
+        </tr>
+    </tbody>
+    <% end %>
+</table>
+<br>
+<!-- <strong>PRESUPUESTO ANUAL</strong>
+<table class="table table-bordered" style="width: 50px;">
+  <thead>
+  <tr>
+    <th>Concepto</th>
+    <th>Precio Actual</th>
+    <th>Incremento 5%</th>
+  </tr>
+  </thead>
+  <tbody>
+    <td>
+      Vehiculo
+    </td>
+    <td>
+    <strong id="val"></strong>
+    </td>
+    <td>
+    <strong id="val2"></strong>
+    </td>
+  </tbody>
+  <tbody>
+    <td>
+      Plaqueo
+    </td>
+    <td>
+    <strong id="val3"></strong>
+    </td>
+    <td>
+    <strong id="val4"></strong>
+    </td>
+  </tbody>
+  <tbody>
+    <td>
+      Seguro
+    </td>
+    <td>
+    <strong id="val5"></strong>
+    </td>
+    <td>
+    <strong id="val6"></strong>
+    </td>
+  </tbody>
+  <tbody>
+    <td>
+    Muelle
+    </td>
+    <td>
+    <strong id="val7"></strong>
+    </td>
+    <td>
+    <strong id="val8"></strong>
+    </td>
+  </tbody>
+  <tbody>
+    <td>
+      Caja
+    </td>
+    <td>
+    <strong id="val9"></strong>
+    </td>
+    <td>
+    <strong id="val10"></strong>
+    </td>
+  </tbody>
+  <tbody>
+    <td>
+      Rotulacion
+    </td>
+    <td>
+    <strong id="val11"></strong>
+    </td>
+    <td>
+    <strong id="val12"></strong>
+    </td>
+  </tbody>
+  <tbody>
+    <td>
+    Lona
+    </td>
+    <td>
+    <strong id="val13"></strong>
+    </td>
+    <td>
+    <strong id="val14"></strong>
+    </td>
+  </tbody>
+</table> -->
+
+<script>
+$(document).ready( function() {
+  $("td.formato").each(function() { $(this).html(parseFloat($(this).text()).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})); })
+})    
+ var table = document.getElementById("table"), sumVal = 0, sumVal2 = 0, sumVal3 = 0,sumVal4=0, sumVal5=0,sumVal6=0,sumVal7=0,can=0;
+            
+            for(var i = 1; i < table.rows.length; i++)
+            {
+                sumVal = sumVal + parseFloat(table.rows[i].cells[5].innerHTML);
+                sumVal2 = sumVal2 + parseFloat(table.rows[i].cells[6].innerHTML);
+                sumVal3 = sumVal3 + parseFloat(table.rows[i].cells[7].innerHTML);
+                sumVal4 = sumVal4 + parseFloat(table.rows[i].cells[8].innerHTML);
+                sumVal5 = sumVal5 + parseFloat(table.rows[i].cells[9].innerHTML);
+                sumVal6 = sumVal6 + parseFloat(table.rows[i].cells[10].innerHTML);
+                sumVal7 = sumVal7 + parseFloat(table.rows[i].cells[11].innerHTML);
+            }
+            calculo = sumVal * 1.05;
+            calculo2 = sumVal2 * 1.05;
+            calculo3 = sumVal3 * 1.05;
+            calculo4 = sumVal4 * 1.05;
+            calculo5 = sumVal5 * 1.05;
+            calculo6 = sumVal6 * 1.05;
+            calculo7 = sumVal7 * 1.05;
+            document.getElementById("val").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal);
+            document.getElementById("val2").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo);
+            document.getElementById("val3").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal2);
+            document.getElementById("val4").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo2);
+            document.getElementById("val5").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal3);
+            document.getElementById("val6").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo3);
+            document.getElementById("val7").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal4);
+            document.getElementById("val8").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo4);
+            document.getElementById("val9").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal5);
+            document.getElementById("val10").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo5);
+            document.getElementById("val11").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal6);
+            document.getElementById("val12").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo6);
+            document.getElementById("val13").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal7);
+            document.getElementById("val14").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo7);
+</script>

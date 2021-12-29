@@ -1,0 +1,99 @@
+<br><br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                  <div class="card-header" style="border-bottom: #ffff">
+                    <div class="example-screen" style="float: right;">
+                      <button onclick="window.print()" class="btn btn-primary font-weight-bolder" style="border-radius: 0.42rem;">Generar PDF</button>&nbsp;&nbsp;
+                      <%= link_to 'Regresar' ,purchase_orders_path , class: "btn btn-default float-right" %>&nbsp;&nbsp;
+                    </div>
+                </div>
+              </div>
+        </div>
+              <div class="card-body">
+              <h3 style="text-align: center;"><img style="float: left;" src="https://www.gafi.com.mx/Content/themes/images/logo.jpg" alt="" width="119" height="164" /></h3>
+              <h4 style="text-align: center;"> <%= @purchase_order.catalog_company.nombre %></h4>
+              <h4 style="text-align: center;"> <%= @purchase_order.catalog_company.domicilio %></h4>
+              <h4 style="text-align: center;">C.P <%= @purchase_order.catalog_company.codigo_postal %></h4>
+              <h4 style="text-align: center;"> <%= @purchase_order.catalog_company.telefono %></h4>
+              <br>
+              <h4 style="text-align: center;">Orden de compra de servicios consumibles y activos</h4>
+              <br>
+              <br>
+              <h4>No. Orden:&nbsp;&nbsp; <%= @purchase_order.clave%> </h4>
+              <h4>Orden de compra:&nbsp;&nbsp; <%= @purchase_order.tipo%> </h4>
+              <h4>Rango de presupuesto:&nbsp;&nbsp; <%= @purchase_order.budget_id ? "Dentro de presupuesto" : "Fuera de presupuesto" %> </h4>
+              <h4 >Titular de pago:&nbsp;&nbsp; <%= @purchase_order.catalog_vendor.razonsocial %></h4>
+              <h4 >Contacto:&nbsp;&nbsp;<%= @purchase_order.catalog_vendor.contacto %></h4>
+              <h4 >Dirección:&nbsp;&nbsp;<%= @purchase_order.catalog_vendor.direccion %></h4>
+              <h4 >R.F.C:&nbsp;&nbsp;<%= @purchase_order.catalog_vendor.rfc %></h4>
+              <br>
+              <h4>Condición de pago:&nbsp;&nbsp;<%= @purchase_order.condicion%></h4>
+              <% if @purchase_order.condicion == "Plazo días" %>
+              <h4>Días:&nbsp;&nbsp;<%= @purchase_order.plazo_dias%></h4>
+              <% end %>
+              <% if @purchase_order.condicion == "En parcialidades" %>
+              <h4>Meses:&nbsp;&nbsp;<%= @purchase_order.plazo_dias %></h4>
+              <h4>Última fecha de pago:&nbsp;&nbsp;<%= @purchase_order.ultima_fecha_pago %></h4>
+              <% end %>
+              <h4>Centro de costo:&nbsp;&nbsp;<%= @purchase_order.cost_center.descripcion %></h4>
+          <div id="contenedor_partidas">
+            <%= render "partidas" %>
+          </div>
+          <br><br>
+          <table class="center">
+            <tr>
+              <th>
+                <br>
+                <div style="width:350px;">
+                  <br><br><br><br><br><br><br><br><br><br>
+                   <hr size="8" width="90%" color="black"> 
+                   <div  style="justify-content:center; align-items:center;display: flex;">
+                    <% if @usuario %>
+                      <p><strong style="text-align: center;"><%= @usuario.name%> <%= @usuario.last_name %></strong></p>
+                    <% end %>
+                   </div>
+                   <div  style="justify-content:center; align-items:center;display: flex;">
+                      <p><strong style="text-align: center;">Firma de quien elaboró</strong></p>
+                   </div>
+                </div>
+              </th>
+              <% if @firma %>
+              <th style="text-align: center;">
+                <div style=" width:350px;">
+                  <%= image_tag(url_for(@firma.firma)) %>
+                  <hr size="8" width="90%" color="black"> 
+                  <div  style="justify-content:center; align-items:center;display: flex;">
+                    <p><strong style="text-align: center;"><%= @firma.user.name %> <%= @firma.user.last_name %></strong></p>
+                  </div>
+                  <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                </div>
+              </th>
+                <% else %>
+                <th style="text-align: center;">
+                  <div style=" width:350px;">
+                    <hr size="8" width="90%" color="black"> 
+                    <div  style="justify-content:center; align-items:center;display: flex;">
+                      <strong style="text-align: center;">Firma de autorización</strong>
+                    </div>
+                  </div>
+                </th>
+              <% end %>
+            </tr>
+          </table>
+        </div>
+    </div>
+</div>
+<style>
+  @media print {
+     .example-screen {
+         display: none;
+      }
+  
+  }
+  .center {
+  margin-left: auto;
+  margin-right: auto;
+}
+  </style>

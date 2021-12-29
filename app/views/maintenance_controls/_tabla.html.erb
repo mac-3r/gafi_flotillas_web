@@ -1,0 +1,77 @@
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>No. Económico</th>
+        <th>Línea</th>
+        <th>Modelo</th>
+        <th>Usuario</th>
+        <th>Área</th>
+        <th>Km actual</th>
+        <th>Días taller</th>
+        <th>Fecha factura</th>
+        <th>Folio factura</th>
+        <th colspan="3"></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @maintenance_controls.each do |maintenance_control| 
+        bitacora = []
+        if maintenance_control.vehicle.maintenance_program
+            bitacora = Binnacle.ver_servicios(maintenance_control.vehicle_id, maintenance_control.vehicle.maintenance_program.id)
+        end
+    %>
+        <tr <% if bitacora.length > 0 %> style="background-color: khaki;" <% end %>>
+        <td><%= maintenance_control.vehicle_id ? maintenance_control.vehicle.numero_economico : "Sin asignar" %></td>
+        <td><%= maintenance_control.vehicle.catalog_brand_id ? maintenance_control.vehicle.catalog_brand.descripcion : "No se asigno" %></td>
+        <td><%= maintenance_control.vehicle.catalog_model_id ? maintenance_control.vehicle.catalog_model.descripcion : "No se asigno"%></td>
+        <td><%= maintenance_control.vehicle.catalog_area_id ? maintenance_control.vehicle.catalog_personal.nombre : "No se asigno" %></td>
+        <td><%= maintenance_control.vehicle.catalog_area_id ? maintenance_control.vehicle.catalog_area.descripcion : "No se asigno" %></td>
+        <td><%= number_with_precision(maintenance_control.km_actual,precision: 0) %></td>
+        <td><%= maintenance_control.dias_taller %></td>
+        <td><%= maintenance_control.fecha_factura.strftime("%d/%m/%Y") %></td>
+        <td><%= maintenance_control.folio_factura %></td>
+
+        <td>
+            <div class="dropdown dropdown-inline">
+            <%= link_to maintenance_control, title: "Ver detalle" do %>
+            <span class='far fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>
+            </span>
+            <% end %>
+            </div>
+        </td>
+        <% if maintenance_control.estatus == "Pendiente" %>
+            <td>
+            <div class="dropdown dropdown-inline">
+                <%= link_to edit_maintenance_control_path(maintenance_control), title: "Completar registro" do %>
+                <span class="fas fa-money-bill-wave" style='font-size:16px;color:#A6ACAF'></span>
+                <%end %>
+            </div>
+            </td>
+        <% end %>
+        <!-- <% if can? :edit, MaintenanceControl %>
+
+        <% end %>
+        <% if can? :destroy, MaintenanceControl %>
+        <td>
+            <div class="dropdown dropdown-inline">
+            <%= link_to maintenance_control, title:"Eliminar" ,method: :delete, data: { confirm: '¿Estas seguro?' } do %>
+            <span class="svg-icon svg-icon-md"> <svg xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                viewBox="0 0 24 24" version="1.1">
+            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <rect x="0" y="0" width="24" height="24"></rect>
+                <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z"
+                fill="#000000" fill-rule="nonzero"></path>
+                <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z"
+                fill="#000000" opacity="0.3"></path>
+                </g>
+                </svg> </span>
+            <% end %>
+            </div>
+        </td>
+        <% end %> -->
+        </tr>
+    <% end %>
+    </tbody>
+</table>

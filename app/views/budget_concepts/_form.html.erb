@@ -1,0 +1,37 @@
+<%= form_with(model: budget_concept, local: true) do |form| %>
+  <% if budget_concept.errors.any? %>
+  <div class="alert alert-danger">Error al registrar
+        <div id="error_explanation">
+          <h2><%= pluralize(budget_concept.errors.count, "error") %> Error al registrar:</h2>
+          <ul>
+            <% budget_concept.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+  </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Terminar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+   <br><br>
+   <div class="row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Clave:&nbsp;<%=@budget_concept.clave %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">CEDIS:&nbsp;<%=@budget_concept.catalog_branch.decripcion %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Área:&nbsp;<%=@budget_concept.catalog_area.descripcion %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha entrega estimada:&nbsp;<%=l @budget_concept.fecha_entrega %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha compra estimada:&nbsp;<%=l @budget_concept.fecha %></label>
+   </div>
+  <div id="contenedor_partidas">
+    <%= render "partidas" %>
+  </div>
+ 
+<% end %>

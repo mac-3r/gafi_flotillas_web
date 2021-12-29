@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle: one
+  km_inicio_ano: 9.99
+  km_recorrido_curso: 9.99
+  promedio_mensual: 9.99
+  frecuencia_mantenimiento: 9.99
+  fecha_ultima_afinacion: 2021-01-19
+  kms_ultima_afinacion: 9.99
+  kms_proximo_servicio: 9.99
+  fecha_proximo_servicio: 9.99
+  km_actual: 9.99
+  observaciones: MyString
+
+two:
+  vehicle: two
+  km_inicio_ano: 9.99
+  km_recorrido_curso: 9.99
+  promedio_mensual: 9.99
+  frecuencia_mantenimiento: 9.99
+  fecha_ultima_afinacion: 2021-01-19
+  kms_ultima_afinacion: 9.99
+  kms_proximo_servicio: 9.99
+  fecha_proximo_servicio: 9.99
+  km_actual: 9.99
+  observaciones: MyString

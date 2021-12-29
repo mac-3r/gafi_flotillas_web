@@ -1,0 +1,93 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Editar</h3>
+                        <%= link_to 'Regresar', binnacles_index_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <%= form_for('', url: editar_bitacora_path,method: :post, remote: true,authenticity_token: true) do |form|%>
+                <div class="float-right">
+                <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+                </div>
+                <br>
+                <br>
+                <br>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" style="font-family: Arial; font-size:16px;">Tipo de frecuencia*:</label>
+                    <div class="col-sm-0">
+                        <%= form.select :tipo_frecuencia, options_for_select([["KM"],["Meses"],["Horas"]],:selected => @resultado.tipo_frecuencia),{}, { class: "form form-group form-control", onchange: "OpenCheck(this);"} %>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" style="font-family: Arial; font-size:16px;">Frecuencia de reemplazo:</label>
+                    <div class="col-sm-0">
+                    <%= form.number_field :frecuencia_reemplazo,value: @resultado.frecuencia_reemplazo,class: "form-control", style:"width: 250px !important;" %>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" style="font-family: Arial; font-size:16px;">Frecuencia de inspección:</label>
+                    <div class="col-sm-0">
+                    <%= form.number_field :frecuencia_inspeccion,value: @resultado.frecuencia_inspeccion,class: "form-control", style:"width: 250px !important;" %>
+                    </div>
+                </div>
+                <div id="div" class="form-group row" style="display: none;">
+                    <label class="col-sm-3 col-form-label" style="font-family: Arial; font-size:16px;">Mes de inicio*:</label>
+                    <div class="col-sm-0">
+                        <div class="input-group date" id="datetimepicker8" data-target-input="nearest" locale="es"  data-date-format="M">
+                            <%= form.text_field :mes_inicio, class: "form-control datetimepicker-input",value: @resultado.meses%>
+                              <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                              </div>
+                          </div>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.input-group.date').datetimepicker({
+		locale: 'es',
+        format: 'M',
+	});
+});
+    function OpenCheck(that) {
+     if (that.value == "Meses") {
+          document.getElementById("div").style.display = "flex";
+      }
+      else {
+        document.getElementById("div").style.display = "none";
+      }
+   }
+</script>
+<script>
+
+</script>
+
+<style>
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0; 
+  }
+  .picker-switch{
+display: none !important;
+}
+.prev {
+display: none !important;
+}
+.next{
+display: none !important;
+}
+</style>

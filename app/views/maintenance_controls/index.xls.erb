@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Número económico</Data></Cell>
+        <Cell><Data ss:Type="String">CEDIS</Data></Cell>
+        <Cell><Data ss:Type="String">#</Data></Cell>
+        <Cell><Data ss:Type="String">Taller</Data></Cell>
+        <Cell><Data ss:Type="String">#</Data></Cell>
+        <Cell><Data ss:Type="String">Reparación</Data></Cell>
+        <Cell><Data ss:Type="String">Detalle</Data></Cell>
+        <Cell><Data ss:Type="String">Observaciones</Data></Cell>
+        <Cell><Data ss:Type="String">Fecha factura</Data></Cell>
+        <Cell><Data ss:Type="String">Año</Data></Cell>
+        <Cell><Data ss:Type="String">Importe</Data></Cell>
+        <Cell><Data ss:Type="String">Importe I.V.A</Data></Cell>
+        <Cell><Data ss:Type="String">KM</Data></Cell>
+        <Cell><Data ss:Type="String">Ciudad</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Línea</Data></Cell>
+        <Cell><Data ss:Type="String">Modelo</Data></Cell>
+        <Cell><Data ss:Type="String">Área</Data>Linea</Data></Cell>
+        <Cell><Data ss:Type="String">Responsable</Data></Cell>
+        
+      </Row>
+    <% @maintenance_controls.each do |maintenance_control| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= maintenance_control.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.vehicle.catalog_branch.decripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.catalog_workshop.clave%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.catalog_workshop.nombre_taller%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.catalog_repair.clave%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.catalog_repair.subcategoria%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.catalog_repair.categoria%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.observaciones%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.fecha_factura%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.año%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.importe%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.importe_iva%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.km_actual%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.ciudad%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.vehicle.catalog_brand.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.vehicle.catalog_area.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= maintenance_control.vehicle.responsable.nombre%></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

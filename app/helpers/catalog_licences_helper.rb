@@ -1,0 +1,2 @@
+module CatalogLicencesHelper
+end

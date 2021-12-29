@@ -1,0 +1,2 @@
+module CatalogAreasHelper
+end

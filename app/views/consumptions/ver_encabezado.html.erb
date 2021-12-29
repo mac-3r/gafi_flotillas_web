@@ -1,0 +1,80 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Ver detalle</h3>
+                        <%= link_to 'Regresar', vehicle_consumptions_path, class: "btn btn-default float-right" %>
+                        <%= link_to 'Exportar a Excel', imprimir_encabezado_excel_path(@encabezado.id), class: "btn float-right btn-outline-success mr-2",target: '_blank' %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div style="max-width: 100%;">
+                <div style="max-width: 100%; overflow:auto;">
+                    <table class="table table-responsive-md table-hover" style=" text-align: center; " >
+                        <thead>
+                            <tr style="text-align: center;">
+                                <th>No. Económico</th>
+                                <th>Tarjeta	</th>
+                                <th>Placas</th>
+                                <th>Descripción</th>
+                                <th>Grupo</th>
+                                <th>Estación</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Despacho</th>
+                                <th>Bomba</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Monto</th>
+                                <th>Cliente</th>
+                                <th>Datos</th>
+                                <th>Responsable</th>
+                                <th>Odometro</th>
+                                <th>Rendimiento</th>
+                                <th>Recorrido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%
+                            @encabezado.vehicle_consumptions.each do |enc| 
+                            %>            
+                                <tr style= "text-align: center;">
+                                    <td><%=enc.vehicle ? enc.vehicle.numero_economico : "No se asignó"%></td>
+                                    <td><%=enc.tarjeta%></td>
+                                    <td><%=enc.placa%></td>
+                                    
+                                    <td><%=enc.vehicle_id ? enc.vehicle.catalog_brand.descripcion : "No se asignó"%></td>
+                                    <td><%=enc.vehicle_id ? enc.vehicle.catalog_area.descripcion : "No se asignó"%></td>
+                                    <td><%=enc.estacion%></td>
+                                    <td><%=enc.fecha.strftime("%d/%m/%Y")%></td>
+                                    <td><%=enc.hora%></td>
+                                    <td><%=enc.despacho%></td>
+                                    <td><%=enc.bomba%></td>
+                                    <td><%=enc.producto%></td>
+                                    <td><%=number_with_delimiter(enc.cantidad)%></td>
+                                    <td><%= number_to_currency(enc.monto)%></td>
+                                    <td><%=enc.cliente%></td>
+                                    <td><%=enc.datos%></td>
+                                    <td><%=enc.vehicle_id ? enc.vehicle.responsable.nombre : "No se asignó"%></td>
+                                    <td><%= number_with_delimiter(enc.odometro) %></td>
+                                    <td><%= number_with_delimiter(enc.rendimiento)%></td>
+                                    <td><%= number_with_delimiter(enc.recorrido)%></td>
+                                </tr>
+                            <% end %>        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready( function() {
+  $("td.formato").each(function() { $(this).html(parseFloat($(this).text()).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})); })
+})    
+</script>

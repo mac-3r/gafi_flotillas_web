@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  clave: MyString
+  catalog_branch: one
+  catalog_personal: one
+  catalog_area: one
+  correo: MyString
+  status: false
+
+two:
+  clave: MyString
+  catalog_branch: two
+  catalog_personal: two
+  catalog_area: two
+  correo: MyString
+  status: false

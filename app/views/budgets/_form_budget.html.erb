@@ -1,0 +1,9 @@
+<%= form_for(@budget, url: create_budget_path, method: "POST", remote: true) do |f| %>
+    <div class="form-group">
+        <label>Año</label>
+        <%= f.select :anio, (Time.zone.now.year - 2)..(Time.zone.now.year + 5), {selected: Time.zone.now.year}, {class: "form-control m-input m-input--air uneditable-input"} %>
+    </div>
+    <div class="float-right">
+        <%= f.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+    </div>
+<% end %>

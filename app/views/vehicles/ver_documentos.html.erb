@@ -1,0 +1,35 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header ">
+            <div class="card-title">
+                <h3 class="card-label">Documentos
+                </h3>
+            </div>
+            <div class="float-right">
+              <br>            
+              <%= link_to 'Regresar', vehicle_path, class:"btn btn-default float-right" %>  
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                    <th>Tipo de archivo</th>
+                    <th>Nombre de archivo</th>
+                    <th>Fecha de vencimiento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%  @documents.each do |document| %>     
+                    <tr>
+                      <td><%= document.tipo_archivo %></td>
+                      <td><%= link_to  document.nombre_archivo, document_detail_path(document.id), target: "_blank" %></td>
+                      <td><%= document.fecha_vencimiento %></td>
+                    </tr>
+                <% end %>
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>

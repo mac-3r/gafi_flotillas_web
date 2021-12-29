@@ -1,0 +1,39 @@
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>No. económico</th>
+            <th>Tipo de vehículo</th>
+            <th>Área</th>
+            <th>Cedis</th>
+            <th>Falla encontrada</th>
+            <th>Tipo de reporte</th>
+            <th>Fecha de auditoría</th>
+            <th>Tipo de reparación</th>
+            <th>Concepto</th>
+            <th>Estatus</th>
+            <th>Atiende</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% @verificaciones.each do |verificacion| %>
+            <tr>
+                <td><%= verificacion.numero_economico %></td>
+                <td><%= verificacion.tipo_vehiculo %></td>
+                <td><%= verificacion.area_vehiculo %></td>
+                <td><%= verificacion.cedis_vehiculo %></td>
+                <td><%= verificacion.falla_encontrada %></td>
+                <td>Auditoría</td>
+                <td><%= l verificacion.fecha_auditoria%></td>
+                <td><%= verificacion.tipo_reparacion %></td>
+                <td><%= verificacion.concepto %></td>
+                <% if verificacion.estatus == 1 %>
+                    <td>Mal estado</td>
+                <% elsif verificacion.estatus == 2 %>
+                    <td>No se recibe</td>
+                <% end %>
+                <td><%= verificacion.atiende %></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

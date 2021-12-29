@@ -1,0 +1,44 @@
+<br><br>
+
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Entrega de vehículo</h3>
+                <%= link_to 'Regresar', catalog_responsives_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+    <div class="card-body">
+    <p>
+      <strong>CEDIS:</strong>
+      <%= @catalog_responsife.catalog_branch.decripcion %>
+    </p>
+
+    <p>
+      <strong>Personal:</strong>
+      <%= @catalog_responsife.catalog_personal.nombre%>
+    </p>
+
+    <p>
+      <strong>Area:</strong>
+      <%= @catalog_responsife.catalog_area.descripcion %>
+    </p>
+
+    <p>
+      <strong>Correo:</strong>
+      <%= @catalog_responsife.correo %>
+    </p>
+
+    <p>
+      <strong>Status:</strong>
+      <%= @catalog_responsife.get_status %>
+    </p>
+      <%= link_to 'Editar', edit_catalog_responsife_path(@catalog_responsife),class:"btn btn-default" %>
+    </div>
+  </div>
+</div>
+

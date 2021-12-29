@@ -1,0 +1,43 @@
+
+            <%= form_for('', url: crear_orden_compra_path,method: :post, remote: true,authenticity_token: true) do |f|%>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">No. Orden:</label>
+                <div class="col-sm-0">
+                    <%= f.text_field :n_orden,value:@nuevo_numero, class: "form-control", style:"width: 310px !important;",disabled:true%>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">No. Ecónomico:</label>
+                <div class="col-sm-0">
+                    <%= collection_select('',:vehicle_id ,Vehicle.listado_vehiculos, :id, :numero_economico,{prompt:"Seleccione el numero economico",selected:@ticket.vehicle_id}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",disabled:true})%>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Proveedor:</label>
+                <div class="col-sm-0">
+                    <%= collection_select('',:catalog_vendor_id ,CatalogVendor.listado_proveedor, :id, :razonsocial, {prompt:"Seleccione el proveedor"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", style: "width: 100%;"})%>
+                </div>
+            </div>
+             <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Modelo del artículo:</label>
+                <div class="col-sm-0">
+                    <%= collection_select('',:catalog_tires_battery_id ,CatalogTiresBattery.listado_articulos(@ticket.vehicle.catalog_brand_id,@ticket.tipo), :id, :datoscombo, {prompt:"Seleccione el modelo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Tipo orden de servicio:</label>
+                <div class="col-sm-0">
+                    <%= collection_select('',:order_service_type_id ,OrderServiceType.listado_ordenes, :id, :descripcion, {prompt:"Seleccione un tipo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Descripción:</label>
+                <div class="col-sm-0">
+                    <%= f.text_field :descripcion, class: "form-control", style:"width: 310px !important;",required: true %>
+                </div>
+            </div>
+            
+            
+            <%= submit_tag "Guardar", class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;"%>
+            <% end %>
+ 

@@ -1,0 +1,73 @@
+<%= form_for(@purchase_detail, url: guardar_detalle_orden_path, remote: true) do |form| %>
+<h5 style="color:black;">Complete los datos</h5>
+<hr>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Cantidad</label><br>
+    <%= form.number_field :cantidad, class: "form-control", style:"width: 250px !important;" %>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Tipo vehículo*</label><br>
+    <%= collection_select('',:vehicle_type_id ,VehicleType.listado_tipos, :id, :descripcion, {prompt:"Seleccione el tipo"}, {:class => "form-control m-input m-input--air uneditable-input chosen-select"})%>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Línea*</label><br>
+    <%= collection_select('',:catalog_brand_id ,CatalogBrand.listado_lineas, :id, :descripcion, {prompt:"Seleccione la línea"}, {:class => "form-control m-input m-input--air uneditable-input chosen-select"})%>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Modelo*</label><br>
+    <%= collection_select('',:catalog_model_id ,CatalogModel.listado_modelo, :id, :descripcion, {prompt:"Seleccione el modelo"}, {:class => "form-control m-input m-input--air uneditable-input chosen-select"})%>
+    <br>    
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Precio</label><br>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+        <span class="input-group-text">$</span>
+        </div>
+        <%= form.number_field :precio, step: :any,oninput:"operacion();" %>
+    </div>
+    </div>
+    <br>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Total</label><br>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+        <span class="input-group-text">$</span>
+        </div>
+        <%= form.number_field :total_detalle, step: :any %>
+    </div>
+    </div>
+    <br>
+</div>
+
+
+<br>
+</div>
+<div class="float-right">
+<br><br>
+<%= submit_tag "Guardar", class: "btn btn-success m-btn m-btn--custom float-right" %>
+</div>
+<% end %>
+<script>
+    function operacion(){
+    var a = document.getElementById("purchase_detail_cantidad").value
+    var b = document.getElementById("purchase_detail_precio").value
+    
+    var total= (a * b)
+    document.getElementById("purchase_detail_total_detalle").value = total
+    }
+</script>

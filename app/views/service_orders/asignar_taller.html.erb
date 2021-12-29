@@ -1,0 +1,130 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Asignación de taller y confirmación de cita</h3>
+                        <%= link_to 'Regresar' ,service_orders_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <label class="col-sm-8 col-form-label" style="font-family: Arial; font-size:18px;"><strong>Empresa:&nbsp;</strong> <%=  @orden.vehicle.catalog_company.nombre %></label> 
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label" style="font-family: Arial; font-size:18px;"><strong>CEDIS:&nbsp;</strong>  <%= @orden.vehicle.catalog_branch.decripcion%></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;"><strong>No. Económico:&nbsp;</strong> <%= @orden.vehicle.numero_economico%></label>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;"><strong>Línea:&nbsp;</strong> <%= @orden.vehicle.catalog_brand.descripcion %></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;"><strong> Modelo:&nbsp;</strong><%= @orden.vehicle.catalog_model.descripcion%></label>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <strong  class="col-sm-9 col-form-label" style="font-family: Arial; font-size:18px;">Fecha propuesta:
+
+                                <label id="lbl_fecha" class="col-sm-7 col-form-label" style="font-family: Arial; font-size:18px;"><%= @orden.fecha_revision_propuesta.strftime('%d/%m/%y %I:%M %p' )%></label></strong>
+                            </div>
+                        </div>
+                    </div>
+                    <%= form_for('', url: guardar_taller_path,method: :post, remote: true,authenticity_token: true,onclick: "return validateForm();") do |f|%>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-lg-3">
+                            <div class="row">
+                                    <%= f.label :taller, "Taller", class: "col-form-label col-sm-4" %>
+                                <%= collection_select('',:catalog_workshop_id ,CatalogWorkshop.listado_talleres, :id, :nombre_taller, {prompt:"Seleccione el taller"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select col-sm-2",required:true})%> 
+                                <input type="button" class="btn btn-primary col-form-label col-sm-4" id="btn_taller" value="Buscar" >
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <%= f.label :nombre_t, "Nombre", class: "col-form-label col-sm-2" %>
+                                <%= f.text_field :nombre_t, class: "form-control col-sm-9", disabled: true %>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <%= f.label :especialidad, "Especialidad", class: "col-form-label col-sm-3" %>
+                                <%= f.text_field :especialidad, class: "form-control col-sm-8", disabled: true %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <%= f.label :responsable, "Responsable", class: "col-form-label col-sm-3" %>
+                                <%= f.text_field :responsable, class: "form-control col-sm-6", disabled: true %>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <%= f.label :domicilio, "Domicilio", class: "col-form-label col-sm-2" %>
+                                <%= f.text_field :domicilio, class: "form-control col-sm-9", disabled: true %>  
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <div class="row">
+                                <%= f.label :telefono, "Teléfono", class: "col-form-label col-sm-2" %>
+                            <%= f.text_field :telefono, class: "form-control col-sm-6", disabled: true %>
+                            </div>
+                        </div>
+                    </div>
+                    <%= submit_tag "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;",:onclick => "return validateForm();"%>
+                </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+              $("#btn_taller").click(function(){
+                  var valor = $("#catalog_workshop_id").val();
+                  if (valor == "") {
+                      alert("Ingresa el taller.");
+                  } else {
+                      $.ajax({
+                          type: "POST",
+                          url: "<%= consulta_taller_mantenimiento_path %>",
+                          data: {id: valor,authenticity_token: $('meta[name=csrf-token]').attr('content')}
+                        })
+                    }
+               })
+          })
+          function validateForm() { 
+        var fecha =document.getElementById('lbl_fecha').textContent
+        var taller = document.getElementById("nombre_t").value;
+        var domicilio = document.getElementById("domicilio").value;
+        var res = confirm("Su cita sera el "+ fecha + " en el taller "+ taller + " Domicilio: "+ domicilio + " ¿Desea continuar?"); 
+    if (res == false) { return false; } 
+  }
+  </script>

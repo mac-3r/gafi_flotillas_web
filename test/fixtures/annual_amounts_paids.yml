@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cantidad: 1.5
+  anio_inicio: 1
+  anio_fin: 1
+
+two:
+  cantidad: 1.5
+  anio_inicio: 1
+  anio_fin: 1

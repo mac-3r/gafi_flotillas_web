@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Catalog branch:</strong>
+  <%= @tuning_price.catalog_branch_id %>
+</p>
+
+<p>
+  <strong>Catalog brand:</strong>
+  <%= @tuning_price.catalog_brand_id %>
+</p>
+
+<p>
+  <strong>Catalog workshop:</strong>
+  <%= @tuning_price.catalog_workshop_id %>
+</p>
+
+<p>
+  <strong>Precio menor:</strong>
+  <%= @tuning_price.precio_menor %>
+</p>
+
+<p>
+  <strong>Precio mayor:</strong>
+  <%= @tuning_price.precio_mayor %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @tuning_price.status %>
+</p>
+
+<p>
+  <strong>Clave:</strong>
+  <%= @tuning_price.clave %>
+</p>
+
+<%= link_to 'Edit', edit_tuning_price_path(@tuning_price) %> |
+<%= link_to 'Back', tuning_prices_path %>

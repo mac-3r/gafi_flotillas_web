@@ -1,0 +1,9 @@
+<%= form_for(@ciclo, url: registrar_prima_inf_path, method: "POST", remote: true) do |form| %>
+    <div class="form-group">
+        <div class="row">
+            <%= form.label :cantidad, "Prima anual:", class: "col-form-label col-sm-2" %>
+            <%= form.number_field :cantidad, class: "form-control col-sm-9", min: 0, step: 0.01 %>
+        </div>
+    </div>
+    <%= form.submit "Guardar", class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;" %>
+<% end %>

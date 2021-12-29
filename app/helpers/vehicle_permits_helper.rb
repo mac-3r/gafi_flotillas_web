@@ -1,0 +1,2 @@
+module VehiclePermitsHelper
+end

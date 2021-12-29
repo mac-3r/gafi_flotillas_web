@@ -1,0 +1,49 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Ver detalle</h3>
+                        <%= link_to 'Regresar', workshop_certifications_path, class: "btn btn-default float-right" %>
+                        <% if can? :imprimir_formato_alta, WorkshopCertification %>
+                            <% if @workshop_certification.estatus == "Autorizado" %>
+                                <%= link_to "Generar formato de alta", imprimir_formato_alta_path(@workshop_certification.id), class: "btn btn-outline-success mr-2 float-right", target: "_blank" %>
+                            <% end %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+        <div class="row"> 
+          <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Número ticket:&nbsp;<%=  @workshop_certification.numero_ticket %></label>
+        </div>
+         <div class="row">
+          <label class="col-sm-6 col-form-label" style="font-family: Arial; font-size:18px;">Taller:&nbsp;<%=  @workshop_certification.catalog_workshop.nombre_taller %></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-6 col-form-label" style="font-family: Arial; font-size:18px;">Especialidad:&nbsp;<%=@workshop_certification.catalog_workshop.especialidad%></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Contacto:&nbsp;<%= @workshop_certification.catalog_workshop.responsable%></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Teléfono:&nbsp;<%=@workshop_certification.catalog_workshop.telefono%></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Correo electrónico:&nbsp;<%= @workshop_certification.catalog_workshop.correo %></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Condición de pago:&nbsp;<%= @workshop_certification.condiciones %></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha ticket:&nbsp;<%= @workshop_certification.fecha.strftime('%d/%m/%y') %></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Estatus:&nbsp;<%= @workshop_certification.estatus %></label>
+         </div>                    
+      </div>
+    </div>
+</div>

@@ -1,0 +1,93 @@
+<br>
+<style>
+    .pulsate::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    animation: pulse 1s ease infinite;
+    border-radius: 50%;
+    border: 4px double lighten(red, 20%);
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    60% {
+      transform: scale(1.3);
+      opacity: 0.4;
+    }
+    100% {
+      transform: scale(1.4);
+      opacity: 0;
+    }
+  }
+</style>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header ">
+            <div class="card-title">
+                <h3 class="card-label">Licencias por expirar
+                    <span class="text-muted pt-2 font-size-sm d-block">Reporte de licencias expiradas y por expirar</span>
+                </h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <%=form_for('', url: filtrado_licencias_expirar_path, remote: true, method: "POST", authenticity_token: true) do |f|%>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Empresa:</label>
+                        <%= collection_select('', :catalog_company_id, CatalogCompany.listado_empresas,:id, :nombre, {prompt:"Escribe el nombre de la empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">CEDIS:</label>
+                        <select name="catalog_branch_id" id="catalog_branch_id" class="form-control m-input m-input--air uneditable-input chosen-select">
+                            <option value="">Seleccione el cedis</option>
+                        </select>
+                        <%#= collection_select('',:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Área:</label>
+                        <%= collection_select('', :area_id, CatalogArea.listado_areas,:id, :descripcion, {prompt:"Escribe el nombre del área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Vehículo:</label>
+                        <%= collection_select('', :vehicle_id, Vehicle.listado_vehiculos,:id, :nombre_p_vehiculo, {prompt:"Escribe el número económico del vehículo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <br><br>
+                        <div class="float-right" style="padding-left: 2%;">
+                            <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                        </div>
+                        <div class="float-right">
+                            <%= link_to  "Generar Excel", excel_licencias_expirar_path, class: "btn btn-outline-success mr-2 ", style:"border-radius: 0.42rem;",target: '_blank' %>
+                        </div>
+                    </div>
+                </div>
+            <% end %>
+            <div style="width: 100%" id="table_container">
+                <%#= render  "grafica_cedis" %>
+			    <%= render  "tabla" %>
+            </div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#catalog_company_id").change(function(){
+            var empresa = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "<%= cedis_x_empresa_siniestralidad_path %>",
+                data: {empresa: empresa, authenticity_token: $('meta[name=csrf-token]').attr('content')}
+            })
+        })
+    })
+</script>

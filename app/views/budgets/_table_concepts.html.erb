@@ -1,0 +1,158 @@
+<div style="width: 100%;">
+    <div class="float-right">
+        <% if can? :request_budget, Budget %>
+            <%
+                if @area != "0"
+            %> 
+                <%= link_to 'Solicitar autorización', request_budget_path(@presupuesto, @area), class:"btn btn-primary font-weight-bolder", data: {confirm: "¿Deseas solicitar la autorización de presupuesto para esta área? Después de esta acción el presupuesto del área ya no podrá ser modificado."}%>&nbsp;
+            <% end %>
+        <% end %>
+        <%= link_to  "Generar PDF", pdf_budget_path(@presupuesto, @area), target: "_blank", class:"btn btn-primary font-weight-bolder float-right" %>
+    </div>
+    <br><br><br>
+    <div style="max-width: 100%; overflow: auto">
+        <table id="table" class="table table-bordered table-hover">
+            <colgroup span="5"></colgroup>
+            <colgroup span="13"></colgroup>
+            <tr style="text-align: center;">
+                <th colspan="5" scope="colgroup">VEHÍCULO PRESUPUESTADO</th>
+                <th colspan="13" scope="colgroup">VALIDACIÓN VEHÍCULO COMPRADO</th>
+            </tr>
+            <tr style="text-align: center;">
+                <th scope="col">CEDIS</th>
+                <th scope="col">FECHA SOLICITUD</th>
+                <th scope="col">MOTIVO DE LA COMPRA</th>
+                <th scope="col">MARCA</th>
+                <th scope="col">PRECIO</th>
+                <th scope="col">FECHA COMPRA</th>
+                <th scope="col">MARCA</th>
+                <th scope="col">NO. VEH</th>
+                <th scope="col">$ VEHÍCULO</th>
+                <th scope="col">$ SEGURO</th>
+                <th scope="col">FECHA AUT. SEGURO</th>
+                <th scope="col">$ PLAQUEO</th>
+                <th scope="col">FECHA AUT. PLAQUEO</th>
+                <th scope="col">$ MUELLE</th>
+                <th scope="col">$ CAJA</th>
+                <th scope="col">$ ROTULACIÓN</th>
+                <th scope="col">$ LONA</th>
+                <th scope="col">FECHA ENTREGA</th>
+                <th scope="col">ESTATUS</th>
+            </tr>
+            <% 
+            total_precio = 0
+            total_precio_vehiculo = 0
+            total_seguro = 0
+            total_plaqueo = 0
+            total_muelle = 0
+            total_caja = 0
+            total_rotulacion = 0
+            total_lona = 0
+            @budget_items.each do |budget_item|  
+                total_precio += budget_item.importe
+                if budget_item.purchase_detail
+                    total_precio_vehiculo = budget_item.purchase_detail.precio
+                    total_seguro = budget_item.purchase_detail.seguro
+                    total_plaqueo = budget_item.purchase_detail.plaqueo
+                    total_muelle = budget_item.purchase_detail.muelle
+                    total_caja = budget_item.purchase_detail.caja
+                    total_rotulacion = budget_item.purchase_detail.rotulacion
+                    total_lona = budget_item.purchase_detail.lona
+                end
+            %>
+                <tr>
+                    <th scope="row"><%= budget_item.catalog_branch.decripcion %></th>
+                    <td><%= (I18n.l budget_item.fecha_solicitud) if budget_item.fecha_solicitud %></td>
+                    <td><%= budget_item.reason.descripcion %></td>
+                    <td><%= budget_item.catalog_brand.descripcion %></td>
+                    <td><%= number_to_currency(budget_item.importe) %></td>
+                    <td><%= (I18n.l budget_item.purchase_detail.purchase_order.fecha) if budget_item.purchase_detail%></td>
+                    <td><%= budget_item.purchase_detail.catalog_brand.descripcion if budget_item.purchase_detail%></td>
+                    <td><%#= budget_item.purchase_detail. if budget_item.purchase_detail%></td>
+                    <td><%= number_to_currency(budget_item.purchase_detail.precio) if budget_item.purchase_detail%></td>
+                    <td><%= number_to_currency(budget_item.purchase_detail.seguro) if budget_item.purchase_detail%></td>
+                    <td><%#= budget_item.purchase_detail. if budget_item.purchase_detail%></td>
+                    <td><%= number_to_currency(budget_item.purchase_detail.plaqueo) if budget_item.purchase_detail%></td>
+                    <td><%#= budget_item.purchase_detail. if budget_item.purchase_detail%></td>
+                    <td><%= number_to_currency(budget_item.purchase_detail.muelle) if budget_item.purchase_detail%></td>
+                    <td><%= number_to_currency(budget_item.purchase_detail.caja) if budget_item.purchase_detail%></td>
+                    <td><%= number_to_currency(budget_item.purchase_detail.rotulacion) if budget_item.purchase_detail%></td>
+                    <td><%= number_to_currency(budget_item.purchase_detail.lona) if budget_item.purchase_detail%></td>
+                    <td><%#= budget_item.purchase_detail. if budget_item.purchase_detail%></td>
+                    <td><%= budget_item.estatus_autorizacion%></td>
+                </tr>
+            <% end %>
+            <tr style="text-align: center;">
+                <th scope="col">Totales:</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"><%= number_to_currency(total_precio) %></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"><%= number_to_currency(total_precio_vehiculo) %></th>
+                <th scope="col"><%= number_to_currency(total_seguro) %></th>
+                <th scope="col"></th>
+                <th scope="col"><%= number_to_currency(total_plaqueo) %></th>
+                <th scope="col"></th>
+                <th scope="col"><%= number_to_currency(total_muelle) %></th>
+                <th scope="col"><%= number_to_currency(total_caja) %></th>
+                <th scope="col"><%= number_to_currency(total_rotulacion) %></th>
+                <th scope="col"><%= number_to_currency(total_lona) %></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </table>
+        <!--<table id="table" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>CEDIS</th>
+                    <th>Área</th>
+                    <th>Cantidad</th>
+                    <th>Tipo de vehículo</th>
+                    <th>Línea</th>
+                    <th>Modelo</th>
+                    <th>Motivo</th>
+                    <th>Importe con I.V.A</th>
+                    <th>Plaqueo</th>
+                    <th>Seguro</th>
+                    <th>Muelle</th>
+                    <th>Caja</th>
+                    <th>Rotulacion</th>
+                    <th>Lona</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%# total = 0 
+                    @budget_items.each do |budget_item| 
+                        total += (budget_item.importe + budget_item.plaqueo + budget_item.seguro + budget_item.muelle + budget_item.caja + budget_item.rotulacion + budget_item.lona)
+                %>
+                    <tr>
+                        <td><%#= budget_item.catalog_branch_id  ? budget_item.catalog_branch.decripcion  : "No se asignó"  %></td>
+                        <td><%#= budget_item.catalog_area_id  ? budget_item.catalog_area.descripcion  : "No se asignó"  %></td>
+                        <td><%#= budget_item.cantidad %></td>
+                        <td><%#= budget_item.vehicle_type_id  ? budget_item.vehicle_type.descripcion  : "No se asignó"  %></td>
+                        <td><%#= budget_item.catalog_brand_id ? budget_item.catalog_brand.descripcion  : "No se asignó"  %></td>
+                        <td><%#= budget_item.catalog_model_id ? budget_item.catalog_model.descripcion  : "No se asignó"  %></td>
+                        <td><%#= budget_item.reason.descripcion %></td>
+                        <td ><%#=  number_to_currency(budget_item.importe) %></td>
+                        <td ><%#= number_to_currency(budget_item.plaqueo) %></td>
+                        <td ><%#= number_to_currency(budget_item.seguro) %></td>
+                        <td ><%#= number_to_currency(budget_item.muelle) %></td>
+                        <td ><%#= number_to_currency(budget_item.caja) %></td>
+                        <td ><%#= number_to_currency(budget_item.rotulacion) %></td>
+                        <td><%#= number_to_currency(budget_item.lona) %></td>
+                    </tr>
+                <%# end %>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="12"></td>
+                    <td><strong>Total:</strong></td>
+                    <td><strong><%#= number_to_currency(total) %></strong></td>
+                </tr>
+            </tfoot>
+        </table>-->
+    </div>
+</div>

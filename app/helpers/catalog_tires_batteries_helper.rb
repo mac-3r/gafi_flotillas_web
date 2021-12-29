@@ -1,0 +1,2 @@
+module CatalogTiresBatteriesHelper
+end

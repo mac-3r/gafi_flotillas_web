@@ -1,0 +1,77 @@
+
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Ver detalle</h3>
+                        <%= link_to 'Regresar' ,maintenance_appointments_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+          <p>
+            <strong> Empresa:</strong>
+            <%= @maintenance_appointment.vehicle.catalog_company.nombre %>
+          </p>
+          <p>
+            <strong> CEDIS:</strong>
+            <%= @maintenance_appointment.vehicle.catalog_branch.decripcion %>
+          </p>
+          <p>
+            <strong>Número económico:</strong>
+            <%= @maintenance_appointment.vehicle.numero_economico %>
+          </p>
+          <p>
+            <strong>Línea:</strong>
+            <%= @maintenance_appointment.vehicle.catalog_brand.descripcion %>
+          </p>
+          <p>
+            <strong>Modelo:</strong>
+            <%= @maintenance_appointment.vehicle.catalog_model.descripcion %>
+          </p>
+          <p>
+            <strong>Fecha cita:</strong>
+            <%=  @maintenance_appointment.fecha_cita.strftime('%d/%m/%y %I:%M %p') %>
+          </p>
+          
+          <p>
+            <strong>Taller:</strong>
+            <%= 
+            @maintenance_appointment.catalog_workshop_id ? @maintenance_appointment.catalog_workshop.nombre_taller  : "No se asignó"
+            %>
+          </p>
+          <p>
+            <strong>Especialidad:</strong>
+            <%= 
+            @maintenance_appointment.catalog_workshop_id ? @maintenance_appointment.catalog_workshop.especialidad  : "No se asignó"
+            %>
+          </p>
+          <p>
+            <strong>Responsable:</strong>
+            <%= 
+            @maintenance_appointment.catalog_workshop_id ? @maintenance_appointment.catalog_workshop.responsable  : "No se asignó"
+            %>
+          </p>
+          <p>
+            <strong>Domicilio:</strong>
+            <%= 
+            @maintenance_appointment.catalog_workshop_id ? @maintenance_appointment.catalog_workshop.domicilio  : "No se asignó"
+            %>
+          </p>
+          <p>
+            <strong>Teléfono:</strong>
+            <%= 
+            @maintenance_appointment.catalog_workshop_id ? @maintenance_appointment.catalog_workshop.telefono  : "No se asignó"
+            %>
+          </p>
+          <p>
+            <strong>Estatus:</strong>
+            <%= @maintenance_appointment.status %>
+          </p>
+        </div>
+    </div>
+</div>

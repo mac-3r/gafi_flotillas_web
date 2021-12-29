@@ -1,0 +1,58 @@
+<%= form_for(@catalog_workshop, method: "POST", url: convertir_a_taller_path(@catalog_vendor.id), authenticity_token: true, remote: true) do |form| %>
+    <div class="form-row">
+        <div class="col-lg-4 form-group">
+            <label>Nombre: *</label>
+            <%= form.text_field(:nombre_taller, class: "form-control", required: true) %>
+        </div>
+        <div class="col-lg-4 form-group">
+            <label>Responsable: *</label>
+            <%= form.text_field(:responsable, class: "form-control", required: true) %>
+        </div>
+        <div class="col-lg-4 form-group">
+            <label>Correo: *</label>
+            <%= form.text_field(:correo, class: "form-control", required: true) %>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-lg-4 form-group">
+            <label>Empresa: *</label>
+            <%= collection_select('', :catalog_company_id, CatalogCompany.listado_empresas,:id, :nombre, {prompt:"Escribe el nombre de la empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+        </div>
+        <div class="col-lg-4 form-group">
+            <label>Cedis: *</label>
+            <select name="catalog_workshop[catalog_branch_id]" id="catalog_branch_id" class="form-control m-input m-input--air uneditable-input chosen-select">
+                <option value="">Seleccione el cedis</option>
+            </select>
+        </div>
+        <div class="col-lg-4 form-group">
+            <label>Especialidad: *</label>
+            <%= form.text_field(:especialidad, class: "form-control", required: true) %>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-lg-4 form-group">
+            <label>Teléfono: *</label>
+            <%= form.phone_field(:telefono, class: "form-control", required: true) %>
+        </div>
+        <div class="col-lg-4 form-group">
+        </div>
+        <div class="col-lg-4 form-group">
+            <div class="float-right">
+                <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+            </div>
+        </div>
+    </div>
+<% end %>
+<script type="text/javascript">
+    $(document).ready(function(){
+		$('.chosen-select').chosen();
+        $("#catalog_company_id").change(function(){
+            var empresa = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "<%= cedis_x_empresa_siniestralidad_path %>",
+                data: {empresa: empresa, authenticity_token: $('meta[name=csrf-token]').attr('content')}
+            })
+        })
+    })
+</script>

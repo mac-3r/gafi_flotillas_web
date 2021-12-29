@@ -1,0 +1,34 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Importar información</h3>
+                        <%= link_to 'Regresar' ,monthly_yields_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <h4>Se encontraron errores durante la importación de vehículos:</h4>
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%">Fila en Excel</th>
+                                                <th width="50%">Problema</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% @monthly_yield.each do |b| %>
+                                                <tr>
+                                                    <td><%= b['fila'] %></td>
+                                                    <td><%= b['Problema'] %></td>
+                                                </tr>
+                                            <% end %>
+                                        </tbody>
+                                    </table>
+        </div>
+    </div>
+</div>

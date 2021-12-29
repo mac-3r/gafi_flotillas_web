@@ -1,0 +1,23 @@
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>JSON enviado</th>
+            <th>Respuesta JD Edwards</th>
+            <th>Fecha</th>
+            <th>Tipo de operación</th>
+            <th>No. económico</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% @logs.each do |log| %>
+            <tr>
+                <td><%= log.json_enviado %></td>
+                <td><%= log.respuesta %></td>
+                <td><%= l log.hora%></td>
+                <td><%= log.tipo %></td>
+                <td><%= log.vehicle.numero_economico %></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

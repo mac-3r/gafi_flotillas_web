@@ -1,0 +1,45 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Concepto de centro de costos</h3>
+                  <%= link_to 'Regresar', cost_centers_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+       <div class="card-body">
+            <p>
+              <strong>Clave:</strong>
+              <%= @cost_center.clave %>
+            </p>
+            <p>
+              <strong>Empresa:</strong>
+              <%= @cost_center.catalog_company.nombre %>
+            </p>
+            <p>
+              <strong>Cedis:</strong>
+              <%= @cost_center.catalog_branch.decripcion %>
+            </p>
+
+            <p>
+              <strong>Descripcion:</strong>
+              <%= @cost_center.descripcion %>
+            </p>
+            <p>
+              <strong>Unidad de negocio:</strong>
+              <%= @cost_center.unidad_negocio %>
+            </p>
+
+            <p>
+              <strong>Status:</strong>
+              <%= @cost_center.get_status %>
+            </p>
+
+            <%= link_to 'Editar', edit_cost_center_path(@cost_center),class:"btn btn-default"%> 
+    </div>
+  </div>
+</div>

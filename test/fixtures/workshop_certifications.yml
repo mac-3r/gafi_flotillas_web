@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  numero_ticket: 
+  fecha: 2021-02-11
+  estatus: 
+  condiciones: MyString
+  catalog_workshop: one
+
+two:
+  numero_ticket: 
+  fecha: 2021-02-11
+  estatus: 
+  condiciones: MyString
+  catalog_workshop: two

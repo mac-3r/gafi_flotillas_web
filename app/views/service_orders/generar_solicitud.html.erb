@@ -1,0 +1,98 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                      <h3 class="card-label float-left">Solicitud de autorización</h3>
+                      <% if can? :autoriza_orden, ServiceOrder %>
+                        <% if @encabezado.estatus == "Pendiente" %>
+                          <%= link_to 'Autorizar' ,autorizar_orden_path(@encabezado.id) , class:"btn btn-primary font-weight-bolder float-right"%>&nbsp;
+                        <% end %>
+                      <% end %>
+                        <%= link_to 'Regresar' ,service_orders_path , class: "btn btn-default float-right" %>
+                        <%= link_to "Generar PDF", imprimir_solicitud_mmto_path(@encabezado.id), class: "btn btn-outline-success mr-2 float-right", target: "_blank" %>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">                   
+                    <div class="row" style="text-align: left;">
+                        <div class="col-lg-4">
+                          <p style="font-family: Arial; font-size:16px;">
+                            <strong>Número Económico:</strong>
+                            <%=@encabezado.vehicle.numero_economico %>
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                          <p style="font-family: Arial; font-size:16px;">
+                            <strong>CEDIS:</strong>
+                            <%=@encabezado.vehicle.catalog_branch.decripcion %>
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                          <p style="font-family: Arial; font-size:16px;">
+                            <strong>Tipo de vehículo:</strong>
+                            <%=@encabezado.vehicle.vehicle_type.descripcion %>
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>KM actual:</strong>
+                              <%= @km_actual ? number_with_precision(@km_actual.km_actual,precision: 2) : "N/A" %>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>Área:</strong>
+                              <%=@encabezado.vehicle.catalog_area.descripcion %>
+                            </p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>Ruta:</strong>
+                              <%=@encabezado.vehicle.catalog_route.descripcion %>
+                            </p>
+                        </div>
+                         <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>KM inicio año en curso:</strong>
+                              <%= @programa ? number_with_precision(@programa.km_inicio_ano,precision: 2) : "N/A"%>
+                            </p>
+                        </div> <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>KM recorrido de año en curso:</strong>
+                              <%= @programa ? number_with_precision(@programa.km_recorrido_curso,precision: 2) : "N/A"  %>
+                            </p>
+                        </div> <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>Gasto por KM recorrido de año en curso:</strong>
+                                 <%=  number_with_precision(@gasto_km,precision: 2)%>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <%=form_for('', url: filtrado_gastos_path(params[:service_order_id]), remote: true) do |f|%>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Año:</label>
+                        <%= f.select(:anio,  [['Hace 2 años', 0],['Hace 1 año', 1],['Año actual', 2]], {}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>  
+                    <div class="col">
+                      <br><br>
+                      <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                    </div>
+            <% end %>
+              <br>
+             <div style="width: 100%" id="table_container">
+            </div>
+          </div>
+        </div>
+    </div>
+</div>

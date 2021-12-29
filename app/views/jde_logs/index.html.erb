@@ -1,0 +1,30 @@
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Bitácora de pólizas</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>JSON</th>
+          <th>Respuesta</th></th>
+          <th>Fecha y hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @jde_logs.each do |jde_log| %>
+          <tr>
+            <td><%= jde_log.json_enviado %></td>
+            <td><%= jde_log.respuesta %></td>
+            <td><%= jde_log.created_at.strftime('%d/%m/%y %I:%M %p') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</div>

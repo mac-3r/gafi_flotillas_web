@@ -1,0 +1,74 @@
+<%= form_with(model: catalog_tires_battery, local: true) do |form| %>
+  <% if catalog_tires_battery.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(catalog_tires_battery.errors.count, "error") %> prohibited this catalog_tires_battery from being saved:</h2>
+
+      <ul>
+        <% catalog_tires_battery.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+  <br><br>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Línea:</label>
+    <div class="col-sm-0">
+      <%= collection_select(:catalog_tires_battery,:catalog_brand_id ,CatalogBrand.listado_lineas, :id, :descripcion, {prompt:"Seleccione la linea"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Medida:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :medida, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Modelo a utilizar:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :modelo, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Tipo:</label>
+    <div class="col-sm-0">
+      <%= form.select :tipo,[
+      ["Seleccione un tipo", ""], 
+      "Llanta", 
+      "Batería","Extintor"], 
+      {}, { class: "form form-group form-control"} %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Moneda:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :moneda, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Precio:</label>
+    <div class="col-sm-0">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">$</span>
+        </div>
+        <%= form.number_field :precio, step: :any, class: 'form-control'%>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Dólar:</label>
+    <div class="col-sm-0">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">$</span>
+        </div>
+        <%= form.number_field :dls, step: :any, class: 'form-control'%>
+      </div>
+    </div>
+  </div>
+
+<% end %>

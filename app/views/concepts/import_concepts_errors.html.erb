@@ -1,0 +1,38 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="card-label">Categorías de conceptos de mantenimiento
+                    <span class="text-muted pt-2 font-size-sm d-block">Catálogo de categorías de conceptos de mantenimiento</span>
+                </h3>
+            </div>
+            <div class="float-right">
+                <br>
+                <%= link_to 'Regresar', concepts_index_path,class:"btn btn-primary font-weight-bolder",style:"border-radius: 0.42rem;", data: { turbolinks: false } %>
+            </div>
+        </div>
+        <div class="card-body">
+            <h4>Se encontraron errores durante la importación de las categorías:</h4>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="20%">Fila en Excel</th>
+                        <th width="30%">Nombre</th>
+                        <th width="50%">Problema</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @concepts.each do |b| %>
+                        <tr>
+                            <td><%= b['fila'] %></td>
+                            <td><%= b['nombre'] if b["nombre"].present? %></td>
+                            <td><%= b['Problema'] %></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

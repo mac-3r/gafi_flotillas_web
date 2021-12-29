@@ -1,0 +1,50 @@
+
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Concepto de empresa</h3>
+                  <%= link_to 'Regresar',   catalog_companies_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+       <div class="card-body">
+            <p>
+              <strong>Clave:</strong>
+              <%= @catalog_company.clave %>
+            </p>
+
+            <p>
+              <strong>Nombre:</strong>
+              <%= @catalog_company.nombre %>
+            </p>
+            <p>
+              <strong>Domicilio:</strong>
+              <%= @catalog_company.domicilio %>
+            </p>
+            <p>
+              <strong>Código postal:</strong>
+              <%= @catalog_company.codigo_postal %>
+            </p>
+            <p>
+              <strong>Telefono:</strong>
+              <%= @catalog_company.telefono %>
+            </p>
+            <p>
+              <strong>RFC:</strong>
+              <%= @catalog_company.rfc %>
+            </p>
+            <p>
+              <strong>Status:</strong>
+              <%= @catalog_company.get_status %>
+            </p>
+
+            <%= link_to 'Editar', edit_catalog_company_path(@catalog_company),class:"btn btn-default" %> 
+          <br><br>                  
+     </div>
+   </div>
+</div>

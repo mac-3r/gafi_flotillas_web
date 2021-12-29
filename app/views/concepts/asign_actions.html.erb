@@ -1,0 +1,39 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Asignar acción a concepto</h3>
+                        <%= link_to 'Regresar', concepts_index_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Concepto: <%=@concept.descripcion%></label>
+                </div>
+             <%= form_for('', url: save_action_path,method: :post, remote: true,authenticity_token: true) do |form|%>
+                <div class="float-right">
+                <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+                </div>
+                <br>
+                <br>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Acción:</label>
+                    <div class="col-sm-0">
+                    <%= form.text_field :nombre,class: "form-control", style:"width: 250px !important;", required:true %>
+                    </div>
+                </div>
+               <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Tipo de afinación:</label>
+                    <div class="col-sm-0">
+                    <%= select_tag 'tipo_afinacion', options_for_select([["Afinación mayor" , 1],["Afinación menor", 0]]),{ class: "form form-group form-control", style:"width: 250px !important;"  }%>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>

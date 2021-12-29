@@ -1,0 +1,39 @@
+
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Concepto de rol</h3>
+                  <%=link_to 'Regresar', catalog_roles_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+       <div class="card-body">
+            <p>
+              <strong>Clave:</strong>
+              <%= @catalog_role.clave %>
+            </p>
+
+            <p>
+              <strong>Nombre:</strong>
+              <%= @catalog_role.nombre %>
+            </p>
+
+            <p>
+              <strong>Descripcion:</strong>
+              <%= @catalog_role.descripcion %>
+            </p>
+
+            <p>
+              <strong>Status:</strong>
+              <%= @catalog_role.status %>
+            </p>
+            <%= link_to 'Editar', edit_catalog_role_path(@catalog_role), class:"btn btn-default"  %> 
+           <br><br>    
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Clave:</strong>
+  <%= @mechanical_review.clave %>
+</p>
+
+<p>
+  <strong>Catalog brand:</strong>
+  <%= @mechanical_review.catalog_brand_id %>
+</p>
+
+<p>
+  <strong>Descripcion:</strong>
+  <%= @mechanical_review.descripcion %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @mechanical_review.status %>
+</p>
+
+<%= link_to 'Edit', edit_mechanical_review_path(@mechanical_review) %> |
+<%= link_to 'Back', mechanical_reviews_path %>

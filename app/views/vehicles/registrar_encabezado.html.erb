@@ -1,0 +1,97 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Registrar fecha y precios</h3>
+                        <%= link_to 'Regresar' ,venta_vehiculo_path(params[:id]) , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%= form_for('', url: guardar_encabezado_path,method: :post, remote: true,authenticity_token: true) do |f|%>
+            
+        <div class="card-body">
+            <div class="float-right">
+                <%= submit_tag "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;"%>
+            </div> <br><br><br>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Fecha inicial de venta:</label>
+                <div class="col-sm-0">
+                  <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                    <%= f.text_field :fecha_inicial, class: "form-control datetimepicker-input", required:true %>
+                    <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Precio inicial de venta:</label>
+                <div class="col-sm-0">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">$</span>
+                    </div>
+                    <%= f.number_field :precio_inicial, step: :any, required: true, class:'form-control' %>
+                  </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Fecha de venta:</label>
+                <div class="col-sm-0">
+                  <div class="input-group date" id="datetimepicker8" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                    <%= f.text_field :fecha_venta, class: "form-control datetimepicker-input", required:true %>
+                    <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Precio final de venta:</label>
+                <div class="col-sm-0">
+                  <div class="input-group mb-6">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">$</span>
+                    </div>
+                    <%= f.number_field :precio_final, step: :any, required: true,class:'form-control'%>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <% end %>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+      $('#datetimepicker7').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es'
+      });
+      $('#datetimepicker8').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es',
+      useCurrent: false
+      });
+      
+      $("#datetimepicker7").on("change.datetimepicker", function (e) {
+          $('#datetimepicker8').datetimepicker('minDate', e.date);
+      });
+      $("#datetimepicker8").on("change.datetimepicker", function (e) {
+          $('#datetimepicker7').datetimepicker('maxDate', e.date);
+      });
+  });
+  </script>
+  <style>
+  input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0; 
+  }
+  </style>

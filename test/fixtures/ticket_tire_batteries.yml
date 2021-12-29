@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle: one
+  dot: MyString
+  fecha: 2021-04-05
+  estatus: 1
+  tipo: 1
+  cantidad: 1
+
+two:
+  vehicle: two
+  dot: MyString
+  fecha: 2021-04-05
+  estatus: 1
+  tipo: 1
+  cantidad: 1

@@ -1,0 +1,192 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="card-header ">
+          <div class="card-title">
+              <h3 class="card-label">Usuarios
+               <span class="text-muted pt-2 font-size-sm d-block">Usuarios registrados</span>
+              </h3>
+          </div>
+      </div>
+      <div class="card-body">
+          <div class="float-right">
+            <button type="button" class="btn btn-primary font-weight-bolder" id="btnNuevoUsuario" data: { turbolinks: false }>Nuevo Usuario</button>
+              <%#= link_to 'Nuevo', new_user_vehicle_path, id: "btn_nueva_empresa",class:"btn btn-primary font-weight-bolder",style:"border-radius: 0.42rem;", data: { turbolinks: false } %>
+          </div>
+          <br>
+          <div class="container">
+            <%= form_tag users_path, :method => :get do %>
+              <div class="row">
+                  <div class="col">
+                    <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Nombre:</label>
+                        <%= text_field_tag :name, params[:name], class:"form-control" %>
+                  </div>
+              <div>
+                <br><br>
+                  <%= submit_tag "Buscar", class:"btn btn-primary" %>
+            <% end %>
+              </div>
+            </div> 
+            <br><br>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>RFC</th>
+                <th>Correo electrónico</th>
+                <th colspan="3">Acciones</th>
+              </tr>
+            </thead>
+          
+            <tbody>
+              <% @users.each do |user| %>
+                <tr>
+                  <td><%= user.name %> <%= user.last_name%></td>
+                  <td><%= user.user %></td>
+                  <td><%= user.email%></td>
+                  <td><button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#Modal<%=user.id%>" data: { turbolinks: false }>Editar</button></td>
+                  <!-- <td><%#= link_to 'Show', user_vehicle %></td>
+                  <td><%#= link_to 'Edit', edit_user_vehicle_path(user_vehicle) %></td>
+                  <td><%#= link_to 'Destroy', user_vehicle, method: :delete, data: { confirm: '¿Estas seguro?' } %></td> -->
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- Nuevo usuario -->
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModalLabel">Nuevo Usuario</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <%= form_for @user, url: create_new_user_path do |f| %>
+        <div class="modal-body">
+  
+          <div class="form-group col-sm-10">
+            <label>Nombre*</label>
+            <%= f.text_field :name, class: 'form-control', id: "input-nombre", required: true %>
+          </div>
+          <div class="form-group col-sm-10">
+            <label>Apellidos*</label>
+            <%= f.text_field :last_name, class: 'form-control', id: "input-apellido", required: true %>
+          </div>
+          <div class="form-group col-sm-10">
+            <label>RFC*</label>
+            <%= f.text_field :user, class: 'form-control', id: "input-rfc", required: true %>
+          </div>
+          <div class="form-group col-md-10">
+            <label>Correo electrónico*</label>
+            <%= f.email_field :email, class: 'form-control', id: "input-email", required: true %>
+          </div>
+  
+          <!-- <div class="form-group col-md-10">
+            <label>Rol*</label>
+            <%#= f.select :role, [["Administrador"], ["Vendedor"], ["Chofer"],["Autorizador"],["Supervisor Vendedor"],["Supervisor Chofer"]], {  }, { class: 'form-control' }%>
+          </div> -->
+  
+  
+          <div class="form-group col-md-10">
+            <%= f.label 'Contraseña*' %>
+            <%= f.password_field :password, autocomplete: 'current-password', class: 'form-control col-sm-19', id: "input-password", required: true %>
+  
+            <% if @minimum_password_length %>
+            <small class="form-text text-muted"><%= t('devise.shared.minimum_password_length', count: @minimum_password_length) %></small>
+            <% end %>
+          </div>
+          <div class="form-group col-md-10">
+            <%= f.label 'Confirmar Contraseña*' %>
+            <%= f.password_field :password_confirmation, autocomplete: 'current-password', class: 'form-control col-sm-19', id: "input-password1", required: true %>
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="color: black;">Cancelar</button>
+          <%= f.submit 'Agregar', class: 'btn btn-primary'%>
+        </div>
+        <%end%>
+      </div>
+    </div>
+  </div>
+  <!-- /Nuevo Usuario -->
+
+  <% @users.each do |usuario| %>
+<!-- Editar Usuario -->
+<div class="modal fade" id="Modal<%=usuario.id%>" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">Editar Usuario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <%= form_for usuario, url: {controller: 'users', action: 'update', id: usuario} do |f| %>
+      <div class="modal-body">
+        <div class="form-group col-sm-10">
+          <%= f.hidden_field :id %>
+          <label>Nombre</label>
+          <%= f.text_field :name, class: 'form-control', required: true %>
+        </div>
+        <div class="form-group col-sm-10">
+          <label>Apellidos</label>
+          <%= f.text_field :last_name, class: 'form-control', required: true %>
+        </div>
+        <div class="form-group col-sm-10">
+          <label>RFC*</label>
+          <%= f.text_field :user, class: 'form-control', id: "input-rfc", required: true %>
+        </div>
+        <div class="form-group col-sm-10">
+          <label>Correo electrónico*</label>
+          <%= f.email_field :email, class: 'form-control', required: true %>
+        </div>
+
+        <div class="form-group col-sm-10">
+          <%= f.label 'Contraseña' %>
+          <%= f.password_field :password, autocomplete: 'current-password', class: 'form-control col-sm-19' %>
+
+          <% if @minimum_password_length %>
+          <small
+            class="form-text text-muted"><%= t('devise.shared.minimum_password_length', count: @minimum_password_length) %></small>
+          <% end %>
+        </div> 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary", id="cancelar", data-dismiss="modal" style="color: black;">Cancelar</button>
+        <%= f.submit 'Editar', class: 'btn btn-brand'%>
+      </div>
+      <%end%>
+    </div>
+  </div>
+</div>
+<!-- Editar Usuario -->
+<% end %>
+  
+<!-- Modal -->
+
+
+<script>
+    $("#btnNuevoUsuario").click(function () {
+      $("#Modal").modal("show");
+    })    
+  
+    $('#Modal').on('shown.bs.modal', function() { 
+      $('#input-nombre').val(null); 
+      $('#input-apellido').val(null); 
+      $('#input-rfc').val(null); 
+      $('#input-email').val(null); 
+      $('#input-password').val(null); 
+      $('#input-password1').val(null); 
+      $('#input-nombre').focus(); 
+  }) 
+  
+  
+  </script>

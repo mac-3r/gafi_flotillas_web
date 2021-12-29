@@ -1,0 +1,3 @@
+$("#titulo_modal_general").text("Reasignar responsable a CEDIS <%= @vehiculo_responsable.catalog_branch.decripcion %>");
+$("#contenido").html("<%= escape_javascript(render partial: 'reasignar_responsable') %>");
+$(".modal_general").modal("show");

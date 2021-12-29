@@ -1,0 +1,108 @@
+<% if action_name != "show" %>
+<div class="float-right">
+<%= link_to "Agregar detalle", formulario_agregar_detalle_path, class: "btn btn-outline-success mr-2 float-right", style:"border-radius: 0.42rem;", data: { turbolinks: false }, remote: true %>
+<br><br>
+</div>
+<% end %>
+<table id="table" class="table table-bordered">
+  <br>
+    <thead>
+      <tr>
+        <th>Cantidad</th>
+        <th>Tipo de vehículo</th>
+        <th>Línea</th>
+        <th>Modelo</th>
+        <th>Motivo</th>
+        <th>Importe con I.V.A</th>
+        <th>Plaqueo</th>
+        <th>Seguro</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @budget_details.each do |budget_detail| %>
+        <tr>
+          <td><%= budget_detail.cantidad %></td>
+          <td><%= budget_detail.vehicle_type_id  ? budget_detail.vehicle_type.descripcion  : "No se asignó"  %></td>
+          <td><%= budget_detail.catalog_brand_id ? budget_detail.catalog_brand.descripcion  : "No se asignó"  %></td>
+          <td><%= budget_detail.catalog_model_id ? budget_detail.catalog_model.descripcion  : "No se asignó"  %></td>
+          <td><%= budget_detail.reason.descripcion %></>
+          <td><%= number_to_currency(budget_detail.importe) %></td>
+          <td><%= number_to_currency(budget_detail.plaqueo )%></td>
+          <td><%= number_to_currency(budget_detail.seguro) %></td>
+          <td>
+            <% if action_name != "show" %>
+            <%= link_to "Eliminar", eliminar_partida_path(budget_detail.id), data: { confirm: "¿Deseas eliminar esta partida?" }, class: "btn btn-outline-danger float-right", style:"border-radius: 0.42rem;", remote: true %>
+            <% end %>
+         <td>
+        </tr>
+    </tbody>
+    <% end %>
+</table>
+<br>
+<!-- <strong>PRESUPUESTO ANUAL</strong>
+<table class="table table-bordered" style="width: 50px;">
+  <thead>
+  <tr>
+    <th>Concepto</th>
+    <th>Precio Actual</th>
+    <th>Incremento 5%</th>
+  </tr>
+  </thead>
+  <tbody>
+    <td>
+      Vehiculo
+    </td>
+    <td>
+    <strong id="val"></strong>
+    </td>
+    <td>
+    <strong id="val2"></strong>
+    </td>
+  </tbody>
+  <tbody>
+    <td>
+      Plaqueo
+    </td>
+    <td>
+    <strong id="val3"></strong>
+    </td>
+    <td>
+    <strong id="val4"></strong>
+    </td>
+  </tbody>
+  <tbody>
+    <td>
+      Seguro
+    </td>
+    <td>
+    <strong id="val5"></strong>
+    </td>
+    <td>
+    <strong id="val6"></strong>
+    </td>
+  </tbody>
+</table> -->
+
+<script>
+$(document).ready( function() {
+  $("td.formato").each(function() { $(this).html(parseFloat($(this).text()).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})); })
+})    
+ var table = document.getElementById("table"), sumVal = 0, sumVal2 = 0, sumVal3 = 0;
+            
+            for(var i = 1; i < table.rows.length; i++)
+            {
+                sumVal = sumVal + parseFloat(table.rows[i].cells[5].innerHTML);
+                sumVal2 = sumVal2 + parseFloat(table.rows[i].cells[6].innerHTML);
+                sumVal3 = sumVal3 + parseFloat(table.rows[i].cells[7].innerHTML);
+            }
+            calculo = sumVal * 1.05;
+            calculo2 = sumVal2 * 1.05;
+            calculo3 = sumVal3 * 1.05;
+            document.getElementById("val").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal);
+            document.getElementById("val2").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo);
+            document.getElementById("val3").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal2);
+            document.getElementById("val4").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo2);
+            document.getElementById("val5").innerHTML = "$" + Intl.NumberFormat('es-MX').format(sumVal3);
+            document.getElementById("val6").innerHTML = "$" + Intl.NumberFormat('es-MX').format(calculo3);
+</script>

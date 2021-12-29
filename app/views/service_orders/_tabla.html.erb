@@ -1,0 +1,222 @@
+<div class="table-responsive">
+    <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:14px;"> <strong>Total de ordenes: <%= @service_orders.count%></strong></label>
+      <table class="table table-bordered table-striped table-sm text-center">
+      <thead>
+        <tr>
+          <th>No. Orden</th>
+          <th>Tipo de servicio</th>
+          <th>No. Económico</th>
+          <th>Tipo</th>
+          <th>Línea</th>
+          <th>Modelo</th>
+          <th>Usuario</th>
+          <th>Tipo orden</th>
+          <th>Taller</th>
+          <th>Fecha revisión propuesta</th>
+          <th>Fecha y hora de entrada</th>
+          <th>Fecha y hora de salida</th>
+          <th>Fecha creación</th>
+          <th>Estatus</th>
+          <th colspan="5"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @service_orders.each do |service_order|
+        if service_order.ticket_tire_battery_id 
+          tipo_compra = service_order.ticket_tire_battery.tipo
+        end %>
+          <tr>
+            <td><%= service_order.n_orden %></td>
+            <td><%= service_order.tipo_servicio%> <%=tipo_compra if tipo_compra %></td>
+            <td><%= service_order.vehicle.numero_economico %></td>
+            <td><%= service_order.vehicle.vehicle_type.descripcion %></td>
+            <td><%= service_order.vehicle.catalog_brand.descripcion %></td>
+            <td><%= service_order.vehicle.catalog_model.descripcion %></td>
+            <td><%= service_order.vehicle.catalog_personal_id ? service_order.vehicle.catalog_personal.nombre : "En captura" %></td>
+            <td><%= service_order.order_service_type_id ? service_order.order_service_type.descripcion : "En captura" %></td>
+            <td><%= service_order.catalog_workshop_id ? service_order.catalog_workshop.nombre_taller : "En captura"%></td>
+            <td><%= service_order.fecha_revision_propuesta ? service_order.fecha_revision_propuesta.strftime('%d/%m/%y %I:%M %p') : "En captura" %></td>
+            <% if service_order.fecha_entrada != nil %>
+              <td ><%= service_order.fecha_entrada.strftime('%d/%m/%y %I:%M %p') %></td>
+            <% else %>
+              <td>Sin definir</td>
+            <% end %>
+            <% if service_order.fecha_salida != nil %>
+              <td ><%= service_order.fecha_salida.strftime('%d/%m/%y %I:%M %p') %></td>
+            <% else %>
+              <td>Sin definir</td>
+            <% end %>
+            <td><%= service_order.created_at.strftime('%d/%m/%y %I:%M %p') %></td>
+            <td><%= service_order.estatus %></td>
+              <% if can? :edit, ServiceOrder %>
+                <% if service_order.descripcion == "" or service_order.estatus == "En captura" %>
+                      <td>
+                        <div class="dropdown dropdown-inline">
+                          <%= link_to crear_orden_ticket_path(service_order), title: "Añadir descripcion" do %>
+                          <span class="svg-icon svg-icon-md"> 
+                          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                          viewBox="0 0 24 24" version="1.1">
+                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                          <rect x="0" y="0" width="24" height="24"></rect>
+                          <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
+                          fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
+                          </path>
+                          <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+                          </g>
+                          </svg> 
+                          </span>
+                          <% end %>
+                        </div>    
+                      </td>
+                      <% end %>    
+                <% end %>
+                <% if can? :show, ServiceOrder %>
+                        <td>
+                          <div class="dropdown dropdown-inline">
+                              <%= link_to (service_order), title:"Ver detalle" do%>
+                              <span class='fas fa-eye' style='font-size:16px;color:#A6ACAF'></span>
+                              </span>
+                              <% end %>
+                          </div>
+                        </td>
+                <% end %> 
+                <% if can? :autorizar_orden, ServiceOrder %>
+                  <% if service_order.estatus == "Pendiente" or service_order.estatus == "Nueva fecha sugerida" %>
+                  <%# if ((service_order.estatus == "Pendiente" or service_order.estatus == "Nueva fecha sugerida") and service_order.tipo_servicio == "Preventivo") or ((service_order.estatus == "Pendiente" or service_order == "Nueva fecha sugerida") and service_order.maintenance_ticket.bandera_ticket_taller == false if service_order.maintenance_ticket_id )%>
+                    <td>
+                      <div class="dropdown dropdown-inline">
+                          <%= link_to autorizar_orden_path(service_order.id), title: "Autorizar orden de servicio",data: { confirm: '¿Desea autorizar esta orden de servicio?, se programara una cita según la fecha propuesta.' } do %>
+                          <span class="fas fa-check" style='font-size:16px;color:#A6ACAF'></span>
+                          </span>
+                          <% end %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="dropdown dropdown-inline">
+                          <%= link_to cancelar_orden_path(service_order.id), title: "Cancelar orden de servicio",data: { confirm: '¿Desea cancelar esta orden de servicio?' } do %>
+                          <span class="fas fa-times" style='font-size:16px;color:#A6ACAF'></span>
+                          </span>
+                          <% end %>
+                      </div>
+                    </td>
+                    <% if can? :reagendar_orden, ServiceOrder%>
+                      <td>
+                        <div class="dropdown dropdown-inline">
+                            <%= link_to reagendar_orden_path(service_order.id), title: "Cambiar fecha propuesta" do %>
+                            <span class="fas fa-calendar-day" style='font-size:16px;color:#A6ACAF'></span>
+                            </span>
+                            <% end %>
+                        </div>
+                      </td>
+                    <% end %>
+                  <% end %>
+                <% end %>
+            <% if can? :registrar_salida, ServiceOrder %>
+              <% if (service_order.estatus == "Entrada a taller" and service_order.cotizacion == true and service_order.tipo_servicio == "Correctivo" or service_order.tipo_servicio == "Correctivo Agencia") or (service_order.estatus == "Entrada a taller" and service_order.tipo_servicio == "Preventivo" or service_order.tipo_servicio == "Preventivo Agencia") %>
+                <td>
+                  <div class="dropdown dropdown-inline">
+                      <%= link_to registrar_salida_path(service_order.id), title: "Registrar salida" do %>
+                      <span class="fas fa-calendar-check" style='font-size:16px;color:#A6ACAF'></span>
+                      </span>
+                      <% end %>
+                  </div>
+                </td>
+              <% end %>
+            <% end %>
+            <% if can? :factura_servicio_orden, ServiceOrder %>
+              <% if service_order.estatus == "Salió de taller" or service_order.estatus== "Autorizada" or service_order.estatus == "Compra autorizada" and (service_order.order_service_type_id != @parametro_garantia.valor_extendido.to_i if @parametro_garantia)  %>
+                <td>
+                  <div class="dropdown dropdown-inline">
+                    <%= link_to factura_servicio_orden_path(service_order.id), remote: true, title:"Cargar factura/Descargar factura" do%>
+                      <span class='fas fa-file-archive' style='font-size:16px;color:#A6ACAF'></span>
+                      </span>
+                    <% end %>
+                  </div>
+                  <td>
+                    <div class="dropdown dropdown-inline">
+                      <%= link_to pdf_orden_path(service_order.id), remote: true, title:"Cargar PDF/Descargar PDF" do%>
+                        <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>
+                        </span>
+                      <% end %>
+                    </div>
+                  </td>
+                </td>
+              <% end %>
+          <% end %>
+          <td>
+            <div class="dropdown dropdown-inline">
+              <%= link_to generar_solicitud_path(service_order.id), title:"Ver solicitud de autorización" do%>
+                <span class='far fa-clipboard' style='font-size:16px;color:#A6ACAF'></span>
+                </span>
+              <% end %>
+            </div>
+          </td>
+          <% if can? :binnacle, ServiceOrder %>
+            <% if service_order.tipo_servicio == "Preventivo" or service_order.tipo_servicio == "Preventivo Agencia" %>
+              <td>
+                <div class="dropdown dropdown-inline">
+                  <%= link_to binnacle_path(service_order.id), title:"Ver bitácora" do%>
+                    <span class='fas fa-tools' style='font-size:16px;color:#A6ACAF'></span>
+                    </span>
+                  <% end %>
+                </div>
+              </td> 
+            <% end %>
+          <% end %>
+          <% if can? :registrar_servicio, ServiceOrder %>
+            <% if service_order.maintenance_ticket_id != nil%>  
+              <% if service_order.maintenance_ticket.bandera_ticket_taller == true %>
+                <td>
+                  <div class="dropdown dropdown-inline">
+                    <%= link_to registrar_servicio_path(service_order.id), title:"Servicio adicional" do%>
+                      <span class='fas fa-plus' style='font-size:16px;color:#A6ACAF'></span>
+                      </span>
+                    <% end %>
+                  </div>
+                </td> 
+              <% end %>
+            <% end %>
+          <% end %>
+          <% if can? :crear_cotizacion, ServiceOrder %>
+            <% if service_order.maintenance_ticket_id or service_order.ticket_tire_battery_id%>
+              <% if (service_order.estatus == "Entrada a taller" and service_order.tipo_servicio == "Correctivo" and service_order.maintenance_ticket.bandera_ticket_taller == false and service_order.cotizacion == false if service_order.maintenance_ticket_id) or (service_order.estatus == "Pendiente" if service_order.ticket_tire_battery_id)%>
+                <td>
+                  <div class="dropdown dropdown-inline">
+                      <%= link_to crear_cotizacion_path(service_order.id), title: "Agregar cotización",data: { confirm: '¿Desea crear una cotización?.' } do %>
+                      <span class="fas fa-file-invoice" style='font-size:16px;color:#A6ACAF'></span>
+                      </span>
+                      <% end %>
+                  </div>
+                </td> 
+              <% end %>
+            <% end %>
+          <% end %>
+          <% if can? :ver_cotizacion, ServiceOrder %>
+            <% if service_order.cotizacion == true%>
+              <td>
+                <div class="dropdown dropdown-inline">
+                    <%= link_to ver_cotizacion_path(service_order.id), title: "Ver cotización" do %>
+                    <span class="fas fa-file-invoice" style='font-size:16px;color:#A6ACAF'></span>
+                    </span>
+                    <% end %>
+                </div>
+              </td> 
+            <% end %>
+          <% end %>
+          <% if can? :finalizar_servicio, ServiceOrder %>
+            <% if  service_order.estatus == "Salió de taller" or service_order.estatus== "Autorizada" or service_order.estatus == "Compra autorizada" %>
+              <td>
+                <div class="dropdown dropdown-inline">
+                  <%= link_to finalizar_servicio_path(service_order.id), title: "Finalizar servicio" do %>
+                    <span class="fas fa-check-double" style='font-size:16px;color:#A6ACAF'></span>
+                    </span>
+                  <% end %>
+                </div>
+              </td> 
+            <% end %>
+          <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>

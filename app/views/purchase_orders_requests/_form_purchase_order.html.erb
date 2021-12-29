@@ -1,0 +1,7 @@
+<%= form_for(@purchase_order, method: "POST", url: rechazar_orden_compra_path, remote: true) do |f| %>
+    <%= f.hidden_field :id %>
+    <div class="form-group">
+        <%= f.text_area :motivo, class: "form-control" %>
+    </div>
+    <%= f.submit "Rechazar orden de compra", class: "btn btn-success float-right"%>
+<% end %>

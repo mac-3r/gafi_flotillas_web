@@ -1,0 +1,108 @@
+<%= form_with(model: monthly_yield, local: true) do |form| %>
+<% if monthly_yield.errors.any? %>
+<div id="error_explanation">
+  <h2><%= pluralize(monthly_yield.errors.count, "error") %> prohibited this monthly_yield from being saved:</h2>
+  
+  <ul>
+    <% monthly_yield.errors.full_messages.each do |message| %>
+    <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+<div class="float-right">
+  <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+ </div><br><br>
+<div class="row">
+  <div class="col-6"><!--left side -->
+    
+    <div class="form-group row">
+      <label for="fname" class="col-sm-6 col-form-label">Rendimiento Enero:</label>
+      <div class="col-sm-6">
+        <%= form.text_field :rendi_enero,class: "form-control" %>
+        </div>
+        </div>
+        <div class="form-group row">
+            <label for="fname" class="col-sm-6 col-form-label">Rendimiento Febrero:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :rendi_febrero,class: "form-control" %>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Rendimiento Marzo:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :rendi_marzo,class: "form-control" %>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Rendimiento Mayo:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :rendi_mayo,class: "form-control" %>
+
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Rendimiento Junio:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :rendi_junio,class: "form-control" %>
+            </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="lname" class="col-sm-6 col-form-label">Rendimiento Julio:</label>
+          <div class="col-sm-6">
+            <%= form.text_field :rendi_julio,class: "form-control" %>
+
+          </div>
+      </div>
+
+        <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Rendimiento Agosto:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :rendi_agosto,class: "form-control" %>
+            </div>
+        </div>
+        
+    
+    <div class="form-group row">
+      <label for="lname" class="col-sm-6 col-form-label">Rendimiento Septiembre:</label>
+      <div class="col-sm-6">
+        <%= form.text_field :rendi_septiembre,class: "form-control" %>
+
+
+      </div>
+  </div>
+  <div class="form-group row">
+    <label for="lname" class="col-sm-6 col-form-label">Rendimiento Octubre:</label>
+    <div class="col-sm-6">
+      <%= form.text_field :rendi_octubre,class: "form-control" %>
+
+    </div>
+</div>
+<div class="form-group row">
+  <label for="lname" class="col-sm-6 col-form-label">Rendimiento Noviembre:</label>
+  <div class="col-sm-6">
+    <%= form.text_field :rendi_noviembre,class: "form-control" %>
+
+  </div>
+</div>
+  <div class="form-group row">
+    <label for="lname" class="col-sm-6 col-form-label">Rendimiento Diciembre:</label>
+    <div class="col-sm-6">
+      <%= form.text_field :rendi_diciembre,class: "form-control" %>
+
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="lname" class="col-sm-6 col-form-label">Rendimiento Ideal:</label>
+    <div class="col-sm-6">
+      <%= form.text_field :rendimiento_ideal,class: "form-control" %>
+
+    </div>
+  </div>
+  </div>
+</div>
+<% end %>

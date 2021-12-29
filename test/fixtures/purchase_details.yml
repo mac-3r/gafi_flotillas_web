@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cantidad: 
+  vehicle_type: one
+  catalog_model: one
+  catalog_brand: one
+  precio: 9.99
+  total_detalle: 9.99
+
+two:
+  cantidad: 
+  vehicle_type: two
+  catalog_model: two
+  catalog_brand: two
+  precio: 9.99
+  total_detalle: 9.99

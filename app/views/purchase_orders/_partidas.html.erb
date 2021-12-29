@@ -1,0 +1,54 @@
+<% if action_name != "show" %>
+<div class="float-right">
+<%= link_to "Agregar detalle", formulario_agregar_detalle_orden_path, class: "btn btn-outline-success mr-2 float-right", style:"border-radius: 0.42rem;", data: { turbolinks: false }, remote: true %>
+<br><br>
+</div>
+<% end %>
+<table id="table" class="table table-bordered">
+  <br>
+    <thead>
+      <tr>
+        <th>Cantidad</th>
+            <th>Tipo vehículo</th>
+            <th>Línea</th>
+            <th>Modelo</th>
+      
+        <th>Precio</th>
+        <th>Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%   subtotal = 0 %>
+      <% @purchase_details.each do |purchase_detail| %>
+        <tr>
+          <td><%= purchase_detail.cantidad %></td>
+            <td><%= purchase_detail.vehicle_type.descripcion %></td>
+            <td><%= purchase_detail.catalog_brand.descripcion %></td>
+            <td><%= purchase_detail.catalog_model.descripcion %></td>          
+            <td><%= number_to_currency(purchase_detail.precio)%></td>
+            <% subtotal += purchase_detail.precio %>
+            <td><%= number_to_currency(purchase_detail.total_detalle) %></td>
+          <td>
+            <% if action_name != "show" %>
+            <%= link_to "Eliminar", eliminar_partida_orden_path(purchase_detail.id), data: { confirm: "¿Deseas eliminar esta partida?" }, class: "btn btn-outline-danger float-right", style:"border-radius: 0.42rem;", remote: true %>
+            <% end %>
+         <td>
+        </tr>
+      <% end %>
+      <% iva = subtotal * 0.16 
+      total = subtotal + iva %> 
+      <tr> 
+        <th colSpan="5">Subtotal</th>
+        <td><%=number_to_currency(subtotal) %></td>
+      </tr>
+      <tr> 
+        <th colSpan="5">IVA</th>
+        <td><%=number_to_currency(iva) %></td>
+      </tr>
+      <tr> 
+        <th colSpan="5">Total</th>
+        <td><%=number_to_currency(total) %></td>
+      </tr>             
+    </tbody>
+</table>

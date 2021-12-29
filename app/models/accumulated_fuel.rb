@@ -1,0 +1,2 @@
+class AccumulatedFuel < ApplicationRecord
+end

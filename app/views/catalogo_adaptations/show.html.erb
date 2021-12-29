@@ -1,0 +1,33 @@
+<br><br>
+<div class="container">
+<div class="card card-custom gutter-b">
+  <div class="row">
+     <div class="col-lg-12">
+        <div class="card-header">
+          <div class="card-title">
+            <h3 class="card-label float-left ">Adaptación de vehÍ­culo</h3>
+              <%= link_to 'Regresar', catalogo_adaptations_path, class:"btn btn-default float-right" %>
+            </div>
+         </div>
+     </div>
+  </div>
+   <div class="card-body">
+    <p>
+      <strong>Clave:</strong>
+      <%= @catalogo_adaptation.clave %>
+    </p>
+
+    <p>
+      <strong>Descripcion:</strong>
+      <%= @catalogo_adaptation.descripcion %>
+    </p>
+
+    <p>
+      <strong>Status:</strong>
+      <%= @catalogo_adaptation.get_status %>
+    </p>
+
+<%= link_to 'Editar', edit_catalogo_adaptation_path(@catalogo_adaptation), class:"btn btn-default" %>
+   </div>
+</div>
+</div>

@@ -1,0 +1,200 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Verificacíon de vehículo</h3>
+                        <div class="example-screen float-right">
+                            &nbsp;<%= link_to 'Regresar', reporte_auditorias_path, class: "btn btn-default float-right" %>
+                            <button onclick="window.print()" class="btn btn-primary font-weight-bolder" style="border-radius: 0.42rem;">Generar PDF</button>&nbsp;&nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div style="width: 100%; background-color: gray; color: #fff; padding: 5px; text-align: center; font-size: 1em;">
+                <span>DATOS DEL VEHÍCULO</span>
+            </div>
+            <table style="width: 100%;">
+                <thead>
+                    <tr style="background-color: gainsboro; text-align: center;">
+                        <th># DE VEHÍCULO</th>
+                        <th>TIPO</th>
+                        <th>MODELO</th>
+                        <th>COLOR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="text-align: center;">
+                        <td><%= @vehicle.numero_economico %></td>
+                        <td><%= @vehicle.vehicle_type.descripcion %></td>
+                        <td><%= @vehicle.catalog_model.descripcion %></td>
+                        <td><%= @vehicle.vehicle_color %></td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr style="background-color: gainsboro; text-align: center;">
+                        <th colspan="2">SERIE</th>
+                        <th>MOTOR</th>
+                        <th>PLACAS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="text-align: center;">
+                        <td colspan="2"><%= @vehicle.numero_serie %></td>
+                        <td><%= @vehicle.numero_motor %></td>
+                        <td><%= @vehicle.numero_placa %></td>
+                    </tr>
+                </tbody>
+            </table>
+            <%
+                bandera_tabla_uno = ""
+                bandera_tabla_dos = ""
+                bandera_contador = 0
+                bandera_mitad_uno = @cantidad_mitad
+                bandera_mitad_dos = @cantidad_mitad
+            %>
+            <br>
+           
+            <div style="width: 100%; background-color: gray; color: #fff; padding: 5px; text-align: center; font-size: 1em;">
+                <span>CHECK LIST DE ENTREGA</span>
+            </div>
+            <table style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td width="50%">
+                            <table style="width: 100%; text-align: center;">
+                                <tbody>
+                                    <tr>
+                                        <td style="border: solid 1px gainsboro;" colspan="2" width="70%"></td>
+                                        <td style="border: solid 1px gainsboro;" width="10%">BUEN ESTADO</td>
+                                        <td style="border: solid 1px gainsboro;" width="10%">MAL ESTADO</td>
+                                        <td style="border: solid 1px gainsboro;" width="10%">NO SE RECIBE</td>
+                                    </tr>
+                                    <% @respuestas.each_with_index do |respuesta, index| 
+                                        if index < @cantidad_mitad
+                                    %>
+                                            <% if bandera_tabla_uno == respuesta.vehicle_checklist.clasificacionvehiculo%>
+                                                <tr>
+                                                    <th  style="border: solid 1px gainsboro;" scope="row"><%= "#{respuesta.vehicle_checklist.conceptovehiculo}" %></th>
+                                                    <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 0 %>X<% end %></td>
+                                                    <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 1 %>X<% end %></td>
+                                                    <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 2 %>X<% end %></td>
+                                                </tr>
+                                            <% else 
+                                                bandera_tabla_uno = respuesta.vehicle_checklist.clasificacionvehiculo
+                                                valor = instance_variable_get("@#{respuesta.vehicle_checklist.clasificacionvehiculo.gsub(" ", "")}_id")
+                                                if (bandera_mitad_uno - valor) >= 0
+                                                    bandera_mitad_uno = bandera_mitad_uno - valor
+                                                    cant_rows = valor
+                                                else
+                                                    bandera_contador = valor - bandera_mitad_uno
+                                                    bandera_mitad_uno = 0
+                                                    cant_rows = valor - bandera_contador
+                                                end
+                                            %>
+                                                <tr>
+                                                    <th  style="border: solid 1px gainsboro; background-color: gainsboro; color: #000;" rowspan="<%= cant_rows %>" scope="rowgroup" ><%= respuesta.vehicle_checklist.clasificacionvehiculo %></th>
+                                                    <th  style="border: solid 1px gainsboro;" scope="row"><%= "#{respuesta.vehicle_checklist.conceptovehiculo}" %></th>
+                                                    <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 0 %>X<% end %></td>
+                                                    <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 1 %>X<% end %></td>
+                                                    <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 2 %>X<% end %></td>
+                                                </tr>
+                                            <% end
+                                        end
+                                    end %>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td width="50%">
+                            <table style="width: 100%; text-align: center;">
+                                <tbody>
+                                    <tr>
+                                        <td style="border: solid 1px gainsboro;" colspan="2" width="70%"></td>
+                                        <td style="border: solid 1px gainsboro;" width="10%">BUEN ESTADO</td>
+                                        <td style="border: solid 1px gainsboro;" width="10%">MAL ESTADO</td>
+                                        <td style="border: solid 1px gainsboro;" width="10%">NO SE RECIBE</td>
+                                    </tr>
+                                    <% @respuestas.each_with_index do |respuesta, index|
+                                        if index >= @cantidad_mitad
+                                    %>
+                                        <% if bandera_tabla_dos == respuesta.vehicle_checklist.clasificacionvehiculo%>
+                                            <tr>
+                                                <th  style="border: solid 1px gainsboro;" scope="row"><%= "#{respuesta.vehicle_checklist.conceptovehiculo}" %></th>
+                                                <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 0 %>X<% end %></td>
+                                                <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 1 %>X<% end %></td>
+                                                <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 2 %>X<% end %></td>
+                                            </tr>
+                                        <% else 
+                                            bandera_tabla_dos = respuesta.vehicle_checklist.clasificacionvehiculo
+                                            valor = instance_variable_get("@#{respuesta.vehicle_checklist.clasificacionvehiculo.gsub(" ", "")}_id")
+                                            if bandera_contador > 0
+                                                cant_rows = bandera_contador
+                                                bandera_mitad_dos = bandera_mitad_dos - bandera_contador
+                                                bandera_contador = 0
+                                            else
+                                                bandera_mitad_dos = bandera_mitad_dos - valor
+                                                cant_rows = valor
+                                            end
+                                        %>
+                                        <tr>
+                                            <th  style="border: solid 1px gainsboro; background-color: gainsboro; color: #000;" rowspan="<%= cant_rows %>" scope="rowgroup" ><%= respuesta.vehicle_checklist.clasificacionvehiculo %></th>
+                                            <th  style="border: solid 1px gainsboro;" scope="row"><%= "#{respuesta.vehicle_checklist.conceptovehiculo}" %></th>
+                                            <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 0 %>X<% end %></td>
+                                            <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 1 %>X<% end %></td>
+                                            <td style="border: solid 1px gainsboro;"><% if respuesta.estatus == 2 %>X<% end %></td>
+                                        </tr>
+                                    <% end
+                                    end
+                                    end %>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br><br><br><br><br><br>
+            <div class="container">
+                <div style="width: 50%; height: 50%;">
+                    <div style="width:350px;" class="center">
+                      <br><br><br><br>
+                       <hr size="8" width="90%" color="black"> 
+                       <div  style="justify-content:center; align-items:center;display: flex;"></div>
+                       <div  style="justify-content:center; align-items:center;display: flex;">
+                          <p><strong style="text-align: center;"><%=  @checklist.user.name%> <%=  @checklist.user.last_name%></strong></p>
+                       </div>
+                        <div  style="justify-content:center; align-items:center;display: flex;">
+                            <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><br><br><br>
+            <span>Fecha de elaboración: <%= @checklist.fecha_captura.strftime('%d/%m/%y') %></span>
+        </div>
+    </div>
+</div>
+<style>
+    @media print {
+       .example-screen {
+           display: none;
+        }
+    
+    }
+</style>
+<style>
+    .center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+  }
+  .container {
+  display: flex;
+}
+.container > div {
+  flex: 1; /*grow*/
+}
+</style>

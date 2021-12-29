@@ -1,0 +1,54 @@
+<canvas id="bar-chart" width="350" height="150"></canvas>
+<br>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>No. Económico</th>
+            <th>Gasto KM recorrido en año en curso</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @resultados.each do |res| %>
+            <tr>
+                <td><%= res[:numero] %></td>
+                <td><%= number_to_currency(res[:gasto]) %></td>
+            </tr>
+        <% end %>
+       
+    </tbody>
+</table>
+<script>
+    var options = {
+        responsive: true,
+        scales: {
+            yAxes: [{
+                display: true,
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    };
+
+    var arr_colores = [];
+    for (var index = 0; index < 2; index++) {
+        var o = Math.round, r = Math.random, s = 255;
+        var piv = 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + "0.7" + ')';
+        color = piv;
+        arr_colores.push(piv);
+    };
+    var barChart = new Chart(document.getElementById("bar-chart"), {
+        type: 'bar',
+        data: {
+            labels: <%= @numero.to_json.html_safe%>,
+            datasets: [{
+                label: 'Gasto',
+            data: <%= @gasto.to_json.html_safe%>,
+            borderWidth: 1
+            }]   
+        },
+        options: options
+    });  
+ 
+   
+</script>

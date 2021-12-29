@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Consumptions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Folio</th>
+      <th>Fecha inicio</th>
+      <th>Fecha fin</th>
+      <th>Cargas</th>
+      <th>Factura</th>
+      <th>Monto</th>
+      <th>Estatus</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @consumptions.each do |consumption| %>
+      <tr>
+        <td><%= consumption.folio %></td>
+        <td><%= consumption.fecha_inicio %></td>
+        <td><%= consumption.fecha_fin %></td>
+        <td><%= consumption.cargas %></td>
+        <td><%= consumption.factura %></td>
+        <td><%= consumption.monto %></td>
+        <td><%= consumption.estatus %></td>
+        <td><%= link_to 'Show', consumption %></td>
+        <td><%= link_to 'Edit', edit_consumption_path(consumption) %></td>
+        <td><%= link_to 'Destroy', consumption, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Consumption', new_consumption_path %>

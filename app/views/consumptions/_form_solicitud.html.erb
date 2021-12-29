@@ -1,0 +1,49 @@
+<%=form_for('', url: busqueda_solicitud_path, remote: true) do |f|%>
+    <div class="form-row">
+        <div class="col-lg-3">
+            <label class="col-form-label" style="font-family: Arial; font-size:15px;">Fecha inicio: </label>
+            <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="start_date" id="start_date" style="width: 50px !important;" required= "true">
+                <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <label class="col-form-label" style="font-family: Arial; font-size:15px;">Fecha fin: </label>
+            <div class="input-group date" id="datetimepicker8" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker8" name="end_date" id="end_date" required= "true">
+                <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-lg-3">
+            <label class="col-form-label" style="font-family: Arial; font-size:15px;">CEDIS</label>
+            <%= collection_select('',:cedis ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Escribe el nombre de CEDIS"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required:true})%>     
+        </div>
+        <div class="form-group col-lg-3"><br><br>
+            <%=f.button type: 'submit', class: "btn btn-outline-info",style:"border-radius: 0.42rem;", id: "search_button" do%>
+                Buscar
+            <%end%>
+        </div>
+    </div>
+<%end%>
+<script>
+    $('#search_button').on('click', function(e) {
+        screenLoader_Global();
+    });
+
+    function screenLoader_Global() {
+        $('<div class="loader-mask"><div class="loader"></div></div>').appendTo('body');
+    }
+</script>
+<script>
+  $(document).ready(function(){
+    $('.chosen-select').chosen();
+    $('.datepicker').datepicker({
+      orientation: "bottom auto",
+      language: "es"
+    });
+  })
+</script>

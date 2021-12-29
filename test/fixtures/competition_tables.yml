@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_branch: one
+  gerencia_operaciones: MyString
+  gerencia_corporativa: MyString
+  direccion: MyString
+
+two:
+  catalog_branch: two
+  gerencia_operaciones: MyString
+  gerencia_corporativa: MyString
+  direccion: MyString

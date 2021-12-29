@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Clave:</strong>
+  <%= @customer.clave %>
+</p>
+
+<p>
+  <strong>Catalog branch:</strong>
+  <%= @customer.catalog_branch_id %>
+</p>
+
+<p>
+  <strong>Catalog company:</strong>
+  <%= @customer.catalog_company_id %>
+</p>
+
+<p>
+  <strong>Estatus:</strong>
+  <%= @customer.estatus %>
+</p>
+
+<%= link_to 'Edit', edit_customer_path(@customer) %> |
+<%= link_to 'Back', customers_path %>

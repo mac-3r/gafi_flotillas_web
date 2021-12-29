@@ -1,0 +1,53 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header ">
+            <div class="card-title">
+                <h3 class="card-label">Catálogos
+                    <span class="text-muted pt-2 font-size-sm d-block">Roles de usuarios</span>
+                </h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <div>
+                <%= link_to 'Asignar Rol a Usuario', modal_asignar_rol_path, class: "btn btn-primary font-weight-bolder float-right", remote: true, data: { turbolinks: false } %>        
+            </div>
+            <div class="container">
+              <%=form_for('', url: filtrado_usuarios_rol_path, remote: true) do |f|%>
+              <div class="row">
+                <div class="col">
+                  <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Usuario: </label>
+                  <%= collection_select('',:user_id ,User.listado_usuarios, :id, :nombre_completo, {prompt:"Seleccione un usuario"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",style: "width:100% !important;"})%>
+                </div>
+                <div class="col">
+                    <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Rol:</label>
+                    <%= collection_select('',:rol_id ,CatalogRole.listado_roles, :id, :nombre, {prompt:"Seleccione un rol"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",style: "width:100% !important;"})%>
+                </div>
+                <div class="col">
+                  <br><br>
+                  <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                </div>
+              </div>
+              <% end %>
+            </div>
+            <br><br>
+            <div id="datatable_lista">
+                <%= render  "datatable" %>
+            </div>
+		</div>
+	</div>
+</div>
+
+<div class="modal prueba fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Asignar rol a usuario</h5>
+          <button type="button" class="close float-right" data-dismiss="modal">&times;</button>   
+        </div>
+        <div class="modal-body">
+          <%= render "form" %>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,157 @@
+<table class="table table-bordered table-sm text-center">
+    <thead>
+      <tr>
+        <th>Folio</th>
+        <th>Fecha de cargas</th>
+        <th>Periodo de semana</th>
+        <th>CEDIS</th>
+        <th>Proveedor</th>
+        <th>Cargas</th>
+        <th>Factura</th>
+        <th>Monto</th>
+        <th>Usuario creador</th>
+        <th>Usuario modificó</th>
+        <th>Estatus</th>
+        <th colspan="4"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @encabezado.each do |cons| %>
+        <tr>
+          <td><%= cons.folio %></td>
+          <td><%= cons.fecha_descripcion%></td>
+          <td style="width: 20%;"><%= "Del: #{cons.fecha_inicio.strftime("%d/%m/%Y")} al: #{cons.fecha_fin.strftime("%d/%m/%Y")}" %></td>
+          <td><%= cons.catalog_branch_id ? cons.catalog_branch.decripcion : "No se asignó" %></td>
+          <td><%= cons.catalog_vendor_id ? cons.catalog_vendor.razonsocial : "No se asignó" %></td>
+          <td><%= cons.cargas %></td>
+          <td><%= cons.factura.attached? ? cons.n_factura : "N/A" %></td>
+          <td><%= number_to_currency(cons.monto) %></td>
+          <td><%= cons.usuario_creador %></td>
+          <td><%= cons.usuario_modifico %></td>
+          <td><%= cons.estatus %></td>
+          <%# if cons.factura == "" %>
+          <% if can? :cargar_facturas_consumos, Consumption %>
+            <td>
+              <div class="dropdown dropdown-inline">
+                <%= link_to documentos_factura_path(cons.id), remote: true, title:"Cargar factura " do%>
+                  <span class='fas fa-file-archive' style='font-size:16px;color:#A6ACAF'></span>
+                  </span>
+                <% end %>
+              </div>
+            </td>
+          <% end %>
+          <%#end%>
+          <%# if cons.pdf == "" or cons.pdf.nil?%>
+          <% if can? :cargar_pdf_consumos, Consumption %>
+            <td>
+              <div class="dropdown dropdown-inline">
+                <%= link_to documentos_pdf_path(cons.id), remote: true, title:"Cargar pdf" do%>
+                  <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>
+                  </span>
+                <% end %>
+              </div>
+            </td>
+          <% end %>
+          <%#end%>
+          <% if can? :ver_encabezado, Consumption %>
+            <td>
+              <div class="dropdown dropdown-inline">
+                <%= link_to ver_encabezado_path(cons.id), title:"Ver detalle " do%>
+                  <span class='fas fa-eye' style='font-size:16px;color:#A6ACAF'></span>
+                  </span>
+                <% end %>
+              </div>
+            </td>
+          <% end %>
+          <% if can? :generar_reporte, Consumption %>
+            <td>
+              <div class="dropdown dropdown-inline">
+                <%= link_to generar_reporte_path(cons.id), title:"Generar consumo" do%>
+                  <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>
+                  </span>
+                <% end %>
+              </div>
+            </td>
+          <% end %>
+          <% if can? :borrar_carga, Consumption %>
+            <% if cons.estatus == "Pendiente" %>
+              <td>
+                <div class="dropdown dropdown-inline">
+                  <%= link_to borrar_carga_path(cons.id), title:"Eliminar", data: { confirm: '¿Desea eliminar este registro?, esta función eliminará todas las cargas de combustible.' } do %>
+                  <span class='fas fa-trash' style='font-size:15px;color:#A6ACAF'></span>
+                  </span>
+                  <% end %>
+                </div>
+              </td>   
+            <% end %>
+          <% end %>
+          <% if can? :modal_cambio_usuario, Consumption %>
+            <% if cons.estatus == "Por autorizar" %>
+              <td>
+                <div class="dropdown dropdown-inline">
+                  <%= link_to modal_cambio_usuario_path(cons.id), title: "Cambiar usuario autorizante", remote: true do %>
+                  <span class='fas fa-user' style='font-size:15px;color:#A6ACAF'></span>
+                  </span>
+                  <% end %>
+                </div>
+              </td>
+            <% end %>
+          <% end %>
+          <% if can? :modal_cambio_factura, Consumption %>
+            <% if cons.estatus == "Por autorizar" %>
+              <td>
+                <div class="dropdown dropdown-inline">
+                  <%= link_to modal_cambio_factura_path(cons.id), title: "Cambiar folio factura", remote: true do %>
+                  <span class='fas fa-receipt' style='font-size:15px;color:#A6ACAF'></span>
+                  </span>
+                  <% end %>
+                </div>
+              </td>
+            <% end %>
+        <% end %>
+          <!--<td>
+            <div class="dropdown dropdown-inline">
+              <%#= link_to solicitar_autorizacion_path(cons.folio), title:"Solicitar autorización" do%>
+                <span class='fas fa-check-circle' style='font-size:16px;color:#A6ACAF'></span>
+                </span>
+              <%# end %>
+            </div>
+          </td>-->
+          <!--<td>
+            <%#if cons.estatus != "Rechazado"%>
+            <div class="dropdown dropdown-inline">
+              <%#= link_to cancelar_encabezado_path(cons.folio),title: "Rechazar" do %>
+              <span class="svg-icon svg-icon-md"> 
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                  viewBox="0 0 24 24" version="1.1">
+                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <rect x="0" y="0" width="24" height="24"></rect>
+                    <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z"
+                    fill="#000000" fill-rule="nonzero"></path>
+                    <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z"
+                    fill="#000000" opacity="0.3"></path>
+                  </g>
+                </svg> 
+              </span>
+              <%#end%>
+            </div>
+              
+            <%#end%>
+          </td>-->
+          <!--<td>
+            <div class="dropdown dropdown-inline">
+              <%#= link_to ver_encabezado_path(cons.id), title:"Ver " do%>
+              <%#= link_to 'Show', vehicle_consumption_path(cons.id) %>
+                <span class='fas fa-folder' style='font-size:16px;color:#A6ACAF'></span>
+                </span>
+              <%# end %>
+            </div>
+          </td>-->
+          <!--<td><%#= link_to 'Edit', edit_vehicle_consumption_path(vehicle_consumption) %></td>
+          <td><%#= link_to 'Destroy', vehicle_consumption, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

@@ -1,0 +1,33 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Concepto de competenciar</h3>
+                  <%= link_to 'Regresar', competition_tables_path , class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+       <div class="card-body">
+       <p>
+          <strong>Sucursales (Centro de Distribución CEDIS)</strong>
+          <%= @competition_table.catalog_branch.decripcion %>
+       </p>
+       <p>
+        <strong>Autorizante</strong>
+        <%= @competition_table.autorizante %>
+     </p>
+     <p>
+      <strong>Monto</strong>
+      <%= @competition_table.monto %>
+    </p>
+  
+
+          <%= link_to 'Editar', edit_competition_table_path(@competition_table) %> 
+        <br><br>                  
+    </div>
+  </div>
+</div>

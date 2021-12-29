@@ -1,0 +1,62 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Expediente del vehículo</h3>
+                <%= link_to 'Regresar', vehicles_path, class:"btn btn-default float-right" %>
+                &nbsp;&nbsp;&nbsp;
+                <%= link_to 'Ver documentos', ver_documentos_path(params[:id]), class:"btn btn-primary float-right" %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%= form_with url: "/uploads/#{@vehicle.id}", multipart: true do |f| %>
+          <div class="card-body">
+                <div class="float-right">
+                  <%= submit_tag "Registrar",class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Archivo:</label>
+                  <div class="col-sm-6">
+                    <div class="custom-file">
+                      <%= f.file_field :file,class:"custom-file-input",style:"width: 400px",required:true %>
+                      <label class="custom-file-label" data-browse="Elegir" for="customFileLang">Seleccionar Archivo</label>
+                    </div>
+                  </div>
+                </div>  
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Tipo de documento:</label>
+                  <div class="col-sm-5">
+                    <select name="tipo" id="tipo"  class= "form form-group form-control" required>
+                      <option value=""></option>
+                      <option value="001">Licencia de conducir</option>
+                      <option value="002">Fotografía del vehículo</option>
+                      <option value="003">Fotografía del vehículo siniestrado</option>
+                      <option value="004">Factura del vehículo</option>
+                      <option value="005">Factura aseguradora</option>
+                      <option value="006">Factura de adaptación</option>
+                      <option value="007">Permiso federal</option>
+                      <option value="008">Permiso físico mecánico</option>
+                      <option value="009">Permiso ambiental</option>
+                      <option value="010">Tarjeta de circulación</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Fecha de vencimiento:</label>
+                    <div class="col-sm-5">
+                      <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="fecha_vencimiento" id="fecha_vencimiento">
+                        <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                  </div>
+                </div>  
+          <% end %>
+        </div>
+     </div>
+</div>

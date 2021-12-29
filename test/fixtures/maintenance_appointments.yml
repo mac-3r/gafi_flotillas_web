@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fecha_cita: 2021-01-13
+  status: 1
+  vehicle: one
+  catalog_workshop: one
+
+two:
+  fecha_cita: 2021-01-13
+  status: 1
+  vehicle: two
+  catalog_workshop: two

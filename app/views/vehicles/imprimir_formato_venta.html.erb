@@ -1,0 +1,67 @@
+<%= form_with(model: @vehicle, local: true) do |form| %>
+   <br>
+   <div class="container">
+       <div class="card card-custom gutter-b">
+           <div class="row">
+               <div class="col-lg-12">
+                   <div class="card-header">
+                       <div class="card-title">
+                           <h3 class="card-label float-left">Formato de venta de vehículo</h3>
+                       </div>
+                   </div>
+               </div>
+           </div>
+        <div class="card-body">
+            <h3 style="text-align: center;">INFORMACIÓN DEL VEHÍCULO</h3><br>
+            <div class="row" style="text-align: center;">
+                <div class="col-lg-4">
+                  <p style="font-family: Arial; font-size:16px;">
+                    <strong>Numero Economico:</strong>
+                    <%=@vehicle.numero_economico %>
+                  </p>
+                </div>
+                <div class="col-lg-4">
+                  <p style="font-family: Arial; font-size:16px;">
+                    <strong>Línea:</strong>
+                    <%= @vehicle.catalog_brand.descripcion%>
+                  </p>
+                </div>
+                <div class="col-lg-4">
+                  <p style="font-family: Arial; font-size:16px;">
+                    <strong>Modelo:</strong>
+                    <%=@vehicle.catalog_model.descripcion %>
+                  </p>
+                </div>
+            </div>
+            <div class="row" style=" text-align: center;">
+                <div class="col-lg-4">
+                    <p style="font-family: Arial; font-size:16px;">
+                    <strong>CEDIS:</strong>
+                    <%=@vehicle.catalog_branch.decripcion %>
+                    </p>
+                </div>
+                <div class="col-lg-4">
+                    <p style="font-family: Arial; font-size:16px;">
+                      <strong>Numero placa:</strong>
+                      <%=@vehicle.numero_placa %>
+                    </p>
+                </div>
+                <div class="col-lg-4">
+                    <p style="font-family: Arial; font-size:16px;">
+                      <strong>Numero serie:</strong>
+                      <%=@vehicle.numero_serie %>
+                    </p>
+                </div>
+            </div>
+            <% end %>
+        </div>
+            <br>
+            <%= render "costos" %>
+        </div>
+       </div>
+   </div>
+  </div>
+
+<script type="text/javascript">
+    window.print();
+</script>

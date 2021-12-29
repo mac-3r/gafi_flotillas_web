@@ -1,0 +1,41 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header ">
+            <div class="card-title">
+                <h3 class="card-label">Centro de costos
+                 <span class="text-muted pt-2 font-size-sm d-block">Catálogo centro de costos</span>
+                </h3>
+            </div>
+            <div class="float-right"> 
+              <br>         
+              <%= link_to 'Nuevo', new_cost_center_path, id: "btn_nueva_empresa",class:"btn btn-primary font-weight-bolder",style:"border-radius: 0.42rem;", data: { turbolinks: false } %>
+    
+          </div>
+        </div>
+        <div class="card-body">
+            <%=form_for('', url: filtrado_centros_path, remote: true) do |f|%>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Área:</label>
+                  <%= collection_select('',:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Seleccione la área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                </div>
+                <div class="col">
+                  <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">CEDIS:</label>
+                  <%= collection_select('',:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                </div>
+                <div class="col">
+                  <br><br>
+                  <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+            <br><br>
+            <div style="width: 100%" id="table_container">
+              <%= render  "tabla" %>
+            </div>
+    </div>
+  </div>
+</div>

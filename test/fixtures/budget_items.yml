@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  budget: one
+  catalog_brand: one
+  reason: one
+  vehicle_type: one
+  catalog_model: one
+  cantidad: 1
+  cantidad_comprada: 1
+  plaqueo: 9.99
+  seguro: 9.99
+  muelle: 9.99
+  caja: 9.99
+  rotulacion: 9.99
+  lona: 9.99
+  importe: 9.99
+
+two:
+  budget: two
+  catalog_brand: two
+  reason: two
+  vehicle_type: two
+  catalog_model: two
+  cantidad: 1
+  cantidad_comprada: 1
+  plaqueo: 9.99
+  seguro: 9.99
+  muelle: 9.99
+  caja: 9.99
+  rotulacion: 9.99
+  lona: 9.99
+  importe: 9.99

@@ -1,0 +1,38 @@
+<br><br>
+
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Reparación</h3>
+                  <%= link_to 'Regresar', catalog_repairs_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+      <div class="card-body">
+        <p>
+          <strong>Clave:</strong>
+          <%= @catalog_repair.clave %>
+        </p>
+        
+        <p>
+          <strong>Categoria:</strong>
+          <%= @catalog_repair.categoria %>
+        </p>
+        
+        <p>
+          <strong>Subcategoria:</strong>
+          <%= @catalog_repair.subcategoria %>
+        </p>
+        
+        <p>
+          <strong>Status:</strong>
+          <%= @catalog_repair.get_status %>
+        </p>
+        <%= link_to 'Editar', edit_catalog_repair_path(@catalog_repair), class:"btn btn-default" %>
+      </div>
+  </div>
+</div>

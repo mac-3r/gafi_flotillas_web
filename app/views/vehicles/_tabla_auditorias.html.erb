@@ -1,0 +1,36 @@
+<table class="table table-bordered">
+    <thead>
+      <tr>
+          <th>No. Económico</th>
+          <th>Tipo de archivo</th>
+          <th>Área</th>
+          <th>Cedis</th>
+          <th>Usuario</th>
+          <th>Falla encontrada</th>
+          <th>Fecha</th>
+          <th>Atiende</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%  @resultados.each do |result| %>     
+          <tr>
+            <td><%= result.vehicle.numero_economico %></td>
+            <td><%= result.vehicle.vehicle_type.descripcion %></td>
+            <td><%= result.vehicle.catalog_area.descripcion %></td>
+            <td><%= result.vehicle.catalog_branch.decripcion %></td>
+            <td><%= result.catalog_personal.nombre %></td>
+            <td><%= result.motivo %></td>
+            <td><%= result.fecha_captura.strftime("%d/%m/%Y") %></td>
+            <td><%= result.user.name%> <%= result.user.last_name%></td>
+            <td>
+              <div class="dropdown dropdown-inline">
+              <%= link_to detalle_auditoria_path(result.id), title:"Ver detalle" do%>
+                  <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>&nbsp;
+                  </span>
+              <% end %>
+              </div>
+            </td>
+          </tr>
+      <% end %>
+    </tbody>
+</table>

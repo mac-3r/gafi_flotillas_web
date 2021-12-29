@@ -1,0 +1,70 @@
+<%= form_with(model: budget_administration,method: "post", url: crear_presupuesto_admin_path, local: true) do |form| %>
+  <% if budget_administration.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(budget_administration.errors.count, "error") %> prohibited this budget_administration from being saved:</h2>
+      <ul>
+        <% budget_administration.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+   <br><br>
+   <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Clave:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :clave, class: "form-control", style:"width: 320px !important;",required:true %>
+    </div>
+  </div>
+   <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">CEDIS:</label>
+    <div class="col-sm-0">
+      <%= collection_select(:budget_administration,:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Fecha estimada de entrega:</label>
+    <div class="col-sm-0">
+      <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+        <%= form.text_field :fecha_entrega, class: "form-control datetimepicker-input",required:true%>
+        <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Área:</label>
+    <div class="col-sm-0">
+      <%= collection_select(:budget_administration,:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Seleccione la área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required: true})%>
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Fecha estimada de compra:</label>
+    <div class="col-sm-0">
+      <div class="input-group date" id="datetimepicker8" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+        <%= form.text_field :fecha_compra, class: "form-control datetimepicker-input", required:true %>
+          <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<script type="text/javascript">
+  $(function () {
+      $('#datetimepicker7').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es'
+      });
+      $('#datetimepicker8').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es'
+      });
+  });
+</script>

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_brand: one
+  concept_description: one
+  frecuecia_reemplazo: 9.99
+  frecuencia_inspeccion: 9.99
+
+two:
+  catalog_brand: two
+  concept_description: two
+  frecuecia_reemplazo: 9.99
+  frecuencia_inspeccion: 9.99

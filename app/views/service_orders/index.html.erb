@@ -1,0 +1,116 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header ">
+           <div class="card-title">
+              <h3 class="card-label">Ordenes de servicio</h3>
+          </div>
+          <div class="float-right">
+            <br>
+            <% if can? :importar_bitacora_mantenimiento, Concept %>
+              <button type="button" class="btn btn-success m-btn m-btn--custom" style="text-decoration:none" data-toggle="modal" data-target="#exampleModalCenter">
+                Importar bitácora de mantenimiento
+              </button>
+            <%end%>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="container">
+            <% if @usuario_cedis != nil %>
+              <div class="row">
+                <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Empresa:&nbsp;<%= @usuario_cedis.catalog_branch.catalog_company.nombre %></label> 
+              </div>
+              <div class="row">
+                <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">CEDIS:&nbsp;<%= @usuario_cedis.catalog_branch.decripcion%></label>
+              </div>
+            <% end %>
+             <br><br>
+              <%=form_for('', url: filtrado_ordenes_servicio_path, remote: true) do |f|%>
+                <div class="container">
+                  <div class="row">
+                   <div class="col">
+                     <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">No. Orden:</label>
+                     <%= text_field_tag :keyword, params[:keyword], class:"form-control" %>
+                   </div>
+                   <div class="col">
+                     <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Empresa:</label>
+                     <%= collection_select('',:catalog_company_id, CatalogCompany.listado_empresas,:id, :nombre, {prompt:"Seleccione la empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                   </div>
+                   <div class="col">
+                     <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">CEDIS:</label>
+                     <%= collection_select('',:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                   </div>
+                   <div class="col">
+                     <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Usuario vehículo:</label>
+                     <%= collection_select('',:catalog_personal_id ,CatalogPersonal.listado_personal,:id, :nombre, {prompt:"Seleccione un usuario"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                   </div>
+                    <div class="col">
+                      <br><br>
+                      <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Tipo vehículo:</label>
+                      <%= collection_select('',:vehicle_type_id ,VehicleType.listado_tipos,:id, :descripcion, {prompt:"Seleccione un tipo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                      <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Línea vehículo:</label>
+                      <%= collection_select('',:catalog_brand_id ,CatalogBrand.listado_lineas,:id, :descripcion, {prompt:"Seleccione una línea"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                      <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Área:</label>
+                      <%= collection_select('',:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Seleccione la área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <br><br>
+            <div style="width: 100%" id="table_container">
+              <%= render  "tabla" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Importar bitácora de mantenimiento</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <%= form_tag importar_bitacora_mantenimiento_path, multipart: true do %>
+                    <div class="form-group"><br>
+                        <%= file_field_tag :file, :class => "form-control-file", accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %>
+                    </div>
+
+                    <div>
+                        <div class="float-left">
+                            <%= link_to "Descargar plantilla", plantilla_frecuencias_path, class: "btn btn-info m-btn m-btn--custom ", target: "_blank" %>&nbsp;
+                        </div>
+                        <div class="form-group">
+                            <%= submit_tag "Cargar", :class => "btn btn-success m-btn m-btn--custom ", :id => "file_button", :disabled => "false" %>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('input:file').change(
+        function() {
+            if($(this).val()){
+                $('input:submit').attr('disabled',false);
+            }
+        }
+    );
+
+</script>

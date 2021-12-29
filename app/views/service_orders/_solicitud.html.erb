@@ -1,0 +1,158 @@
+<div class="card-body">
+    <h2>Solicitud de autorización de mantenimiento</h2>
+    <br>
+    <div class="row">
+        <div class="col-lg-12">                   
+            <div class="row" style="text-align: left;">
+                <div class="col-lg-4">
+                  <p style="font-family: Arial; font-size:16px;">
+                    <strong>Numero Economico:</strong>
+                    <%=@encabezado.vehicle.numero_economico %>
+                  </p>
+                </div>
+                <div class="col-lg-4">
+                  <p style="font-family: Arial; font-size:16px;">
+                    <strong>CEDIS:</strong>
+                    <%=@encabezado.vehicle.catalog_branch.decripcion %>
+                  </p>
+                </div>
+                <div class="col-lg-4">
+                  <p style="font-family: Arial; font-size:16px;">
+                    <strong>Tipo de vehículo:</strong>
+                    <%=@encabezado.vehicle.vehicle_type.descripcion %>
+                  </p>
+                </div>
+                <div class="col-lg-4">
+                    <p style="font-family: Arial; font-size:16px;">
+                      <strong>KM actual:</strong>
+                      <%= @km_actual.km_actual ? number_with_precision(@km_actual.km_actual,precision: 2) : "N/A" %>
+
+                </div>
+                <div class="col-lg-4">
+                    <p style="font-family: Arial; font-size:16px;">
+                      <strong>Area:</strong>
+                      <%=@encabezado.vehicle.catalog_area.descripcion %>
+                    </p>
+                </div>
+                <div class="col-lg-4">
+                    <p style="font-family: Arial; font-size:16px;">
+                      <strong>Ruta:</strong>
+                      <%=@encabezado.vehicle.catalog_route.descripcion %>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <h3 style="text-align: center;">Información historica del gasto del vehículo</h3><br><br>
+    <h3 style="text-align: center;">Gasto hace 2 años</h3>
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Reparación</th>
+            <th>Concepto</th>
+            <th>Importe</th>
+          </tr>
+        </thead>
+  
+        <tbody>
+          <% @conceptos_dos.each do |con| %>
+            <% if con.catalog_repair_id %>
+
+              <tr>
+                <td><%= con.catalog_repair.categoria %></td>
+                <td><%= con.catalog_repair.subcategoria %></td>
+
+                <td><%= number_to_currency(con.importe) %></td>
+              
+              </tr>
+            <% end %>
+          <% end %>
+            <tr> 
+                <th colSpan="2"> Total </th>
+                <td> <%= number_to_currency(@total_dos) %> </td>
+            </tr>
+        </tbody>
+      </table>
+      <br>
+      <h3 style="text-align: center;">Gasto hace 1 año</h3>
+      <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Reparación</th>
+              <th>Concepto</th>
+              <th>Importe</th>
+            </tr>
+          </thead>
+    
+          <tbody>
+            <% @conceptos_uno.each do |con| %>
+              <% if con.catalog_repair_id %>
+                <tr>
+                  <td><%= con.catalog_repair.categoria %></td>
+                  <td><%= con.catalog_repair.subcategoria %></td>
+                  <td><%= number_to_currency(con.importe) %></td>
+                </tr>
+              <% end %>
+            <% end %>
+              <tr> 
+                  <th colSpan="2"> Total </th>
+                  <td> <%= number_to_currency(@total_uno) %> </td>
+              </tr>
+          </tbody>
+        </table>
+        <br>
+        <h3 style="text-align: center;">Gasto año en curso</h3>
+        <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Reparación</th>
+                <th>Concepto</th>
+                <th>Importe</th>
+              </tr>
+            </thead>
+      
+            <tbody>
+              <% @conceptos_actual.each do |con| %>
+                <% if con.catalog_repair_id %>
+
+                  <tr>
+                    <td><%= con.catalog_repair.categoria %></td>
+                    <td><%= con.catalog_repair.subcategoria %></td>
+
+                    <td><%= number_to_currency(con.importe) %></td>
+                  
+                  </tr>
+                <% end %>
+              <% end %>
+                <tr> 
+                    <th colSpan="2"> Total </th>
+                    <td> <%= number_to_currency(@total_actual) %> </td>
+                </tr>
+            </tbody>
+          </table>
+</div>
+<div class="row">
+  <div class="col-lg-12">                   
+    <div class="row" style="text-align: left;">
+      <div class="col-lg-4">
+        <p style="font-family: Arial; font-size:16px;">
+          <strong>KM inicio año en curso:</strong>
+          <%= @programa ? number_with_precision(@programa.km_inicio_ano,precision: 2) : "N/A"%>
+        </p>
+      </div>
+      <div class="col-lg-4">
+        <p style="font-family: Arial; font-size:16px;">
+          <strong>KM recorrido de año en curso:</strong>
+          <%= @programa ? number_with_precision(@programa.km_recorrido_curso,precision: 2) : "N/A"  %>
+        </p>
+      </div>
+      <div class="col-lg-4">
+        <p style="font-family: Arial; font-size:16px;">
+          <strong>Gasto por KM recorrido de año en curso :</strong>
+          <%=  number_with_precision(@gasto_km,precision: 2)%>
+        </p>
+      </div>
+    </div>
+</div>
+</div>

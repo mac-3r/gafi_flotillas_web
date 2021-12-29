@@ -1,0 +1,56 @@
+<%= form_with(model: competition_table, local: true) do |form| %>
+  <% if competition_table.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(competition_table.errors.count, "error") %>Error al registrar:</h2>
+
+      <ul>
+        <% competition_table.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+  <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+  </div>
+  <br>
+  <br>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">CEDIS*</label>
+    <div class="col-sm-0">
+      <%= collection_select(:competition_table,:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Escribe el nombre de CEDIS"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>     
+    </div>
+  </div>
+ 
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Autorizante*</label>
+    <div class="col-sm-0">
+      <%= collection_select(:competition_table,:catalog_role_id ,CatalogRole.listado_roles, :id, :nombre, {prompt:"Escribe el nombre del rol"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>     
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Tipo afectación*</label>
+    <div class="col-sm-0">
+      <%= form.select :tipo,[
+      ["Seleccione una cuenta contable", ""], 
+      "Combustible","Mantenimiento y equipo de transporte", "Mantenimiento y maquinaria","Permisos","Plaqueo","Seguros"],
+      {}, { class: "form form-group form-control"} %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Monto:</label>
+    <div class="col-sm-0">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">$</span>
+        </div>
+        <%= form.number_field :monto, step: :any, class: 'form-control'%>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<% end %>

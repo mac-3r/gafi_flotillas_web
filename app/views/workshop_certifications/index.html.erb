@@ -1,0 +1,190 @@
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Certificación de talleres</h3>
+    </div>
+    <div class="float-right">
+      <br>
+      <!-- <%= link_to 'Nuevo', crear_ticket_taller_path,class:"btn btn-primary font-weight-bolder",style:"border-radius: 0.42rem;", data: { turbolinks: false } %> -->
+
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="container">
+      <%= form_tag workshop_certifications_path, :method => :get do %>
+             <div class="row">
+                 <div class="col">
+                     <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">No. Ticket: </label>
+                     <%= text_field_tag :numero, params[:numero], class:"form-control" %>
+                 </div>
+                 <div class="col">
+                     <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha inicio:</label>
+                      <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="start_date" id="start_date">
+                        <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>                 
+                  </div>
+                  <div class="col">
+                    <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha fin:</label>
+                     <div class="input-group date" id="datetimepicker8" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                       <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker8" name="end_date" id="end_date">
+                       <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                       </div>
+                     </div>                 
+                 </div>
+                 <div class="col">
+                  <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Estatus:</label>
+                  <select name="status" id="status"  class= "form form-group form-control">
+                    <option value=""></option>
+                    <option value="0">Pendiente de documentación</option>
+                    <option value="1">Pendiente de revisión</option>
+                    <option value="2">Autorizado</option>
+                    <option value="3">Rechazado</option>
+                  </select>
+                 </div>
+                 <div class="col">
+                   <br><br>
+                   <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                 <% end %>
+               </div>
+             </div>   
+    </div>
+    <div class="table-responsive">
+        <table  class="table table-bordered table-striped table-sm text-center">
+          <thead>
+            <tr>
+              <th>No. Ticket</th>
+              <th>Taller</th>
+              <th>Especialidad</th>
+              <th>Domicilio</th>
+              <th>Contacto</th>
+              <th>Teléfono</th>
+              <th>Email</th>
+              <th>Fecha ticket</th>
+              <th>Condición de pago</th>
+              <th>Estatus</th>
+              <th colspan="2">Acciones</th>
+              <th colspan="5">Expendiente</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @workshop_certifications.each do |workshop_certification| %>
+              <tr>
+                <td><%= workshop_certification.numero_ticket %></td>
+                <td><%= workshop_certification.catalog_workshop.nombre_taller %></td>
+                <td><%= workshop_certification.catalog_workshop.especialidad %></td>
+                <td><%= workshop_certification.catalog_workshop.domicilio %></td>
+                <td><%= workshop_certification.catalog_workshop.responsable %></td>
+                <td style="width: 7%"><%= workshop_certification.catalog_workshop.telefono %></td>
+                <td><%= workshop_certification.catalog_workshop.correo %></td>
+                <td style="width: 8%;"><%= workshop_certification.fecha.strftime('%d/%m/%y') %></td>
+                <td><%= workshop_certification.condiciones %></td>
+                <td><%= workshop_certification.estatus %></td>
+                <td>
+                  <div class="dropdown dropdown-inline">
+                      <%= link_to workshop_certification, title: "Ver detalle" do %>
+                      <span class='fas fa-eye' style='font-size:16px;color:#A6ACAF'></span>
+                      </span>
+                      <% end %>
+                  </div>
+                </td>
+                <% if can? :edit, WorkshopCertification %>
+                <% if workshop_certification.estatus != "Pendiente de revisión" and workshop_certification.estatus != "Autorizado" %>
+                <td>
+                  <div class="dropdown dropdown-inline">
+                    <%= link_to edit_workshop_certification_path(workshop_certification.id), title: "Editar" do %>
+                    <span class="svg-icon svg-icon-md"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                    viewBox="0 0 24 24" version="1.1">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <rect x="0" y="0" width="24" height="24"></rect>
+                    <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
+                    fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
+                    </path>
+                    <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+                    </g>
+                    </svg> 
+                    </span>
+                    <% end %>
+                    </div>  
+                </td>
+                <% end %>                 
+                <% end %>
+                <% if can? :fotos_taller, WorkshopCertification %>
+                  <% if workshop_certification.estatus != "Pendiente de revisión" %>
+                    <td>
+                      <div class="dropdown dropdown-inline">
+                          <%= link_to fotos_taller_path(workshop_certification.id),remote: true, title:"Adjuntar fotografías" do%>
+                              <span class='far fa-file-image' style='font-size:16px;color:#A6ACAF'></span>
+                              </span>
+                          <% end %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="dropdown dropdown-inline">
+                          <%= link_to comprobante_taller_path(workshop_certification.id),remote: true, title:"Adjuntar comprobante de domicilio" do%>
+                              <span class='far fa-address-card' style='font-size:16px;color:#A6ACAF'></span>
+                              </span>
+                          <% end %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="dropdown dropdown-inline">
+                        <%= link_to caratulas_taller_path(workshop_certification.id),remote: true, title:"Adjuntar caratulas de estado de cuenta" do%>
+                          <span class='fas fa-file-invoice-dollar' style='font-size:16px;color:#A6ACAF'></span>
+                          </span>
+                        <% end %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="dropdown dropdown-inline">
+                        <%= link_to constancia_taller_path(workshop_certification.id),remote: true, title:"Adjuntar constancia de situación fiscal" do%>
+                          <span class='far fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>
+                          </span>
+                        <% end %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="dropdown dropdown-inline">
+                        <%= link_to rfc_taller_path(workshop_certification.id),remote: true, title:"Adjuntar RFC" do%>
+                          <span class='fas fa-tools' style='font-size:16px;color:#A6ACAF'></span>
+                          </span>
+                        <% end %>
+                      </div>
+                    </td>
+                  <% end %>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
+  </div>
+    </div>
+</div>
+<script type="text/javascript">
+  $(function () {
+    $('#datetimepicker7').datetimepicker({
+    format: 'DD/MM/YYYY',
+    locale: 'es'
+    });
+    $('#datetimepicker8').datetimepicker({
+    format: 'DD/MM/YYYY',
+    locale: 'es',
+    useCurrent: false
+    });
+    
+    $("#datetimepicker7").on("change.datetimepicker", function (e) {
+        $('#datetimepicker8').datetimepicker('minDate', e.date);
+    });
+    $("#datetimepicker8").on("change.datetimepicker", function (e) {
+        $('#datetimepicker7').datetimepicker('maxDate', e.date);
+    });
+});
+</script>

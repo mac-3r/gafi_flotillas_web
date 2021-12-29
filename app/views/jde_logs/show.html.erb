@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Fecha:</strong>
+  <%= @jde_log.fecha %>
+</p>
+
+<p>
+  <strong>Hora:</strong>
+  <%= @jde_log.hora %>
+</p>
+
+<p>
+  <strong>Json enviado:</strong>
+  <%= @jde_log.json_enviado %>
+</p>
+
+<p>
+  <strong>Respuesta:</strong>
+  <%= @jde_log.respuesta %>
+</p>
+
+<%= link_to 'Edit', edit_jde_log_path(@jde_log) %> |
+<%= link_to 'Back', jde_logs_path %>

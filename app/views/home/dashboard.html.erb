@@ -1,0 +1,297 @@
+<br><br>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card card-custom gutter-b" style="width: 250px;">
+                <div class="card-header h-auto">
+                    <div class="card-title py-5">
+                        <h3 class="card-label" style="text-align: center !important;">Total de vehículos</h3>
+                    </div>
+                </div>
+                <div class="card-body" style="position: relative;" >
+                    <div id="chart_1" style="min-height: 100px;">
+                        <h1 style="text-align: center;font-size: 5.5em;"><strong><%=@total_vehiculos %></strong><h1>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-custom gutter-b" style="width: 250px;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label" style="text-align: center;">Vehículos activos</h3>
+                    </div>
+                </div>
+                <div class="card-body" style="position: relative;" >
+                    <div id="chart_1" style="min-height: 100px;">
+                        <h1 style="text-align: center;font-size: 5.5em;"><strong> <%=@vehiculos_activos %></strong><h1>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-custom gutter-b" style="width: 250px;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label" style="text-align: center;">Vehículos inactivos</h3>
+                    </div>
+                </div>
+                <div class="card-body" style="position: relative;" >
+                   <div id="chart_1" style="min-height: 100px;">
+                        <h1 style="text-align: center;font-size: 5.5em;"><strong> <%=@vehiculos_inactivos %></strong><h1>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3">
+            <div class="card card-custom gutter-b" style="width: 250px;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label" style="text-align: center;">Vehículos siniestrados</h3>
+                    </div>
+                </div>
+                <div class="card-body" style="position: relative;" >
+                   <div id="chart_1" style="min-height: 100px;">
+                        <h1 style="text-align: center;font-size: 5.5em;"><strong> <%=@vehiculos_siniestados %></strong><h1>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-6" height="150">
+            <div class="card card-custom card-stretch gutter-b">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label" style="text-align: center;">Vehículos por área</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="pie-chart"  width="350" height="150"></canvas>     
+                </div>
+            </div>
+        </div>
+          <div class="col-xl-6" height="150">
+            <div class="card card-custom card-stretch gutter-b">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label" style="text-align: center;">Vehículos por CEDIS</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="cedis-chart"  width="350" height="150"></canvas>     
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-6" height="150">
+            <div class="card card-custom card-stretch gutter-b">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label" style="text-align: center;">Flotillas siniestradas año en curso</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="bar-chart" width="350" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+          <div class="col-xl-6" height="150">
+            <div class="card card-custom card-stretch gutter-b">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label" style="text-align: center;">Mantenimientos realizados mes actual</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                        <canvas id="mmto-chart" width="750" height="650"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12" height="150">
+            <div class="card card-custom card-stretch gutter-b">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label" style="text-align: center;">Gasto combustible mes actual</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="line-chart" width="750" height="650"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var arr_colores = [];
+    var arr_nombres = [];
+    var arr_nombres_cedis = [];
+    var arr_semanas = [];
+    var arr_gastos = [];
+
+    <% @resultados_nombre.each do |x| %>
+        arr_nombres.push("<%= x %>");
+    <% end %>
+     <% @res_nombre_cedis.each do |x| %>
+        arr_nombres_cedis.push("<%= x %>");
+    <% end %>
+     <% @semana.each do |sem| %>
+        <% sem.each do |s|%>
+            arr_semanas.push("<%= s %>");
+        <% end %>
+    <% end %>
+    
+    for (var index = 0; index < 40; index++) {
+        var o = Math.round, r = Math.random, s = 255;
+        var piv = 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + "0.7" + ')';
+        color = piv;
+        arr_colores.push(piv);
+    };
+    //vehiculos por area
+    var barChart = new Chart(document.getElementById("pie-chart"), {
+        type: 'pie',
+        data: {
+          labels: arr_nombres,
+          datasets: [
+              {
+                  backgroundColor: arr_colores,
+                  data:<%=@resultados_areas %>
+              }
+          ],
+        },
+        options: { 
+            cutoutPercentage: 0,
+            legend: {
+                display: true,
+                position: 'top',
+            },
+            scales: {
+           
+            yAxes: [{
+                stacked: true,
+                ticks: {
+                    min: 0,
+                    max: 100,
+                    callback: function(value) {
+                        return value + '%'
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "Porcentaje"
+                }
+            }]
+            },
+        }
+    });
+    //vehiculos por cedis
+    var barChart = new Chart(document.getElementById("cedis-chart"), {
+        type: 'pie',
+        data: {
+          labels: arr_nombres_cedis,
+          datasets: [
+              {
+                  backgroundColor: arr_colores,
+                  data:<%=@resultados_cedis %>
+              }
+          ],
+        },
+        options: { 
+            cutoutPercentage: 0,
+            legend: {
+                display: false
+            },
+            scales: {
+           
+            yAxes: [{
+                stacked: true,
+                ticks: {
+                    min: 0,
+                    max: 100,
+                    callback: function(value) {
+                        return value + '%'
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "Porcentaje"
+                }
+            }]
+            },
+        }
+    });
+     var densityData = {
+        label: ['Flotillas dañadas'],
+        data: [<%= @flotillas_siniestradas[1].length %>, <%=(((@flotillas_siniestradas[1].length).to_f * 100) / @flotillas_siniestradas[0][0].total_vehiculos).round(2) %>],
+        backgroundColor: arr_colores,
+    };
+    var options = {
+        responsive: true,
+        scales: {
+            yAxes: [{
+                display: true,
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    };
+    var barChart = new Chart(document.getElementById("bar-chart"), {
+        type: 'bar',
+        data: {
+            labels: ["Cantidad", "Porcentaje %"],
+            datasets: [densityData]
+        },
+        options: options
+    });
+    //Mantenimiento
+    var densityData2 = {
+         label: ['Cantidad'],
+        data: <%= @resultados_mmto%>,
+        backgroundColor: arr_colores,
+    };
+    var options = {
+        responsive: true,
+        scales: {
+            yAxes: [{
+                display: true,
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    };
+    var barChart = new Chart(document.getElementById("mmto-chart"), {
+        type: 'bar',
+        data: {
+            labels: arr_nombres_cedis,
+            datasets: [densityData2]
+        },
+        options: options
+    });
+    //Combustible
+     var LineChart = new Chart(document.getElementById("line-chart"), {
+        type: 'line',
+        data: {
+            labels: arr_semanas,
+            datasets: [
+              <% @resultados_combustible.each_with_index  do |res,index| %>
+                {
+                    label: ["<%= res[0]%>"],
+                    data: <%= res[2]%>,
+                    fill: false,
+                    borderColor: arr_colores[<%= index %>],
+                    backgroundColor: arr_colores[<%= index %>],
+                    tension: 7000
+                },
+              <% end %>
+            ]
+        }
+    });
+</script>

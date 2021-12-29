@@ -1,0 +1,75 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="card-label">Archivos del vehículo </h3>
+            </div>
+            <div class="float-right">  
+                <br>
+                <h3 for=""><%= "#{@vehicle.catalog_brand.descripcion} #{@vehicle.numero_economico}" %></h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <br>
+            <div id="container_files">
+                <%= render 'contenedor_archivos' %>
+            </div>
+            <hr>
+            <div class="dropzone my-dropzone" id="my-dropzone"><div class="dz-message" data-dz-message><span>Da click o arrastra un archivo para subirlo</span></div></div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        const dropzone = new Dropzone("div.my-dropzone", { 
+            url: "<%= upload_document_path(@vehicle.id) %>", 
+            method: "POST",
+            success: function (file, response) {
+                var imgName = response;
+                file.previewElement.classList.add("dz-success");
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                toastr.success("Archivo cargado con éxito", "Operación satisfactoria");
+                $("#container_files").empty();
+                //$("#container_files").html("<%= escape_javascript(render partial: 'contenedor_archivos.html.erb') %>");
+            },
+            error: function (file, response) {
+                file.previewElement.classList.add("dz-error");
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                toastr.error("<%= @mensaje %>", "Ocurrió un error");
+            }
+        })
+    })
+</script>

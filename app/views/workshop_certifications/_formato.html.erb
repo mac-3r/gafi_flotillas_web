@@ -1,0 +1,34 @@
+        <br>
+        <div class="row"> 
+          <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Número ticket:&nbsp;<%=  @workshop_certification.numero_ticket %></label>
+        </div>
+         <div class="row">
+          <label class="col-sm-6 col-form-label" style="font-family: Arial; font-size:18px;">Taller:&nbsp;<%=  @workshop_certification.catalog_workshop.nombre_taller %></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-6 col-form-label" style="font-family: Arial; font-size:18px;">Especialidad:&nbsp;<%=@workshop_certification.catalog_workshop.especialidad%></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Contacto:&nbsp;<%= @workshop_certification.catalog_workshop.responsable%></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Teléfono:&nbsp;<%=@workshop_certification.catalog_workshop.telefono%></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-6 col-form-label" style="font-family: Arial; font-size:18px;">Correo electrónico:&nbsp;<%= @workshop_certification.catalog_workshop.correo %></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Condición de pago:&nbsp;<%= @workshop_certification.condiciones %></label>
+         </div>
+         <div class="row">
+          <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha certificación:&nbsp;<%= @workshop_certification.fecha.strftime('%d/%m/%y') %></label>
+         </div>
+         <div style="justify-content:center; align-items:center;display: flex;">
+          <div style=" width:350px;">
+              <br><br><br><br>
+              <hr size="8" width="90%" color="black"> 
+              <div  style="justify-content:center; align-items:center;display: flex;">
+                  <strong style="text-align: center;">Firma de autorización</strong>
+              </div>
+          </div>
+      </div>               

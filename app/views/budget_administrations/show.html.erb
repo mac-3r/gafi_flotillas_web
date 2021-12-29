@@ -1,0 +1,63 @@
+
+<br><br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card-header" style="border-bottom: #ffff">
+          <div class="example-screen" style="float: right;">
+            <% if can? :solicitar_presupuesto_admin, BudgetAdministration %>
+              <% if @budget_administration.status == "Pendiente" %> 
+                <%= link_to 'Solicitar autorización' ,solicitar_presupuesto_admin_path , class:"btn btn-primary font-weight-bolder"%>&nbsp;
+              <% end %>
+            <% end %>
+            <button onclick="window.print()" class="btn btn-primary font-weight-bolder" style="border-radius: 0.42rem;">Generar PDF</button>&nbsp;&nbsp;
+            <%= link_to 'Regresar' ,budget_administrations_path , class: "btn btn-default float-right" %>
+          </div>
+            <div class="card-title">
+              <h3 style="text-align: center;"><img style="float: left;" src="https://www.gafi.com.mx/Content/themes/images/logo.jpg" alt="" width="119" height="164" /></h3>
+              <h3 style="text-align: center;">&nbsp;</h3>
+              <h3 style="text-align: center;">&nbsp;</h3>
+              <h3 style="text-align: center;">Presupuestos de compra de veh&iacute;culos de administración</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card-body">
+  <div class="row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Clave:&nbsp;<%=@budget_administration.clave %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">CEDIS:&nbsp;<%=@budget_administration.catalog_branch.decripcion %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Área:&nbsp;<%=@budget_administration.catalog_area.descripcion %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha entrega estimada:&nbsp;<%=l @budget_administration.fecha_entrega %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha compra estimada:&nbsp;<%=l @budget_administration.fecha_compra %></label>
+   </div>
+  <div id="contenedor_partidas">
+    <%= render "partidas" %>
+  </div>
+  <div style="justify-content:center; align-items:center;display: flex;">
+    <div style=" width:350px;">
+        <br><br><br><br>
+        <hr size="8" width="90%" color="black"> 
+        <div  style="justify-content:center; align-items:center;display: flex;">
+            <strong style="text-align: center;">Firma de autorización</strong>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<style>
+@media print {
+   .example-screen {
+       display: none;
+    }
+}
+</style>

@@ -1,0 +1,39 @@
+<div class="card-body">
+    <br>
+    <br>
+        <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>No. Económico</th>
+                <th>CEDIS</th>
+                <th>Tipo vehículo</th>
+                <th>Línea</th>
+                <th>Usuario</th>
+                <th>Km inicio año</th>
+                <th>KM recorrido de año en curso</th>
+                <th>Gasto por KM recorrido de año en curso</th>
+                <th>Gasto año anterior</th>
+                <th>Gasto año actual</th>
+              </tr>
+            </thead>
+      
+            <tbody>
+              <% @resultados.each do |res| %>
+                <tr>
+                  <td><%= res[:vehiculo] %></td>
+                  <td><%= res[:cedis] %></td>
+                  <td><%= res[:tipo]%></td>
+                  <td><%= res[:linea] %></td>
+                  <td><%= res[:usuario] %></td>
+                  <td><%= number_with_precision(res[:km_inicio_ano],precision: 2)%></td>
+                  <td><%= number_with_precision(res[:km_recorrido_curso],precision: 2)%></td>
+                  <td><%= number_with_precision(res[:km],precision: 2)%></td>
+                  <td><%= number_to_currency(res[:km2]) %></td>
+                  <td><%= number_to_currency(res[:gasto_km]) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+        </table>
+</div>
+
+</div>

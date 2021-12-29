@@ -1,0 +1,66 @@
+<%= form_with(model: catalog_vendor, local: true) do |form| %>
+  <% if catalog_vendor.errors.any? %>
+  <div class="alert alert-danger">Error al registrar:
+    <div id="error_explanation">
+      <ul>
+        <% catalog_vendor.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+  <br><br>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Clave:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :clave, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Razon Social:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :razonsocial, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Nombre proveedor:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :nombre, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">RFC:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :rfc, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Contacto:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :contacto, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Dirección:</label>
+    <div class="col-sm-0">
+      <%= form.text_area :direccion, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Correo:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :correo, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Estatus:</label>
+    <div class="col-sm-0">
+      <%= select_tag 'catalog_vendor[estatus]', options_for_select([["Activo" , 1],["Inactivo", 0]]),{ class: "form form-group form-control" }%>
+
+    </div>
+  </div>
+<% end %>

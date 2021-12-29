@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_branch: one
+  catalog_area: one
+  fecha_entrega: 2021-03-22
+  fecha_compra: 2021-03-22
+  clave: MyString
+  status: 1
+  motivo_rechazo: MyText
+  user: one
+
+two:
+  catalog_branch: two
+  catalog_area: two
+  fecha_entrega: 2021-03-22
+  fecha_compra: 2021-03-22
+  clave: MyString
+  status: 1
+  motivo_rechazo: MyText
+  user: two

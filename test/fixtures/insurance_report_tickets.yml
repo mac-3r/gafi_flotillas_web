@@ -1,0 +1,55 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  numero_siniestro: MyString
+  inciso: MyString
+  fecha_ocurrio: 2020-10-29 12:18:44
+  fecha_reporte: 2020-10-29 12:18:44
+  vehicle: one
+  numero_serie: MyString
+  numero_poliza: MyString
+  cedis: MyString
+  numero_economico: MyString
+  vehiculo: MyString
+  modelo: MyString
+  estatus_vehiculo: MyString
+  type_sinisters: one
+  tipo_siniestro: MyString
+  ubicacion_siniestro: MyString
+  responsable: MyString
+  estatus: 1
+  monto_siniestro: 1.5
+  cargo_deducible_empresa: 1.5
+  cargo_deducible_empleado: MyString
+  declaracion: MyText
+  estatus_responsabilidad_gafi: 1
+  estatus_responsabilidad_aseguradora: 1
+  coincide: 1
+  comentarios_adicionales: MyText
+
+two:
+  numero_siniestro: MyString
+  inciso: MyString
+  fecha_ocurrio: 2020-10-29 12:18:44
+  fecha_reporte: 2020-10-29 12:18:44
+  vehicle: two
+  numero_serie: MyString
+  numero_poliza: MyString
+  cedis: MyString
+  numero_economico: MyString
+  vehiculo: MyString
+  modelo: MyString
+  estatus_vehiculo: MyString
+  type_sinisters: two
+  tipo_siniestro: MyString
+  ubicacion_siniestro: MyString
+  responsable: MyString
+  estatus: 1
+  monto_siniestro: 1.5
+  cargo_deducible_empresa: 1.5
+  cargo_deducible_empleado: MyString
+  declaracion: MyText
+  estatus_responsabilidad_gafi: 1
+  estatus_responsabilidad_aseguradora: 1
+  coincide: 1
+  comentarios_adicionales: MyText

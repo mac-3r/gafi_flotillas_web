@@ -1,0 +1,29 @@
+
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Concepto permiso vehicular</h3>
+                  <%= link_to 'Regresar',  catalog_permits_vehicles_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+       <div class="card-body">
+          <p>
+            <strong>Descripcion:</strong>
+            <%= @catalog_permits_vehicle.descripcion %>
+          </p>
+
+          <p>
+            <strong>Estatus:</strong>
+            <%= @catalog_permits_vehicle.get_status %>
+          </p>
+              <%= link_to 'Editar', edit_catalog_permits_vehicle_path(@catalog_permits_vehicle), class:"btn btn-default" %>
+       <br><br>                  
+    </div>
+  </div>
+</div>

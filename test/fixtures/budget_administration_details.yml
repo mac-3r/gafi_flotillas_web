@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  budget_administration: one
+  cantidad: 1
+  catalog_brand: one
+  reason: one
+  importe: 9.99
+  plaqueo: 9.99
+  seguro: 9.99
+
+two:
+  budget_administration: two
+  cantidad: 1
+  catalog_brand: two
+  reason: two
+  importe: 9.99
+  plaqueo: 9.99
+  seguro: 9.99

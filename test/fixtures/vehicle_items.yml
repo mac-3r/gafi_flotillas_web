@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  codigo: MyString
+  string: MyString
+  vehicle: one
+  tipo: 1
+  fecha_compra: MyString
+  date: MyString
+  estatus: 1
+  km_inicio: 9.99
+  km_fin: 9.99
+
+two:
+  codigo: MyString
+  string: MyString
+  vehicle: two
+  tipo: 1
+  fecha_compra: MyString
+  date: MyString
+  estatus: 1
+  km_inicio: 9.99
+  km_fin: 9.99

@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Clave:</strong>
+  <%= @catalog_workshop.clave %>
+</p>
+
+<p>
+  <strong>Catalog branch:</strong>
+  <%= @catalog_workshop.catalog_branch_id %>
+</p>
+
+<p>
+  <strong>Nombre taller:</strong>
+  <%= @catalog_workshop.nombre_taller %>
+</p>
+
+<p>
+  <strong>Razonsocial:</strong>
+  <%= @catalog_workshop.razonsocial %>
+</p>
+
+<p>
+  <strong>Especialidad:</strong>
+  <%= @catalog_workshop.especialidad %>
+</p>
+
+<p>
+  <strong>Responsable:</strong>
+  <%= @catalog_workshop.responsable %>
+</p>
+
+<p>
+  <strong>Telefono:</strong>
+  <%= @catalog_workshop.telefono %>
+</p>
+
+<p>
+  <strong>Domicilio:</strong>
+  <%= @catalog_workshop.domicilio %>
+</p>
+
+<p>
+  <strong>Correo:</strong>
+  <%= @catalog_workshop.correo %>
+</p>
+
+<p>
+  <strong>Vigente:</strong>
+  <%= @catalog_workshop.vigente %>
+</p>
+
+<%= link_to 'Edit', edit_catalog_workshop_path(@catalog_workshop) %> |
+<%= link_to 'Back', catalog_workshops_path %>

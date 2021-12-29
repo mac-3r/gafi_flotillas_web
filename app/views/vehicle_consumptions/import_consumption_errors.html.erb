@@ -1,0 +1,62 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="card-label">Errores de importación
+                    <span class="text-muted pt-2 font-size-sm d-block"></span>
+                </h3>
+            </div>
+            <div class="float-right">
+              <%= link_to 'Regresar' , vehicle_consumptions_path, class: "btn btn-default float-right" %>
+            </div>
+        </div>
+        <div class="card-body">
+            <h4>Se encontraron errores durante la importación:</h4>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="20%">Fila en Excel</th>
+                        <th width="50%">Problema</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <%#byebug%>
+                    <% @vehicle_consumption[0].each do |vehiculo| %>
+                    <%#byebug%>
+                        <tr>
+                            <td><%= vehiculo[:fila] %></td>
+                            <td><%= vehiculo[:problema] %></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<style>
+  .btn.btn-light-success {
+    color: #1bc5bd;
+    background-color: #c9f7f5;
+    border-color: transparent;
+  }
+  .font-weight-bold {
+    font-weight: 500!important;
+  }
+  .mr-2, .mx-2 {
+    margin-right: .5rem!important;
+  }
+  .btn {
+    outline: 0!important;
+    vertical-align: middle;
+    -webkit-transition: color .15s ease,background-color .15s ease,border-color .15s ease,-webkit-box-shadow .15s ease;
+    transition: color .15s ease,background-color .15s ease,border-color .15s ease,-webkit-box-shadow .15s ease;
+    transition: color .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease;
+    transition: color .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease,-webkit-box-shadow .15s ease;
+  } 
+  .btn.btn-light-primary {
+    color: #3699ff;
+    background-color: #e1f0ff;
+    border-color: transparent;
+  }
+</style>

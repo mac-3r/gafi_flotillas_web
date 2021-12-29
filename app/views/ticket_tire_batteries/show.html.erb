@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Vehicle:</strong>
+  <%= @ticket_tire_battery.vehicle_id %>
+</p>
+
+<p>
+  <strong>Dot:</strong>
+  <%= @ticket_tire_battery.dot %>
+</p>
+
+<p>
+  <strong>Fecha:</strong>
+  <%= @ticket_tire_battery.fecha %>
+</p>
+
+<p>
+  <strong>Estatus:</strong>
+  <%= @ticket_tire_battery.estatus %>
+</p>
+
+<p>
+  <strong>Tipo:</strong>
+  <%= @ticket_tire_battery.tipo %>
+</p>
+
+<p>
+  <strong>Cantidad:</strong>
+  <%= @ticket_tire_battery.cantidad %>
+</p>
+
+<%= link_to 'Edit', edit_ticket_tire_battery_path(@ticket_tire_battery) %> |
+<%= link_to 'Back', ticket_tire_batteries_path %>

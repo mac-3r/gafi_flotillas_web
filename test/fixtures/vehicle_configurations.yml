@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  clave: MyString
+  descripcion: MyText
+  numero_ejes: MyString
+  numero_llantas: MyString
+  fecha_inicio_vigencia: MyString
+  fecha_fin_vigencia: MyString
+
+two:
+  clave: MyString
+  descripcion: MyText
+  numero_ejes: MyString
+  numero_llantas: MyString
+  fecha_inicio_vigencia: MyString
+  fecha_fin_vigencia: MyString

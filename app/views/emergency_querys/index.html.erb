@@ -1,0 +1,39 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header ">
+            <div class="card-title">
+                <h3 class="card-label">Querys
+                 <span class="text-muted pt-2 font-size-sm d-block">Queryes Emergentes / Soporte / Ajustes</span>
+                </h3>
+                
+            </div>
+        </div>
+        <div class="card-body">
+        <ol>
+            <li><%= link_to "Generacion de programa de mtto", emergency_querys_programa_mtto_path %></li>
+            <br>
+            <li><%= link_to "Importa consumo historico de combustible", emergency_querys_consumo_combustible_path %></li>
+            <br>
+            <li><%= link_to "Importa historico de siniestros", emergency_querys_siniestros_path %></li>
+            <br>
+            <li><%= link_to "Importa concept brand", emergency_querys_bitacora_path %></li>
+            <br>
+            <li><%= link_to "Borrar historicos", eliminar_consumos_path %></li>
+            <br>
+            <li><%= link_to "Importar control de mantenimiento", emergency_querys_gastos_path %></li>
+            <br>
+            <li><%= link_to "Importar presupuesto de combustible", emergency_querys_presupuesto_path %></li>
+            <br>
+            <li><%= link_to "Importar tipos de permiso de remolque", importa_tipos_permiso_remolque_path %></li>
+            <br>
+            <li><%= link_to "Importar subtipos de remolque", importa_subtipo_remolque_path %></li>
+            <br>
+            <li><%= link_to "Importar configuraciones de autotransporte", importa_configuracion_vehiculo_path %></li>
+
+        </ol>
+      </div>
+             
+        </div>
+    </div>
+</div>

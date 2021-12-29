@@ -1,0 +1,2 @@
+module CatalogCompaniesHelper
+end

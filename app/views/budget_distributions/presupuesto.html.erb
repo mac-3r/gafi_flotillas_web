@@ -1,0 +1,75 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header" style="border-bottom: #ffff">
+                    <div class="card-title">
+                        <h3 style="text-align: center;"><img style="float: left;" src="https://www.gafi.com.mx/Content/themes/images/logo.jpg" alt="" width="119" height="164" /></h3>
+                        <h3 style="text-align: center;">&nbsp;</h3>
+                        <h3 style="text-align: center;">&nbsp;</h3>
+                        <h3 style="text-align: center;">Presupuestos de compra de reparto,almacen y gerencia de operaciones</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <br>
+            <table class="table table-bordered" id="table">
+                <thead>
+                  <tr>
+                    <th>CEDIS</th>
+                    <th>Fecha entrega estimada</th>
+                    <th>Area</th>
+                    <th>Marca</th>
+                    <th>Importe</th>
+                    <th>Motivo</th>
+                    <th>Fecha compra estimada</th>
+                    <th>Plaqueo</th>
+                    <th>Seguro</th>
+                    <th>Muelles</th>
+                    <th>Caja</th>
+                    <th>Rotulacion</th>
+                    <th colspan="3"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% BudgetDistribution.all.each do |budget_distribution| %>
+                    <tr>
+                      <td><%= budget_distribution.catalog_branch.decripcion %></td>
+                      <td><%= l budget_distribution.fecha_entrega %></td>
+                      <td><%= budget_distribution.catalog_area.descripcion %></td>
+                      <td><%= budget_distribution.catalog_brand.descripcion %></td>
+                      <td>$<%= number_with_delimiter(budget_distribution.importe, :delimiter => ',') %></td>
+                      <td><%= budget_distribution.reason.descripcion %></td>
+                      <td><%=l budget_distribution.fecha_compra %></td>
+                      <td class="formato">$<%= number_with_delimiter(budget_distribution.plaqueo, :delimiter => ',') %></td>
+                      <td class="formato">$<%= number_with_delimiter(budget_distribution.seguro, :delimiter => ',') %></td>
+                      <td class="formato">$<%= number_with_delimiter(budget_distribution.muelles, :delimiter => ',') %></td>
+                      <td class="formato">$<%= number_with_delimiter(budget_distribution.caja, :delimiter => ',') %></td>
+                      <td class="formato">$<%= number_with_delimiter(budget_distribution.rotulacion, :delimiter => ',') %></td>
+                    </tr>
+                <%end%>
+                </tbody>
+            </table>
+            <div style="justify-content:center; align-items:center;display: flex;">
+                <div style=" width:350px;">
+                    <br><br><br><br>
+                    <hr size="8" width="90%" color="black"> 
+                    <div  style="justify-content:center; align-items:center;display: flex;">
+                        <strong style="text-align: center;">Firma de autorizacion</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready( function() {
+$("td.formato").each(function() { $(this).html(parseFloat($(this).text()).toLocaleString('es-MX', {style: 'currency', currency: 'MXN'})); })
+})
+
+</script>
+<script type="text/javascript">
+    window.print();
+</script>

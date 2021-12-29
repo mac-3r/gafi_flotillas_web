@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Vehicle:</strong>
+  <%= @mileage_indicator.vehicle_id %>
+</p>
+
+<p>
+  <strong>Km actual:</strong>
+  <%= @mileage_indicator.km_actual %>
+</p>
+
+<p>
+  <strong>Fecha:</strong>
+  <%= @mileage_indicator.fecha %>
+</p>
+
+<%= link_to 'Edit', edit_mileage_indicator_path(@mileage_indicator) %> |
+<%= link_to 'Back', mileage_indicators_path %>

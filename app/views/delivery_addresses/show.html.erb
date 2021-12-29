@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Catalog company:</strong>
+  <%= @delivery_address.catalog_company_id %>
+</p>
+
+<p>
+  <strong>Clave:</strong>
+  <%= @delivery_address.customer_id %>
+</p>
+
+<p>
+  <strong>Principal:</strong>
+  <%= @delivery_address.principal %>
+</p>
+
+<p>
+  <strong>Catalog branch:</strong>
+  <%= @delivery_address.catalog_branch_id %>
+</p>
+
+<p>
+  <strong>Direccion:</strong>
+  <%= @delivery_address.direccion %>
+</p>
+
+<p>
+  <strong>Estatus:</strong>
+  <%= @delivery_address.estatus %>
+</p>
+
+<%= link_to 'Edit', edit_delivery_address_path(@delivery_address) %> |
+<%= link_to 'Back', delivery_addresses_path %>

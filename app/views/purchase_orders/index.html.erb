@@ -1,0 +1,78 @@
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Órdenes de compras
+        </h3>
+      </div>
+      <div class="float-right">
+        <br>
+        <% if can? :nueva_orden, PurchaseOrder %>
+          <%= link_to 'Nuevo', nueva_orden_path,class:"btn btn-primary font-weight-bolder",style:"border-radius: 0.42rem;", data: { turbolinks: false } %>
+        <% end %>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="container">
+        <%=form_for('', url: filtrado_ordenes_path, remote: true) do |f|%>
+        <div class="row">
+          <div class="col">
+              <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha inicio: </label>
+              <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                  <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="start_date" id="start_date">
+                  <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+              </div>
+          </div>
+          <div class="col">
+                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha fin: </label>
+                <div class="input-group date" id="datetimepicker8" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker8" name="end_date" id="end_date">
+                    <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+          </div>
+          <div class="col">
+            <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Estatus: </label>
+            <%= f.select(:registro,  [['Todos', 'Todos'],['Pendiente de autorizar', 0],['Autorizado', 1],['Rechazado',2]], {}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+          </div>
+          <div class="col">
+            <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Rango de presupuesto: </label>
+            <%= f.select(:rango,  [['Todos', 'Todos'],['Fuera de presupuesto', 0],['Dentro de presupuesto', 1]], {}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+          </div>
+        </div>
+        <br>
+        <%= submit_tag "Buscar", class:"btn btn-primary float-right" %>
+        <br>
+        <% end %>
+        <br><br>
+      <div style="width: 100%" id="table_container">
+        <%= render  "tabla" %>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script type="text/javascript">
+  $(function () {
+      $('#datetimepicker7').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es'
+      });
+      $('#datetimepicker8').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es',
+      useCurrent: false
+      });
+      
+      $("#datetimepicker7").on("change.datetimepicker", function (e) {
+          $('#datetimepicker8').datetimepicker('minDate', e.date);
+      });
+      $("#datetimepicker8").on("change.datetimepicker", function (e) {
+          $('#datetimepicker7').datetimepicker('maxDate', e.date);
+      });
+  });
+</script>

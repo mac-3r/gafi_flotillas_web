@@ -1,0 +1,55 @@
+<!-- modal donde se agrega el detalle -->
+<%= form_for(@maintenance_details, url: guardar_detalle_mantenimiento_path, remote: true) do |form| %>
+<h5 style="color:black;">Complete los datos</h5>
+<hr>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Categoría</label><br>
+    <%= form.text_field :categoria, class: "form-control", style:"width: 250px !important;" %>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Descripción</label><br>
+    <%= form.text_field :descripcion, class: "form-control", style:"width: 250px !important;" %>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Frecuencia de reemplazo(kms)</label><br>
+    <%= form.number_field :frecuencia_reemplazo, class: "form-control", style:"width: 250px !important;" %>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Frecuencia de inspección(kms u hrs)</label><br>
+    <%= form.number_field :frecuencia_inspeccion, class: "form-control", style:"width: 250px !important;" %>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Servicio a realizar</label><br>
+    <%= form.text_area :servicio, class: "form-control", style:"width: 250px !important;" %>
+    <br>
+    </div>
+</div>
+<br>
+</div>
+<div class="float-right">
+<br><br>
+<%= submit_tag "Guardar", class: "btn btn-success m-btn m-btn--custom float-right" %>
+</div>
+<% end %>
+<style>
+    input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+</style>

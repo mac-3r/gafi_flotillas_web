@@ -1,0 +1,38 @@
+<%= form_with(model: parameter, local: true) do |form| %>
+  <% if parameter.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(parameter.errors.count, "error") %> prohibited this parameter from being saved:</h2>
+
+      <ul>
+        <% parameter.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+    </div>
+    <br>
+    <br>
+  
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Nombre:</label>
+      <div class="col-sm-0">
+        <%= form.text_field :nombre, class: "form-control", style:"width: 250px !important;" %>
+      </div>
+    </div>
+  
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Valor:</label>
+      <div class="col-sm-0">
+        <%= form.text_field :valor, class: "form-control", style:"width: 250px !important;" %>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Valor extendido:</label>
+      <div class="col-sm-0">
+        <%= form.text_field :valor_extendido, class: "form-control", style:"width: 250px !important;" %>
+      </div>
+    </div>
+<% end %>

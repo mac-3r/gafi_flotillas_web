@@ -1,0 +1,105 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Crear orden de servicio</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">No. Orden:</label>
+                <div class="col-sm-0">
+                    <label style="font-family: Arial; font-size:15px;"><%=@orden.n_orden %></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">No. Ecónomico:</label>
+                <div class="col-sm-0">
+                    <label style="font-family: Arial; font-size:15px;"><%=@orden.vehicle.numero_economico %></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Línea:</label>
+                <div class="col-sm-0">
+                    <label style="font-family: Arial; font-size:15px;"><%=@orden.vehicle.catalog_brand.descripcion %></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Modelo:</label>
+                <div class="col-sm-0">
+                    <label style="font-family: Arial; font-size:15px;"><%=@orden.vehicle.catalog_model.descripcion %></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Responsable:</label>
+                <div class="col-sm-0">
+                    <label style="font-family: Arial; font-size:15px;"><%=@orden.vehicle.responsable.nombre %></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Empresa:</label>
+                <div class="col-sm-0">
+                    <label style="font-family: Arial; font-size:15px;"><%=@orden.vehicle.catalog_company.nombre %></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Cedis:</label>
+                <div class="col-sm-0">
+                    <label style="font-family: Arial; font-size:15px;"><%=@orden.vehicle.catalog_branch.decripcion %></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Último kilometraje:</label>
+                <div class="col-sm-0">
+                    <label style="font-family: Arial; font-size:15px;"><%=@ultimo_km ? number_with_precision(@ultimo_km.km_actual,precision: 2) : "N/A"  %></label>
+                </div>
+            </div>
+            <%= form_for('', url: guardar_orden_ticket_path, method: :post, authenticity_token: true) do |f|%>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Descripción:</label>
+                <div class="col-sm-0">
+                    <%= f.text_field :descripcion, class: "form-control", style:"width: 310px !important;",required: true %>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Tipo orden de servicio:</label>
+                <div class="col-sm-0">
+                    <%= collection_select('',:order_service_type_id ,OrderServiceType.listado_ordenes, :id, :descripcion, {prompt:"Seleccione un tipo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Taller:</label>
+                <div class="col-sm-0">
+                    <%= collection_select('',:catalog_workshop_id ,CatalogWorkshop.listado_talleres, :id, :nombre_taller, {prompt:"Seleccione el taller"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Fecha revisión propuesta:</label>
+                <div class="col-sm-0">
+                    <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                      <%= f.text_field :fecha_revision_propuesta, class: "form-control datetimepicker-input", required:true %>
+                      <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+                  </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Tipo servicio:</label>
+                <div class="col-sm-0">
+                    <select name="tipo" id="tipo" class="form-control">
+                        <option value="Correctivo">Correctivo</option>
+                        <option value="Correctivo Agencia">Correctivo Agencia</option>
+                    </select>
+                </div>
+            </div>
+            <%= submit_tag "Guardar", class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;"%>
+            <% end %>
+        </div>
+    </div>
+</div>

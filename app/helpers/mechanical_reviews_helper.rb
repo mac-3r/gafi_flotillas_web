@@ -1,0 +1,2 @@
+module MechanicalReviewsHelper
+end

@@ -1,0 +1,80 @@
+
+<% bandera_nombre = "" %>
+<% bandera_opcion = "" %>
+<%= form_for('', url: save_actions_brand_path(@linea.id),method: :post, remote: true,authenticity_token: true) do |form|%>
+    <div class="accordion" id="accordionExample">
+        <% @categorias.each_with_index do |categoria, index| 
+            if bandera_nombre == categoria.categoria
+            #byebug
+        %>
+                <tr>
+                    <td>
+                        <%= form.hidden_field :categorias, name: "categorias[]", value: categoria.id %>
+                        <span class="m-switch m-switch--icon m-switch--success" >
+                            <label>
+                                <input type="checkbox"  <% if categoria.seleccionado %>checked="checked" <% end %> name="chkcategoria_<%= categoria.id %>" class="chkcategoria">
+                                <span></span>
+                            </label>
+                        </span>
+                    </td>
+                    <td scope="row"> <%= categoria.nombre %></td>
+                    <td scope="row"> <%= categoria.clave %></td>
+                </tr>
+            <% else %>
+                <% if index > 0 %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                <% end 
+                bandera_nombre = categoria.categoria
+                %>
+                <div class="card">
+                    <div class="card-header" id="heading<%= index %>">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<%= index %>" aria-expanded="true" aria-controls="collapse<%= index %>">
+                                <%= categoria.categoria %>
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapse<%= index %>" class="collapse" aria-labelledby="heading<%= index %>" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Nombre</th>
+                                        <th>Clave</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                        <%= form.hidden_field :categorias, name: "categorias[]", value: categoria.id %>
+                                            <span class="m-switch m-switch--icon m-switch--success" >
+                                                <label>
+                                                    <input type="checkbox" <% if categoria.seleccionado %>checked="checked" <% end %> name="chkcategoria_<%= categoria.id %>" class="chkcategoria">
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                        </td>
+                                        <td scope="row"> <%= categoria.nombre %></td>
+                                        <td scope="row"> <%= categoria.clave %></td>
+                                    </tr>
+                            
+            <% end %>
+            <% if @categorias.length == (index +1)%>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <% end %>
+         <% end %>
+    </div>
+                <div class="float-right">
+                    <%= form.submit "Terminar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+                </div>
+<% end %>

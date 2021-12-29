@@ -1,0 +1,42 @@
+<div class="float-right">
+    <%= link_to  "Exportar a excel", responsible_incident_excel_path, target: "_blank", class: "btn" %>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Empresa</th>
+            <th>CEDIS</th>
+            <th>Chofer</th>
+            <th>Costo siniestro</th>
+            <th>Total siniestros</th>
+            <th>Costo total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%  costo_siniestro_total = 0
+            totales_siniestro = 0
+            costo_totales = 0
+            
+            @ticket[0].each do |responsable| %>
+            <tr>
+                
+                <td><%= responsable["empresa"] %></td>
+                <td><%= responsable["cedis"] %></td>
+                <td><%= responsable["chofer"] %></td>
+                <td><%= number_to_currency(responsable["costo_siniestro"]) %></td>
+                <% costo_siniestro_total += responsable["costo_siniestro"] %>
+                <td><%= responsable["total_siniestro"] %></td>
+                <% totales_siniestro +=  responsable["total_siniestro"] %>
+                <td><%= number_to_currency(responsable["costo_total"]) %></td>
+                <% costo_totales +=  responsable["costo_total"] %>
+            </tr>
+        <% end %>
+        <tr> 
+            <th colSpan="3">Total</th>
+            <td><b><%= number_to_currency(costo_siniestro_total) %></b></td>
+            <td><b><%= number_to_human(totales_siniestro) %></b> </td>
+            <td><b><%= number_to_currency(costo_totales) %></b></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>

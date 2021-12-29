@@ -1,0 +1,29 @@
+<%= form_with(model: maintenance_log, local: true) do |form| %>
+  <% if maintenance_log.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(maintenance_log.errors.count, "error") %> prohibited this maintenance_log from being saved:</h2>
+
+      <ul>
+        <% maintenance_log.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Terminar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+   <br><br>
+   <div class="row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Clave:&nbsp;<%=@maintenance_log.clave %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Línea:&nbsp;<%=@maintenance_log.catalog_brand.descripcion %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha:&nbsp;<%=l @maintenance_log.fecha %></label>
+   </div>
+  <div id="contenedor_partidas">
+    <%= render "partidas" %>
+  </div>
+<% end %>

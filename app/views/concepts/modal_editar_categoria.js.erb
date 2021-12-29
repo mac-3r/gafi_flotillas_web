@@ -1,0 +1,24 @@
+<% if @concepto%>
+    $("#titulo_modal_general").text("Editar categoría de mantenimiento <%= @concepto.descripcion %>");
+    $(".modal_general").modal("show");
+    $("#contenido").html("<%= escape_javascript(render partial: 'form_categorias') %>");
+<% else %>
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    toastr.info("No se encontró la categoría seleccionada.");
+<% end %>

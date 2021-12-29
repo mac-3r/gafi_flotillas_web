@@ -1,0 +1,6 @@
+$("#cost_center_id").empty();
+$('<option>').val('').text('Seleccione el centro de costo').appendTo('#cost_center_id');
+<% @centro_costos.each do |ccosto| %>
+    $('<option>').val('<%= ccosto.id %>').text('<%= ccosto.datoscombo %>').appendTo('#cost_center_id');
+<% end %>
+$('#cost_center_id').trigger("chosen:updated");

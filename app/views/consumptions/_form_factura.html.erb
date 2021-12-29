@@ -1,0 +1,9 @@
+<%= form_for(@consumption, method: @metodo.to_sym, url: eval(@url), remote: true) do |f| %>
+    <div class="form-group">
+        <label>Folio Factura</label>
+        <%= f.text_field :n_factura, class: "form-control", required: true %>
+    </div>
+    <div class="float-right">
+        <%= f.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;",data: { confirm: '¿Desea cambiar el folio?.'} %>
+    </div>
+<% end %>

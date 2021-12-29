@@ -1,0 +1,45 @@
+<center>
+    <h3><%= @accion.nombre %></h3>
+</center>
+<hr>
+<%= form_for('', url: asignar_servicios_path(@accion.id),method: :post, remote: true,authenticity_token: true) do |form|%>
+    
+    <% if @acciones != [] %>
+        <div style="max-height: 700px; overflow: auto;">
+            <% @acciones.each do |accion| %>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <%= form.hidden_field :acciones, name: "acciones[]", value: accion.id %>
+                        <span class="m-switch m-switch--icon m-switch--success" >
+                            <label>
+                                <input type="checkbox" <% if accion.seleccionado %>checked="checked" <% end %> name="chkcategoria_<%= accion.id %>" class="chkcategoria">
+                                <span></span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="col-lg-10">
+                        <h6><%= accion.descripcion %></h6>
+                    </div>
+                </div>
+                <hr>
+            <% end %>
+        </div>
+        <div class="float-right">
+            <%= form.submit "Terminar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+        </div>
+    <%else%>
+        <div style="max-height: 700px; overflow: auto;">
+           <h2 style="text-align: center;">No se encontraron servicios verifique el catálogo de servicios de mantenimiento.<h1>
+        </div>
+    <% end %>
+    
+<% end %>
+
+<script type="text/javascript">
+  $('input[type=checkbox]').change(function(e){
+   if ($('input[type=checkbox]:checked').length > 2) {
+        $(this).prop('checked', false)
+        alert("Solo se puede seleccionar hasta 2 servicios.");
+   }
+})
+</script>

@@ -1,0 +1,5 @@
+<%= form_tag importar_frecuencias_path, multipart: true do %>
+    <%= file_field_tag :file, :class => "form-control-file", accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %>
+
+    <%= submit_tag "Cargar", class: "form_submit btn btn-primary", :id => "file_button" %>
+<% end %>

@@ -1,0 +1,27 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Vehículo por usuario</h3>
+                  <%= link_to 'Regresar', user_vehicles_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+       <div class="card-body">  
+        <p>
+          <strong>Usuario:</strong>
+          <%= @user_vehicle.user_id %>
+        </p>
+        
+        <p>
+          <strong>Vehículo:</strong>
+          <%= @user_vehicle.vehicle_id %>
+        </p>
+            <%= link_to 'Editar', edit_user_vehicle_path(@user_vehicle),class:"btn btn-default"%> 
+    </div>
+  </div>
+</div>

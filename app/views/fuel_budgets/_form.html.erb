@@ -1,0 +1,46 @@
+<%= form_with(model: fuel_budget, local: true) do |form| %>
+  <% if fuel_budget.errors.any? %>
+  <div class="alert alert-danger">Error al registrar:
+    <div id="error_explanation">
+      <ul>
+        <% fuel_budget.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+  <br><br>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">No. Económico*</label>
+    <div class="col-sm-0">
+      <%= collection_select(:fuel_budget,:vehicle_id ,Vehicle.listado_vehiculos, :id, :numero_economico, {prompt:"Vehículo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Litros:</label>
+    <div class="col-sm-0">
+      <%= form.number_field :litros, step: :any,class: "form-control", style:"width: 250px !important;"%>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Precio Litro:</label>
+    <div class="col-sm-0">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">$</span>
+        </div>
+        <%= form.number_field :precio_litro, step: :any,class: "form-control", style:"width: 220px !important;" %>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Fórmula presupuesto</label>
+    <div class="col-sm-0">
+      <%= form.text_field :formula_presupuesto,class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+<% end %>

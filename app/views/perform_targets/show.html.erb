@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Afectacion contable</h3>
+                  <%= link_to 'Regresar', perform_targets_path , class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+      <div class="card-body">
+
+        <p>
+          <strong>Clave:</strong>
+          <%= @perform_target.clave %>
+        </p>
+
+        <p>
+          <strong>Objperform:</strong>
+          <%= @perform_target.objperform %>
+        </p>
+
+        <p>
+          <strong>Catalog branch:</strong>
+          <%= @perform_target.catalog_branch_id %>
+        </p>
+
+        <p>
+          <strong>Vehicle type:</strong>
+          <%= @perform_target.vehicle_type_id %>
+        </p>
+
+        <p>
+          <strong>Idealperform:</strong>
+          <%= @perform_target.idealperform %>
+        </p>
+
+        <p>
+          <strong>Status:</strong>
+          <%= @perform_target.status %>
+        </p>
+
+        <%= link_to 'Editar', edit_perform_target_path(@perform_target),class:"btn btn-default" %>
+        <br><br>                  
+    </div>
+  </div>
+</div>

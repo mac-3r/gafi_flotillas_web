@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>GAFI FLOTILLAS</h1>
+    <p>
+        Completar el proceso de compra del vehículo con el numero economico: <strong><%= @vehicle.numero_economico %> </strong> para que pueda ser entregado.<br>
+    </p>
+    <h4>Datos del vehículo:</h4>
+    <p><strong>Numero economico: </strong> <%= @vehicle.numero_economico %> </p>
+    <p><strong>Tipo de vehículo:</strong> <%= @vehicle.vehicle_type.descripcion %></p>
+    <p><strong>Linea de vehículo:</strong><%= @vehicle.catalog_brand.descripcion%></p>
+    <p><strong>Modelo del vehículo:</strong> <%= @vehicle.catalog_model.descripcion %></p>
+    <p><strong>N° Serie: </strong><%= @vehicle.numero_serie %></p>
+    <p><strong>Motor:</strong> <%= @vehicle.numero_motor %></p>
+    <p><strong>Color:</strong><%= @vehicle.vehicle_color %></p>
+  </body>
+</html>

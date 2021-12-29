@@ -1,0 +1,2 @@
+class AnnualAmountsPaid < ApplicationRecord
+end

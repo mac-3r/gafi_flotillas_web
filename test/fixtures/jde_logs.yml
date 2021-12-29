@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fecha: 2021-05-15
+  hora: 2021-05-15 01:18:11
+  json_enviado: MyText
+  respuesta: MyText
+
+two:
+  fecha: 2021-05-15
+  hora: 2021-05-15 01:18:11
+  json_enviado: MyText
+  respuesta: MyText

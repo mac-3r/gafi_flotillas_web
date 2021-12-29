@@ -1,0 +1,44 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header ">
+            <div class="card-title">
+                <h3 class="card-label">Direcciones de entrega 
+                 <span class="text-muted pt-2 font-size-sm d-block">Catálogo de direcciones de entrega</span>
+                </h3>
+            </div>
+        </div>
+        <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>Clave</th>
+            <th>Principal</th>
+            <th>CEDIS</th>
+            <th>Dirección</th>
+            <th>Estatus</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @delivery_addresses.each do |delivery_address| %>
+            <tr>
+              <td><%= delivery_address.catalog_company.nombre %></td>
+              <td><%= delivery_address.clave %></td>
+              <td><%= delivery_address.principal %></td>
+              <td><%= delivery_address.catalog_branch.decripcion %></td>
+              <td><%= delivery_address.direccion %></td>
+              <% if delivery_address.estatus == 1 %>
+                <td>Activo</td>
+              <% else %>
+                <td>Inactivo</td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+        </div>
+    </div>
+</div>

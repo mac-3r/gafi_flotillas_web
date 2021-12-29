@@ -1,0 +1,41 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Licencia</h3>
+                  <%= link_to 'Regresar', catalog_licences_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+      <div class="card-body">
+        <p>
+          <strong>Clave:</strong>
+          <%= @catalog_licence.clave %>
+        </p>
+        <p>
+          <strong>Numero economico:</strong>
+          <%= @catalog_licence.vehicle.numero_economico %>
+        </p>
+        <p>
+          <strong>Descripcion:</strong>
+          <%= @catalog_licence.descripcion %>
+        </p>
+        <p>
+          <strong>Numero economico:</strong>
+          <%= @catalog_licence.numero_licencia %>
+        </p>
+        <p>
+          <strong>Fecha de vencimiento:</strong>
+          <%= @catalog_licence.fecha_vencimiento %>
+        </p>
+        <%= link_to 'Ver archivo', @catalog_licence.file, class:"btn btn-default" %>
+        <%= link_to 'Editar', edit_catalog_licence_path(@catalog_licence), class:"btn btn-default" %>
+      </div>
+    </div>
+</div>
+
+

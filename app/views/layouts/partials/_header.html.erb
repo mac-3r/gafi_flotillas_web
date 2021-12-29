@@ -1,0 +1,482 @@
+
+<!--begin::Header-->
+<div id="kt_header" class="header flex-column header-fixed">
+
+    <!--begin::Top-->
+    <div class="header-top" style="background-color: #DC2827;">
+        <!--begin::Container-->
+        <div class="container">
+
+            <!--begin::Left-->
+            <div class="d-none d-lg-flex align-items-center mr-3">
+
+                <!--begin::Logo-->
+                <a href="#" class="mr-20">
+                    <img alt="Logo" src="/logo_transparente.png" class="max-h-35px" />
+                </a>
+
+                <!--end::Logo-->
+
+                <!--begin::Tab Navs(for desktop mode)-->
+                <ul class="header-tabs nav align-self-end font-size-lg" role="tablist">
+
+                    <!--begin::Item-->
+                    <li class="nav-item">
+                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Maestro de vehículos" %>active<% end %>" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Maestro de vehículos</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Siniestralidad" %>active<% end %>" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Siniestralidad</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Combustible" %>active<% end %>" data-toggle="tab" data-target="#kt_header_tab_3" role="tab">Combustible</a>
+                    </li>
+                    
+                    <li class="nav-item mr-3">
+                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Mantenimiento" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_4">Mantenimiento</a>  
+                    </li>
+                    <% if can? :index, WorkshopCertification %>
+                        <li class="nav-item mr-3">
+                            <a class="nav-link py-4 px-3 <% if session["menu1"] == "Certificación de talleres" %>active<% end %>" href="/workshop_certifications">
+                            Certificación de talleres</a>                    
+                        </li>
+                    <% end %>
+                    <li class="nav-item mr-2">
+                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Seguridad" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_5">Seguridad</a>  
+                    </li>
+                    
+                                   
+                </ul>
+            </div>
+            
+            <!--end::Left-->
+
+            <!--begin::Topbar-->
+            
+            <!--end::Topbar-->
+        </div>
+                    <div class="topbar bg-primary">
+        
+                        <!--begin::User-->
+                        <div class="topbar-item" style="background-color: #DC2827;">
+                            <div class="btn btn-icon btn-hover-transparent-white w-lg-auto d-flex align-items-center btn-lg" id="kt_quick_user_toggle">
+                                <div class="d-flex flex-column text-right pr-lg-1">
+                                    <% if user_signed_in? %>
+                                    <span class="text-white font-weight-bold font-size-sm d-none d-md-inline"><%= current_user.name%>&nbsp;<%= current_user.last_name%></span>
+                                    <% end %>
+                                </div>
+                                <span class="symbol symbol-35">
+                                    <span class="symbol-label font-size-h5 font-weight-bold text-white bg-white-o-30"><i class="fas fa-user"></i></span>
+                                </span>
+                            </div>
+                        </div>
+        
+                        <!--end::User-->
+                    </div>
+
+        <!--end::Container-->
+    </div>
+
+    <!--end::Top-->
+    
+    <!--begin::Bottom-->
+    <div class="header-bottom">
+
+        <!--begin::Container-->
+        <div class="container">
+
+            <!--begin::Header Menu Wrapper-->
+            <div class="header-navs header-navs-left" id="kt_header_navs">
+
+                <!--begin::Tab Navs(for tablet and mobile modes)-->
+                <ul class="header-tabs p-5 p-lg-0 d-flex d-lg-none nav nav-bold nav-tabs" role="tablist">
+
+                    <!--begin::Item-->
+                    <li class="nav-item mr-2">
+                        <a href="#" class="nav-link btn btn-clean active" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Vehículos</a>
+                    </li>
+
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <li class="nav-item mr-2">
+                        <a href="#" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Reportes</a>
+                    </li>
+
+                    <!--end::Item-->
+                </ul>
+
+                <!--begin::Tab Navs-->
+
+                <!--begin::Tab Content-->
+                <div class="tab-content">
+
+                    <!--begin::Tab Pane-->
+                    <div class="tab-pane py-5 p-lg-0 <% if session["menu1"] == "Maestro de vehículos" %> show active <% end %>" id="kt_header_tab_1">
+
+                        <!--begin::Menu-->
+                        <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+
+                            <!--begin::Nav-->
+                            <ul class="menu-nav">
+                            
+
+                                <li class="menu-item <% if session["menu2"] == "Maestro"%> menu-item-active <% end %>" aria-haspopup="true">
+                                    <%= link_to vehicles_path, class: "menu-link" do %>
+                                        <span class="menu-text">Maestro</span>
+                                    <% end %>
+                                </li>
+                                
+                                <% if can? :index, Budget %>
+                                    <li class="menu-item <% if session["menu2"] == "Presupuestos"%> menu-item-active <% end %>" aria-haspopup="true">
+                                        <%= link_to budgets_path, class: "menu-link" do %>
+                                            <span class="menu-text">Presupuestos</span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                               
+                                <% if can? :index, Budget %>
+                                    <li class="menu-item <% if session["menu2"] == "Autorización de Presupuestos"%> menu-item-active <% end %>" aria-haspopup="true">
+                                        <%= link_to budget_requests_path, class: "menu-link" do %>
+                                            <span class="menu-text">Autorización de Presupuestos</span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <%# if (can? :index, BudgetConcept) or (can? :index, BudgetAdministration) or (can? :index,BudgetDistribution) %>
+                                    <!--<li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
+                                        <a href="javascript:;" class="menu-link menu-toggle">
+                                            <span class="menu-text">Presupuestos</span>
+                                            <span class="menu-desc"></span>
+                                            <i class="menu-arrow"></i>
+                                        </a>
+                                        <div class="menu-submenu menu-submenu-classic menu-submenu-left">
+                                            <ul class="menu-subnav" style="overflow-y: auto; max-height: 400px;">
+                                            <%# if can? :index, BudgetConcept %>
+                                            <li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
+                                                <%#= link_to budget_concepts_path, class: "menu-link" do %>
+                                                    <span class="menu-text">Compra de vehículos de venta</span>
+                                                    <span class="menu-desc"></span>
+                                                <%# end %>
+                                            </li>
+                                            <%# end %>
+                                            <%# if can? :index, BudgetAdministration %>
+                                            <li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
+                                                <%#= link_to budget_administrations_path, class: "menu-link" do %>
+                                                    <span class="menu-text">Compra de vehículos de administración</span>
+                                                    <span class="menu-desc"></span>
+                                                <%# end %>
+                                            </li>
+                                            <%# end %>
+                                            <%# if can? :index, BudgetDistribution %>
+                                            <li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
+                                                <%#= link_to budget_distributions_path, class: "menu-link" do %>
+                                                    <span class="menu-text">Compra de vehículos de reparto,almacen y gerencia de operaciones</span>
+                                                    <span class="menu-desc"></span>
+                                                <%# end %>
+                                            </li>
+                                            <%# end %>
+                                            </ul>
+                                        </div>
+                                    </li>-->
+                                <%# end %>
+
+
+                                <% if can? :index, TicketTireBattery %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Solicitudes de compra"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to ticket_tire_batteries_path, class: "menu-link" do %>
+                                            <span class="menu-text">Solicitudes de compra</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+
+                                <% if can? :index, PurchaseOrder %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Orden de compra"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to purchase_orders_path, class: "menu-link" do %>
+                                            <span class="menu-text">Orden de compra</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+
+                                <% if can? :autorizacion_ordenes_compra, :purchase_orders_request %>
+                                    <li class="menu-item <% if session["menu2"] == "Autorización de ordenes de compra"%> menu-item-active <% end %>" aria-haspopup="true">
+                                        <%= link_to purchase_orders_requests_path, class: "menu-link" do %>
+                                            <span class="menu-text">Autorización de ordenes de compra</span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <%# if can? :reporte_auditorias, Vehicle %>
+                                    <!--<li class="menu-item <%# if session["menu2"] == "Reporte de auditorías"%> menu-item-active <%# end %>" aria-haspopup="true">
+                                        <%#= link_to reporte_auditorias_path, class: "menu-link" do %>
+                                            <span class="menu-text">Reporte de auditorías</span>
+                                        <%# end %>
+                                    </li>-->
+                                <%# end %>
+
+                                <% if can? :index, :verifications_report %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Reporte de auditorías"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to verifications_report_path, class: "menu-link" do %>
+                                            <span class="menu-text">Reporte de auditorías</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <!-- <% if can? :new, Vehicle %>
+                                <li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
+                                    <%= link_to new_vehicle_path, class: "menu-link" do %>
+                                        <span class="menu-text">Compra de vehículo</span>
+                                        <span class="menu-desc"></span>
+                                    <% end %>
+                                </li>
+                                <% end %> -->
+                                <% if can? :reporte_responsivas, Vehicle %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Responsivas"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to reporte_responsivas_path, class: "menu-link" do %>
+                                            <span class="menu-text">Responsivas</span>
+                                            <span class="menu-desc"></span>
+                                    </li>
+                                    <% end %>
+                                <% end %>
+                                <% if can? :reporte_documentos, Vehicle %>
+                                <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Reporte de documentos"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                    <%= link_to reporte_documentos_path, class: "menu-link" do %>
+                                        <span class="menu-text">Reporte de documentos</span>
+                                        <span class="menu-desc"></span>
+                                </li>
+                                <% end %>
+                                
+                            <% end %>
+                            </ul>
+                            
+                            <!--end::Nav-->
+                        </div>
+
+                        <!--end::Menu-->
+                        
+                    </div>
+
+                    <!--begin::Tab Pane-->
+
+                    <!--begin::Tab Pane-->
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between  <% if session["menu1"] == "Siniestralidad" %> show active <% end %>" id="kt_header_tab_2">
+                        <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+                            <ul class="menu-nav">
+                                <%= render  "layouts/partials/menu_siniestralidad" %>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between <% if session["menu1"] == "Combustible" %> show active <% end %>" id="kt_header_tab_3">   
+                        <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+                            <ul class="menu-nav">
+                                <% if can? :index, VehicleConsumption %>
+                                <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Consumo por vehículos"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                    <%= link_to vehicle_consumptions_path, class: "menu-link" do %>
+                                        <span style="width: 120px;" class="menu-text">Consumo por vehículos</span>
+                                    <% end %>
+                                </li>
+                                <% end %>
+                                <% if can? :indice_solicitud, Consumption %>
+                                <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Solicitudes Autorizadas"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                    <%= link_to indice_solicitud_path, class: "menu-link" do %>
+                                        <span class="menu-text">Solicitudes Autorizadas</span>
+                                        <span class="menu-desc"></span>
+                                    <% end %>
+                                </li>
+                                <% end %>
+                                <% if can? :reporte_acumulado, VehicleConsumption %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Reporte de control de combustible acumulado"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to reporte_acumulado_path, class: "menu-link" do %>
+                                            <span class="menu-text">Reporte de control de combustible acumulado</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <% if can? :reporte_mensual, VehicleConsumption %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Reporte de rendimiento mensual de reparto"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to reporte_mensual_path, class: "menu-link" do %>
+                                        <span class="menu-text">Reporte de rendimiento mensual de reparto</span>
+                                        <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <% if can? :indicador_rendimiento, VehicleConsumption %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Indicador vehículos dentro de rendimiento"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to indicador_rendimiento_path, class: "menu-link" do %>
+                                        <span class="menu-text">Indicador vehículos dentro de rendimiento</span>
+                                        <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <% if can? :indicador_presupuesto, VehicleConsumption %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Indicador vehículos fuera de presupuesto"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to indicador_presupuesto_path, class: "menu-link" do %>
+                                            <span class="menu-text">Indicador vehículos fuera de presupuesto</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <% if can? :indicador_km, VehicleConsumption %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Indicador vehículos dentro del objetivo del gasto por km"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to indicador_km_path, class: "menu-link" do %>
+                                            <span class="menu-text">Indicador vehículos dentro del objetivo del gasto por km</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <!--<li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
+                                    <%#= link_to accumulated_fuels_path, class: "menu-link" do %>
+                                        <span class="menu-text">Reporte de control de combustible acumulado</span>
+                                        <span class="menu-desc"></span>
+                                    <%# end %>
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between <% if session["menu1"] == "Mantenimiento" %> show active <% end %>" id="kt_header_tab_4">
+                        <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+                            <ul class="menu-nav">
+                                <% if can? :index, MileageIndicator %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Seguimiento de captura de kilometraje"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to mileage_indicators_path, class: "menu-link" do %>
+                                            <span class="menu-text">Seguimiento de captura de kilometraje</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                 <% end %>
+                                 <% if can? :index, MaintenanceProgram %>
+                                     <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Programa de mantenimiento"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                         <%= link_to maintenance_programs_path, class: "menu-link" do %>
+                                             <span class="menu-text">Programa de mantenimiento</span>
+                                             <span class="menu-desc"></span>
+                                         <% end %>
+                                     </li>
+                                 <% end %>
+                                 <% if can? :index, MaintenanceTicket %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Tickets"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to maintenance_tickets_path, class: "menu-link" do %>
+                                            <span class="menu-text">Tickets</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                 <% if can? :index, ServiceOrder %>
+                                     <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Ordenes de servicio"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                         <%= link_to service_orders_path, class: "menu-link" do %>
+                                             <span class="menu-text">Ordenes de servicio</span>
+                                             <span class="menu-desc"></span>
+                                         <% end %>
+                                     </li>
+                                 <% end %>
+                                <% if can? :index, MaintenanceControl %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Control de mantenimiento"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to maintenance_controls_path, class: "menu-link" do %>
+                                            <span class="menu-text">Control de mantenimiento</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                
+                                <% if can? :index, MaintenanceAppointment %>
+
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Citas"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to maintenance_appointments_path, class: "menu-link" do %>
+                                            <span class="menu-text">Citas</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <% if can? :indicador_horas_taller, MaintenanceControl %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Indicador horas taller"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to indicador_horas_taller_path, class: "menu-link" do %>
+                                            <span class="menu-text">Indicador horas taller</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <% if can? :indicador_respuestas_taller, MaintenanceControl %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to indicador_respuestas_taller_path, class: "menu-link" do %>
+                                            <span class="menu-text">Indicador respuestas taller</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <% if can? :indicador_costo_mantemiento, ServiceOrder %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Indicador costo mantenimiento por km por vehículo"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to indicador_costo_mantenimiento_path, class: "menu-link" do %>
+                                            <span class="menu-text"> Indicador costo mantenimiento por km por vehículo</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                                <% if can? :reporte_presupuesto_mantenimiento, MaintenanceControl %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Reporte de presupuesto mantenimiento"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%= link_to reporte_presupuesto_mantenimiento_path, class: "menu-link" do %>
+                                            <span class="menu-text"> Reporte de presupuesto mantenimiento</span>
+                                            <span class="menu-desc"></span>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between <% if session["menu1"] == "Seguridad" %> show active <% end %>" id="kt_header_tab_5">
+                        <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+                            <ul class="menu-nav">
+                                <%= render  "layouts/partials/menu_seguridad" %>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between" id="kt_header_tab_6">
+                        <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+                                <ul class="menu-nav">
+                                    <% if can? :index, AgencyMileageIndicator %>
+                                        <li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
+                                            <%= link_to agency_mileage_indicators_path, class: "menu-link" do %>
+                                                <span class="menu-text">Seguimiento de captura de kilometraje</span>
+                                                <span class="menu-desc"></span>
+                                            <% end %>
+                                        </li>
+                                    <% end %>
+                                </ul>
+                        </div>
+                    </div>
+                        
+                  
+                
+                    <!--begin::Tab Pane-->
+                </div>
+
+                <!--end::Tab Content-->
+            </div>
+
+            <!--end::Header Menu Wrapper-->
+        </div>
+
+        <!--end::Container-->
+    </div>
+
+    <!--end::Bottom-->
+</div>
+
+<!--end::Header-->
+<script>
+    $(document).ready(function() {
+        $('.dropdown-toggle').click(function(){
+
+$('.dropdown-menu').toggleClass('show');
+
+});
+});
+</script>
+<style>	
+    .scrollable-menu {	
+    height: auto;	
+    max-height: 200px;	
+    overflow-x: hidden;	
+}
+    .menu-text {
+        text-align: center;
+    }	
+</style> 

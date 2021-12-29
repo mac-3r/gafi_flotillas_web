@@ -1,0 +1,227 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title example-screen">
+                        <h3 class="card-label float-left">Ver descripción</h3>
+                        <%= link_to 'Regresar' ,service_orders_path , class: "btn btn-default float-right" %>&nbsp;&nbsp;&nbsp;
+                        <div class="float-right">
+                            <% if @service_order.estatus != "Pendiente" and @service_order.estatus != "Cancelado"%>
+                                <button onclick="window.print()" class="btn btn-primary font-weight-bolder" style="border-radius: 0.42rem;">Generar PDF</button> 
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <h3 style="text-align: center;"><img style="float: left;" src="https://www.gafi.com.mx/Content/themes/images/logo.jpg" alt="" width="80" height="90" /></h3>
+                <h3 style="text-align: center;" class="center"><strong>ORDEN DE TRABAJO PARA MANTENIMIENTO VEHICULAR</strong></h3>
+                <br><br><br>
+                <table class="table" style="border: 1px solid black;"   >
+                    <tr style="background-color:black">
+                        <th colspan="6" scope="colgroup" style="text-align: center;border: 1px solid black !important;color:#FFFFFF" class="colores">Información del vehículo</th>
+                    </tr>
+                    <tr style="background-color:#BDC3C7">
+                        <th scope="col">No. Económico</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Modelo</th>
+                        <th scope="col">Año</th>
+                        <th scope="col">Kilometraje</th>
+                        <th scope="col">Responsable</th>
+                    </tr>
+                    <tr>
+                        <td><%= @service_order.vehicle.numero_economico %></td>
+                        <td><%= @service_order.vehicle.vehicle_type.descripcion %></td>
+                        <td><%= @service_order.vehicle.catalog_brand.descripcion %></td>
+                        <td><%= @service_order.vehicle.catalog_model.descripcion %></td>
+                        <% if @service_order.estatus == "Salió de taller" or @service_order.estatus == "Servicio Finalizado" %>
+                        <td><%= number_with_precision(@service_order.km_actual,precision: 0)  %></td>
+                        <%else %>
+                            <td><%= @km ? number_with_precision(@km.km_actual,precision: 2) : "N/A"%></td>
+                        <% end %>
+                        <td><%= @service_order.vehicle.responsable.nombre %></td>
+                    </tr>
+                    <% if @service_order.estatus == "Cancelado" or @service_order.estatus == "Rechazada"%>
+                        <tr style="background-color:#BDC3C7">
+                            <th colspan="6">Motivo de cancelación</th>
+                        </tr>
+                        <tr>
+                            <td colspan="6"><%= @service_order.motivo_rechazo %></td>
+                        </tr>
+                    <% end %>
+                </table>
+                <br>
+                <table class="table" >
+                    <tr style="background-color:#000000">
+                        <th colspan="6" scope="colgroup" style="text-align: center;border: 1px solid black !important;color:#FFFFFF" class="colores">Descripción mantenimiento</th>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><%= @service_order.descripcion %></td>
+                    </tr>
+                    <tr style="background-color:#BDC3C7">
+                        <th colspan="1" scope="colgroup" style="text-align: center;">Proveedor autorizado</th>
+                        <th colspan="1" scope="colgroup" style="text-align: center;">Razón social</th>
+                        <th colspan="1" scope="colgroup" style="text-align: center;">Responsable</th>
+                        <th colspan="1" scope="colgroup" style="text-align: center;">Costo IVA incluido</th>
+                    </tr>
+                     <tr>
+                         <% if @service_order.ticket_tire_battery_id %>
+                            <td scope="col" style="text-align: center;"><%= @service_order.catalog_vendor_id ? @service_order.catalog_vendor.nombre : "N/A"%></td>
+                            <td scope="col" style="text-align: center;"><%= @service_order.catalog_vendor_id ? @service_order.catalog_vendor.razonsocial : "N/A"%></td>
+                            <td scope="col" style="text-align: center;"><%= @service_order.catalog_vendor_id ? @service_order.catalog_vendor.nombre : "N/A"%></td>
+                        <% else %>
+                            <td scope="col" style="text-align: center;"><%= @service_order.catalog_workshop_id ? @service_order.catalog_workshop.nombre_taller : "N/A"%></td>
+                            <td scope="col" style="text-align: center;"><%= @service_order.catalog_workshop_id ? @service_order.catalog_workshop.razonsocial : "N/A"%></td>
+                            <td scope="col" style="text-align: center;"><%= @service_order.catalog_workshop_id ? @service_order.catalog_workshop.responsable : "N/A"%></td>
+                         <% end %>
+                        <% if @service_order.precio.nil?%>
+                        <td scope="col" style="text-align: center;"><%= number_to_currency(@precio)%></td>   
+                        <% else %>  
+                        <td scope="col" style="text-align: center;"><%= number_to_currency(@service_order.precio) if @service_order.precio%></td>   
+                        <% end %>
+                    </tr>
+                </table>
+                <br><br><br>
+                <% if @service_order.tipo_servicio == "Preventivo" or @service_order.tipo_servicio == "Preventivo Agencia"%>
+                    <table class="table">
+                        <tr style="background-color:#000000">
+                            <th colspan="6" scope="colgroup" style="text-align: center;border: 1px solid black !important;color:#FFFFFF" class="colores">Servicios</th>
+                        </tr>
+                        <tr style="background-color:#BDC3C7 ">
+                            <th colspan="1" scope="colgroup" style="text-align: center;">Categoría</th>
+                            <th colspan="1" scope="colgroup" style="text-align: center;">Concepto</th>
+                            <th colspan="1" scope="colgroup" style="text-align: center;">Servicio a realizar</th>
+                        </tr>
+                        <% if @service_order.estatus == "Salió de taller" or @service_order.estatus == "Servicio Finalizado"%>
+                            <% @servicios_realizar.each do |servicio| %>
+                                <tr>
+                                    <td><%= servicio.categoria%></td>
+                                    <td><%= servicio.concepto%></td>
+                                    <td style="text-align:center"><%= servicio.servicio%></td>
+                                </tr>
+                            <% end %>
+                        <%else%>
+                            <% @servicios_realizar.each do |servicio| %>
+                                <tr>
+                                    <td><%= servicio[:nombre]%></td>
+                                    <td><%= servicio[:accion]%></td>
+                                    <td style="text-align:center"><%= servicio[:servicio]%></td>
+                                </tr>
+                            <% end %>
+                        <% end %>
+                    </table>
+                <% end %>
+                <br><br><br>
+                <% if session["taller"].nil?%>
+                    <% if @service_order.estatus == "Salió de taller" or @service_order.estatus == "Servicio Finalizado" and @encuesta %>
+                        <table class="table">
+                            <tr style="background-color:#000000" class="borde">
+                                <th colspan="6" scope="colgroup" style="text-align: center;border: 1px solid black !important;color:#FFFFFF" class="colores">Recepción a conformidad</th>
+                            </tr>
+                            <tr>
+                                <th colspan="1" scope="colgroup" style="text-align: center;">Días taller</th>
+                                <th colspan="1" scope="colgroup" style="text-align: center;"><%= @tiempo.dias_taller if @tiempo%></th>
+                            </tr>
+                            <tr style="background-color:#BDC3C7 ">
+                                <th colspan="2" scope="colgroup" style="text-align: center;">Encuesta de satisfacción</th>
+                            </tr>
+                            <% @encuesta.each do |enc| %>
+                                <tr>
+                                    <td><%= enc.question.descripcion%></td>
+                                    <td><%= enc.answer.descripcion%></td>
+                                </tr>
+                            <% end %>
+                        </table>
+                    <% end %>  
+                <% end %>
+                <% if @service_order.catalog_tires_battery_id %>
+                    <table class="table">
+                        <tr style="background-color:#000000">
+                            <th colspan="6" scope="colgroup" style="text-align: center;border: 1px solid black !important;color:#FFFFFF">Información del artículo</th>
+                        </tr>
+                        <tr style="background-color:#BDC3C7">
+                            <th scope="col">Medida</th>
+                            <th scope="col">Modelo a utilizar</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Precio</th>
+                        </tr>
+                        <tr>
+                            <td><%= @service_order.catalog_tires_battery.medida %></td>
+                            <td><%= @service_order.catalog_tires_battery.modelo %></td>
+                            <td><%= @service_order.ticket_tire_battery.cantidad %></td>
+                            <td><%= number_to_currency(@service_order.catalog_tires_battery.precio)%></td>
+                        </tr>
+                    </table>
+                <% end %>
+            </div>
+            <br><br><br>
+            <div style="width: 50%; height: 50%; float:left;" class="firmas">
+                <div style="width:350px;" class="center">
+                  <br><br><br><br>
+                   <hr size="8" width="90%" color="black"> 
+                   <div  style="justify-content:center; align-items:center;display: flex;">
+                      <p><strong style="text-align: center;">Proveedor</strong></p>
+                   </div>
+                   <div  style="justify-content:center; align-items:center;display: flex;">
+                      <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                   </div>
+                </div>
+            </div>
+            <div style="width: 50%; height: 50%; float:right;"class="firmas">
+                <div style="width:350px;" class="center">
+                  <br><br><br><br>
+                   <hr size="8" width="90%" color="black"> 
+                   <div  style="justify-content:center; align-items:center;display: flex;"></div>
+                   <div  style="justify-content:center; align-items:center;display: flex;">
+                      <p><strong style="text-align: center;"><%= @service_order.usuario_autoriza %></strong></p>
+                   </div>
+                    <div  style="justify-content:center; align-items:center;display: flex;">
+                        <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    table, th, td {
+    border: 1px solid black;
+    text-align: center;
+    }
+    .center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+  }
+  .firmas {
+    display: none;
+  }
+    @media print {
+   .colores {
+       color: black !important;
+   }
+   .example-screen {
+             display: none;
+    }
+}
+</style>
+<style type="text/css" media="print">
+    @media print {
+      body {-webkit-print-color-adjust: exact;}
+    }
+    .firmas {
+    display: block;
+  }
+    @page {
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin: 0;
+        -webkit-print-color-adjust: exact;
+    }
+</style>

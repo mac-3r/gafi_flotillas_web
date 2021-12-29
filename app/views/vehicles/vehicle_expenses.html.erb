@@ -1,0 +1,112 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Gastos del vehículo</h3>
+                        <%= link_to 'Regresar' ,vehicles_path , class: "btn btn-default float-right" %>
+                        <input type="button" value="Generar PDF", class="btn btn-outline-success mr-2 float-right" id="btn_imprimir">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">                   
+                    <div class="row" style="text-align: left;">
+                        <div class="col-lg-4">
+                          <p style="font-family: Arial; font-size:16px;">
+                            <strong>Número Económico:</strong>
+                            <%=@vehicle.numero_economico %>
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                          <p style="font-family: Arial; font-size:16px;">
+                            <strong>CEDIS:</strong>
+                            <%=@vehicle.catalog_branch.decripcion %>
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                          <p style="font-family: Arial; font-size:16px;">
+                            <strong>Tipo de vehículo:</strong>
+                            <%=@vehicle.vehicle_type.descripcion %>
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>KM actual:</strong>
+                              <%= @vehicle.kilometraje_actual > 0 ? number_with_precision(@vehicle.kilometraje_actual) : "N/A" %>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>Área:</strong>
+                              <%=@vehicle.catalog_area.descripcion %>
+                            </p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>Ruta:</strong>
+                              <%=@vehicle.catalog_route.descripcion %>
+                            </p>
+                        </div>
+                         <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>KM inicio año en curso:</strong>
+                              <%= @vehicle.kilometro_inicio_ano_curso > 0 ? number_with_precision(@vehicle.kilometro_inicio_ano_curso) : "N/A"%>
+                            </p>
+                        </div> <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>KM recorrido de año en curso:</strong>
+                              <%= @vehicle.kilometro_recorrido_ano_curso ? number_with_precision(@vehicle.kilometro_recorrido_ano_curso) : "N/A"  %>
+                            </p>
+                        </div> <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                                <strong>Gasto por KM recorrido de año en curso:</strong>
+                                <%= @vehicle.gasto_kilometro_ano_curso > 0 ? number_with_precision(@vehicle.gasto_kilometro_ano_curso) : "N/A"%>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <%=form_for('', url: gastos_vehiculo_x_fecha_path(@vehicle.id), method: "POST", authenticity_token: true, remote: true) do |f|%>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha inicio: </label>
+                        <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="start_date" id="start_date">
+                            <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha fin: </label>
+                        <div class="input-group date" id="datetimepicker8" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker8" name="end_date" id="end_date">
+                            <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="col">
+                      <br><br>
+                      <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                    </div>
+            <% end %>
+              <br>
+             <div style="width: 100%" id="table_container">
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#btn_imprimir").click(function(){
+        window.print();
+    })
+</script>

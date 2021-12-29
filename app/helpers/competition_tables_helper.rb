@@ -1,0 +1,2 @@
+module CompetitionTablesHelper
+end

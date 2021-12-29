@@ -1,0 +1,58 @@
+<br>
+<div class="container">
+  	<div class="card card-custom gutter-b">
+  		<div class="card-header">
+    		<div class="card-title">
+      			<h3 class="card-label">Solicitudes de presupuestos
+      				<span class="text-muted pt-2 font-size-sm d-block">Módulo para autorización de presupuestos de compra.</span>
+      			</h3>
+    		</div>
+		</div>
+		<div class="card-body">
+            <% @anios.each do |anio| %>
+                <h3><%= anio.anio %></h3>
+                <hr>
+                <div class="row row-cols-3">
+                    <% @secciones.each do |seccion|
+                        consulta = Section.consultas_autorizacion_card(anio.id, seccion.id)
+                        bandera_mostrar = consulta[0]
+                        cantidad = consulta[1]
+                        total = consulta[2]
+                        if bandera_mostrar
+                    %>
+                        <div class="col mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= seccion.nombre %>
+                                        <%= link_to  "Ver", show_budget_requests_concepts_path(anio.id, seccion.id), class: "btn btn-outline-danger float-right btn-sm", remote: true %>
+                                    </h5>
+                                    <p class="card-text">
+                                        Cantidad de vehículos: <%= cantidad %>
+                                    </p>
+                                    <p class="card-text">
+                                        Importe total: <%= number_to_currency(total) %>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <center>
+                                                <%= link_to  "Rechazar", reject_budget_request_path(anio.id, seccion.id), class: "btn btn-danger", data: {confirm: "¿Desea rechazar este presupuesto?"} %>
+                                            </center>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <center>
+                                                <%= link_to  "Autorizar", accept_budget_request_path(anio.id, seccion.id), class: "btn btn-success", data: {confirm: "¿Desea autorizar este presupuesto? Esta actividad no podrá deshacerse."} %>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% end
+                    end %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>

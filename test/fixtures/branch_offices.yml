@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_company: one
+  clave_clasificacion: MyString
+  clave_jd: MyString
+  descripcion: MyString
+  unidad_negocio: MyString
+  status: false
+
+two:
+  catalog_company: two
+  clave_clasificacion: MyString
+  clave_jd: MyString
+  descripcion: MyString
+  unidad_negocio: MyString
+  status: false

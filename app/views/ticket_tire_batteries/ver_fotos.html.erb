@@ -1,0 +1,49 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Ver fotografías</h3>
+                        <%= link_to 'Regresar' ,ticket_tire_batteries_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-image">
+                <thead>
+                    <tr>
+                      <th>Imagen</th>
+                      <th>DOT</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @photos.each do |photo| %>
+                    <tr>
+                        <td class="img-thumbnail">
+                            <%= image_tag(url_for(photo.imagen)) %>
+                        </td>
+                        <td><%= photo.dot%></td>
+                    </tr>
+                    <% end %>
+                  </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<style>
+.container {
+  padding: 2rem 0rem;
+}
+
+h4 {
+  margin: 2rem 0rem 1rem;
+}
+
+.table-image td,
+.table-image th {
+  vertical-align: middle;
+}
+</style>

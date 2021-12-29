@@ -1,0 +1,5 @@
+$("#table_solicitud").html("<%= escape_javascript(render partial: 'table_solicitud') %>");
+remove_screenLoader_Global();
+function remove_screenLoader_Global() {
+    $('.loader-mask').remove();
+}

@@ -1,0 +1,41 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Bitacora de mantenimiento</h3>
+                        <%= link_to 'Regresar', maintenance_logs_path, class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Clave:&nbsp;<%=@maintenance_log.clave %></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">No. Económico:&nbsp;<%=@maintenance_log.vehicle.numero_economico %></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Tipo de vehículo:&nbsp;<%=@maintenance_log.vehicle.vehicle_type.descripcion %></label>
+           </div>
+           <div class="row">
+               <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Línea:&nbsp;<%=@maintenance_log.vehicle.catalog_brand.descripcion %></label>
+            </div>
+            <div class="row">
+                <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Área:&nbsp;<%=@maintenance_log.vehicle.catalog_area.descripcion %></label>
+            </div>
+            <div class="row">
+                <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Usuario:&nbsp;<%=@maintenance_log.vehicle.catalog_personal.nombre %></label>
+               </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha:&nbsp;<%=l @maintenance_log.fecha %></label>
+           </div>
+          <div id="contenedor_partidas">
+            <%= render "partidas" %>
+          </div>
+        </div>
+    </div>
+</div>

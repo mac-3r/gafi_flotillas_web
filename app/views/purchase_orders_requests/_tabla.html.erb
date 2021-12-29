@@ -1,0 +1,55 @@
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Clave</th>
+            <th>Nombre Empresa</th>
+            <th>Titular de pago</th>
+            <th>Centro de costos</th>
+            <th>Total</th>
+            <th>Fecha</th>
+            <th colspan="3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @purchase_orders.each do |purchase_order| %>
+            <tr>
+                <td><%= purchase_order.clave ? purchase_order.clave : "Sin asignar" %></td>
+                <td><%= purchase_order.catalog_company.nombre %></td>
+                <td><%= purchase_order.catalog_vendor.razonsocial %></td>
+                <td><%= purchase_order.cost_center.descripcion %></td>
+                <td><%= number_to_currency(purchase_order.total) %></td>
+                <td><%= purchase_order.fecha.strftime('%d/%m/%y' ) %></td>
+                <td>
+                    <center>
+                        <div class="dropdown dropdown-inline">
+                            <%= link_to imprimir_orden_path(purchase_order), title: "Generar PDF", target: "_blank" do %>
+                                <span class='flaticon2-sheet' style='font-size:16px;color:#A6ACAF'></span>
+                                </span>
+                            <% end %>
+                        </div>
+                    </center>
+                </td>
+                <td>
+                    <center>
+                        <div class="dropdown dropdown-inline">
+                            <%= link_to autorizar_ordenes_compra_path(purchase_order), title: "Autorizar" do %>
+                                <span class='flaticon2-correct' style='font-size:16px;color:#A6ACAF'></span>
+                                </span>
+                            <% end %>
+                        </div>
+                    </center>
+                </td>
+                <td>
+                    <center>
+                        <div class="dropdown dropdown-inline">
+                            <%= link_to modal_rechazar_orden_compra_path(purchase_order), title: "Rechazar", remote: true do %>
+                                <span class='flaticon2-cancel-music' style='font-size:16px;color:#A6ACAF'></span>
+                                </span>
+                            <% end %>
+                        </div>
+                    </center>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

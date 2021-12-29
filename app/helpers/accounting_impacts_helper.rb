@@ -1,0 +1,2 @@
+module AccountingImpactsHelper
+end

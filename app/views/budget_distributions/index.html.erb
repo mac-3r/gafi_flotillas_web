@@ -1,0 +1,116 @@
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Presupuestos
+      <span class="text-muted pt-2 font-size-sm d-block">Catálogo de presupuesto de compra de reparto,almacen y gerencia de operaciones</span>
+      </h3>
+    </div>
+    <div class="float-right">
+      <% if can? :nuevo_pres_reparto, BudgetDistribution %>
+        <br>
+        <%= link_to 'Nuevo', nuevo_pres_reparto_path,class:"btn btn-primary font-weight-bolder",style:"border-radius: 0.42rem;", data: { turbolinks: false } %>
+      <% end %>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="container">
+      <%= form_tag budget_distributions_path, :method => :get do %>
+      <div class="row">
+                <div class="col">
+                    <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">CEDIS:</label>
+                    <%= collection_select('',:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                </div>
+                <div class="col">
+                    <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Área:</label>
+                    <%= collection_select('',:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Seleccione la area"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                </div>
+                <div class="col">
+                  <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha: </label>
+                  <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="YYYY">
+                      <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="start_date" id="start_date">
+                      <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+              </div>
+        </div>
+        <div class="col">
+          <br><br>
+          <%= submit_tag "Buscar", class:"btn btn-primary" %>
+          <% end %>
+      </div>
+    </div>
+    </div>
+    <br>
+    <table class="table table-bordered" id="table">
+      <thead>
+        <tr>
+          <th>Clave</th>
+          <th>CEDIS</th>
+          <th>Fecha entrega estimada</th>
+          <th>Área</th>
+          <th>Fecha compra estimada</th>
+          <th>Estatus</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @budget_distributions.each do |budget_distribution| %>
+          <tr>
+            <td><%= budget_distribution.clave %></td>
+            <td><%= budget_distribution.catalog_branch.decripcion %></td>
+            <td><%= budget_distribution.fecha_entrega.strftime("%d/%m/%y") %></td>
+            <td><%= budget_distribution.catalog_area.descripcion %></td>
+            <td><%= budget_distribution.fecha_compra.strftime("%d/%m/%y") %></td>
+            <td><%= budget_distribution.status %></td>
+            <td>
+              <div class="dropdown dropdown-inline">
+                <%= link_to presupuesto_imprimir_path(budget_distribution), title: "Ver archivo" do %>
+                <span class='far fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>
+                </span>
+                <% end %>
+              </div>
+            </td>
+            <% if can? :edit, BudgetDistribution %>
+              <% if budget_distribution.status == "Pendiente" %>
+                <td>
+                  <div class="dropdown dropdown-inline">
+                    <%= link_to  edit_budget_distribution_path(budget_distribution), title: "Editar" do %>
+                    <span class="svg-icon svg-icon-md"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                    viewBox="0 0 24 24" version="1.1">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <rect x="0" y="0" width="24" height="24"></rect>
+                    <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
+                    fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
+                    </path>
+                    <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+                    </g>
+                    </svg> 
+                    </span>
+                    <% end %>
+                    </div>    
+                </td>
+              <% end %>
+            <% end %>
+            <% if can? :destroy, BudgetDistribution %>
+              <% if budget_distribution.status == "Pendiente" %>
+                <td>
+                  <div class="dropdown dropdown-inline">
+                    <%= link_to budget_distribution, title:"Eliminar", method: :delete, data: { confirm: '¿Desea eliminar este registro?, esta función eliminará el detalle de este presupuesto.' } do %>
+                    <span class='fas fa-trash' style='font-size:15px;color:#A6ACAF'></span>
+                      </span>
+                    <% end %>
+                    </div>
+                </td>
+              <% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</div>
+

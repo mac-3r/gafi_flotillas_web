@@ -1,0 +1,35 @@
+<%= form_with(model: budget_administration, local: true) do |form| %>
+  <% if budget_administration.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(budget_administration.errors.count, "error") %> prohibited this budget_administration from being saved:</h2>
+
+      <ul>
+        <% budget_administration.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Terminar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+   <br><br>
+   <div class="row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Clave:&nbsp;<%=@budget_administration.clave %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">CEDIS:&nbsp;<%=@budget_administration.catalog_branch.decripcion %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Área:&nbsp;<%=@budget_administration.catalog_area.descripcion %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha entrega estimada:&nbsp;<%=l @budget_administration.fecha_entrega %></label>
+   </div>
+   <div class="row">
+    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha compra estimada:&nbsp;<%=l @budget_administration.fecha_compra %></label>
+   </div>
+   <div id="contenedor_partidas">
+    <%= render "partidas" %>
+  </div>
+<% end %>

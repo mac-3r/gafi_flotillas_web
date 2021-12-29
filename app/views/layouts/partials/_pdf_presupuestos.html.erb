@@ -1,0 +1,100 @@
+<div class="mostrar" style="background-color: #DC2827; width: 100%; height: 100px;">
+    <div class="mostrar">
+        <img alt="Logo" src="/logo_transparente.png" class="mostrar" style="max-width: 100px; padding: 1%;"/>
+        <h1 class="mostrar" style="color: #fff; margin-left: 100px;margin-top: -60px;">Presupuesto 2021</h1>
+    </div>
+</div>
+<br><br>
+<table id="table" class="table table-bordered table-hover mostrar">
+    <colgroup span="5" class="mostrar"></colgroup>
+    <colgroup span="13" class="mostrar"></colgroup>
+    <tr style="text-align: center;" class="mostrar">
+        <th colspan="5" scope="colgroup" class="mostrar">VEHÍCULO PRESUPUESTADO</th>
+        <th colspan="13" scope="colgroup" class="mostrar">VALIDACIÓN VEHÍCULO COMPRADO</th>
+    </tr>
+    <tr style="text-align: center;" class="mostrar">
+        <th scope="col" class="mostrar">CEDIS</th>
+        <th scope="col" class="mostrar">FECHA SOLICITUD</th>
+        <th scope="col" class="mostrar">MOTIVO DE LA COMPRA</th>
+        <th scope="col" class="mostrar">MARCA</th>
+        <th scope="col" class="mostrar">PRECIO</th>
+        <th scope="col" class="mostrar">FECHA COMPRA</th>
+        <th scope="col" class="mostrar">MARCA</th>
+        <th scope="col" class="mostrar">NO. VEH</th>
+        <th scope="col" class="mostrar">$ VEHÍCULO</th>
+        <th scope="col" class="mostrar">$ SEGURO</th>
+        <th scope="col" class="mostrar">FECHA AUT. SEGURO</th>
+        <th scope="col" class="mostrar">$ PLAQUEO</th>
+        <th scope="col" class="mostrar">FECHA AUT. PLAQUEO</th>
+        <th scope="col" class="mostrar">$ MUELLE</th>
+        <th scope="col" class="mostrar">$ CAJA</th>
+        <th scope="col" class="mostrar">$ ROTULACIÓN</th>
+        <th scope="col" class="mostrar">$ LONA</th>
+        <th scope="col" class="mostrar">FECHA ENTREGA</th>
+    </tr>
+    <% 
+    total_precio = 0
+    total_precio_vehiculo = 0
+    total_seguro = 0
+    total_plaqueo = 0
+    total_muelle = 0
+    total_caja = 0
+    total_rotulacion = 0
+    total_lona = 0
+    @budget_items.each do |budget_item|  
+        total_precio += budget_item.importe
+        if budget_item.purchase_detail
+            total_precio_vehiculo = budget_item.purchase_detail.precio
+            total_seguro = budget_item.purchase_detail.seguro
+            total_plaqueo = budget_item.purchase_detail.plaqueo
+            total_muelle = budget_item.purchase_detail.muelle
+            total_caja = budget_item.purchase_detail.caja
+            total_rotulacion = budget_item.purchase_detail.rotulacion
+            total_lona = budget_item.purchase_detail.lona
+        end
+    %>
+        <tr class="mostrar">
+            <th scope="row" class="mostrar"><%= budget_item.catalog_branch.decripcion %></th>
+            <td class="mostrar"><%= (I18n.l budget_item.fecha_solicitud) if budget_item.fecha_solicitud %></td>
+            <td class="mostrar"><%= budget_item.reason.descripcion %></td>
+            <td class="mostrar"><%= budget_item.catalog_brand.descripcion %></td>
+            <td class="mostrar"><%= number_to_currency(budget_item.importe) %></td>
+            <td class="mostrar"><%= (I18n.l budget_item.purchase_detail.purchase_order.fecha) if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%= budget_item.purchase_detail.catalog_brand.descripcion if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%#= budget_item.purchase_detail. if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%= number_to_currency(budget_item.purchase_detail.precio) if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%= number_to_currency(budget_item.purchase_detail.seguro) if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%#= budget_item.purchase_detail. if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%= number_to_currency(budget_item.purchase_detail.plaqueo) if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%#= budget_item.purchase_detail. if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%= number_to_currency(budget_item.purchase_detail.muelle) if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%= number_to_currency(budget_item.purchase_detail.caja) if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%= number_to_currency(budget_item.purchase_detail.rotulacion) if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%= number_to_currency(budget_item.purchase_detail.lona) if budget_item.purchase_detail%></td>
+            <td class="mostrar"><%#= budget_item.purchase_detail. if budget_item.purchase_detail%></td>
+        </tr>
+    <% end %>
+    <tr style="text-align: center;" class="mostrar">
+        <th scope="col" class="mostrar">Totales:</th>
+        <th scope="col" class="mostrar"></th>
+        <th scope="col" class="mostrar"></th>
+        <th scope="col" class="mostrar"></th>
+        <th scope="col" class="mostrar"><%= number_to_currency(total_precio) %></th>
+        <th scope="col" class="mostrar"></th>
+        <th scope="col" class="mostrar"></th>
+        <th scope="col" class="mostrar"></th>
+        <th scope="col" class="mostrar"><%= number_to_currency(total_precio_vehiculo) %></th>
+        <th scope="col" class="mostrar"><%= number_to_currency(total_seguro) %></th>
+        <th scope="col" class="mostrar"></th>
+        <th scope="col" class="mostrar"><%= number_to_currency(total_plaqueo) %></th>
+        <th scope="col" class="mostrar"></th>
+        <th scope="col" class="mostrar"><%= number_to_currency(total_muelle) %></th>
+        <th scope="col" class="mostrar"><%= number_to_currency(total_caja) %></th>
+        <th scope="col" class="mostrar"><%= number_to_currency(total_rotulacion) %></th>
+        <th scope="col" class="mostrar"><%= number_to_currency(total_lona) %></th>
+        <th scope="col" class="mostrar"></th>
+    </tr>
+</table>
+<script>
+    window.print();
+</script>

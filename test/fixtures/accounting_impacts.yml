@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_branches: one
+  nombre: MyString
+  mantenimiento_equipo: 9.99
+  mantenimiento_maquinaria: 9.99
+  combustible: 9.99
+  plaqueo: 9.99
+  seguro: 9.99
+  permiso: 9.99
+  status: false
+
+two:
+  catalog_branches: two
+  nombre: MyString
+  mantenimiento_equipo: 9.99
+  mantenimiento_maquinaria: 9.99
+  combustible: 9.99
+  plaqueo: 9.99
+  seguro: 9.99
+  permiso: 9.99
+  status: false

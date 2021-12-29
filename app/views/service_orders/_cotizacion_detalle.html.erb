@@ -1,0 +1,65 @@
+<div class="row"> 
+    <div class="col-lg-12">                   
+        <div class="row" style="text-align: left;">
+            <div class="col-lg-4">
+              <p style="font-family: Arial; font-size:16px;">
+                <strong>No. Orden:</strong>
+                <%=@cotizacion.service_order.n_orden%>
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <p style="font-family: Arial; font-size:16px;">
+                <strong>No. Económico:</strong>
+                <%=@cotizacion.vehicle.numero_economico%>
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <p style="font-family: Arial; font-size:16px;">
+                <strong>Tipo de vehículo:</strong>
+                <%=@cotizacion.vehicle.vehicle_type.descripcion%>
+              </p>
+            </div>
+            <div class="col-lg-4">
+                <p style="font-family: Arial; font-size:16px;">
+                  <strong>Línea:</strong>
+                  <%=@cotizacion.vehicle.catalog_brand.descripcion%>
+                </p>
+            </div>
+            <div class="col-lg-4">
+                <p style="font-family: Arial; font-size:16px;">
+                  <strong>Usuario:</strong>
+                  <%=@cotizacion.vehicle.catalog_personal.nombre%>
+                </p>
+            </div>
+            <div class="col-lg-4">
+              <p style="font-family: Arial; font-size:16px;">
+                <strong>Tipo orden servicio:</strong>
+                <%= @cotizacion.service_order.order_service_type_id ? @cotizacion.service_order.order_service_type.descripcion : "N/A"%>
+              </p>
+          </div>
+        </div>
+    </div>
+</div>
+<br>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+          <th>Servicio</th>
+          <th>Costo</th>
+        </tr>
+    </thead>    
+    <tbody>
+      <% sumatoria = 0%>
+        <% @detalle.each do |det|%>
+            <tr>
+              <td><%= det.descripcion %></td>
+              <td><%= number_to_currency(det.precio)%></td>
+              <% sumatoria += det.precio %>
+            </tr>
+        <% end %>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td><%= number_to_currency(sumatoria)%></td>
+        </tr>
+    </tbody>  
+</table>

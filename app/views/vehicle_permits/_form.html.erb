@@ -1,0 +1,73 @@
+<%= form_with(model: vehicle_permit, local: true) do |form| %>
+  <% if vehicle_permit.errors.any? %>
+  <div class="alert alert-danger">Error al registrar:
+    <div id="error_explanation">
+      <ul>
+        <% vehicle_permit.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+    </div>
+  <% end %>
+
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+   <br><br>
+   <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Número económico*</label>
+    <div class="col-sm-0">
+      <%= collection_select(:vehicle_permit,:vehicle_id ,Vehicle.listado_vehiculos, :id, :numero_economico, {prompt:"Vehículo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Tipo permiso:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :descripcion, class: "form-control", style:"width: 320px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Fecha vigencia:</label>
+    <div class="col-sm-0">
+      <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+        <%= form.text_field :fecha_vigencia, class: "form-control datetimepicker-input"%>
+          <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Estatus:</label>
+    <div class="col-sm-0">
+    <div class="form-group col-lg-6">
+      <label class="switch">
+      <input type="checkbox" name="vehicle_permit[status]" <% if @vehicle_permit.status%> checked<%end%>>
+      <span class="slider round"></span>
+      </label>
+      </div>
+  </div>
+  </div>
+<% end %>
+<script type="text/javascript">
+  $(function () {
+      $('#datetimepicker7').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es'
+      });
+  });
+</script>
+<style>
+  .switch input:checked ~ span:after {
+    opacity: 1;
+    color: #ffffff;
+    background-color:#ffffff;
+}
+.switch input:empty ~ span:before {
+    background-color: #ccc;
+}
+.switch input:checked ~ span:before {
+    background-color: #1bc5bd;
+}
+</style>

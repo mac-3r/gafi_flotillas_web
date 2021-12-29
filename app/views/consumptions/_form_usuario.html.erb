@@ -1,0 +1,9 @@
+<%= form_for(@consumption, method: @metodo.to_sym, url: eval(@url), remote: true) do |f| %>
+    <div class="form-group">
+        <label>Usuario</label>
+        <%= collection_select(:consumption,:usuario_autorizante_id ,User.listado_competencias(@consumption), :id, :nombre_completo, {prompt:"Seleccione el usuario"}, {:class => "form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+    <div class="float-right">
+        <%= f.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;",data: { confirm: '¿Desea cambiar el usuario?.'} %>
+    </div>
+<% end %>

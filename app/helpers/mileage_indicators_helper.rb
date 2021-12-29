@@ -1,0 +1,2 @@
+module MileageIndicatorsHelper
+end

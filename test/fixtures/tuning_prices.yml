@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_branch: one
+  catalog_brand: one
+  catalog_workshop: one
+  precio_menor: 9.99
+  precio_mayor: 9.99
+  status: false
+  clave: MyString
+
+two:
+  catalog_branch: two
+  catalog_brand: two
+  catalog_workshop: two
+  precio_menor: 9.99
+  precio_mayor: 9.99
+  status: false
+  clave: MyString

@@ -1,0 +1,47 @@
+<%= form_with(model: ticket_tire_battery, local: true) do |form| %>
+  <% if ticket_tire_battery.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ticket_tire_battery.errors.count, "error") %> prohibited this ticket_tire_battery from being saved:</h2>
+
+      <ul>
+        <% ticket_tire_battery.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :vehicle_id %>
+    <%= form.text_field :vehicle_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :dot %>
+    <%= form.text_field :dot %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fecha %>
+    <%= form.date_select :fecha %>
+  </div>
+
+  <div class="field">
+    <%= form.label :estatus %>
+    <%= form.number_field :estatus %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tipo %>
+    <%= form.number_field :tipo %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cantidad %>
+    <%= form.number_field :cantidad %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

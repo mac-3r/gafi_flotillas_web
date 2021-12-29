@@ -1,0 +1,16 @@
+<%# byebug %>
+<% if @comparacion%>
+    $("#catalog_workshop_id2").empty();
+    $('<option>').val('').text('Seleccione el taller').appendTo('#catalog_workshop_id2');
+    <% @taller.each do |taller| %>
+        $('<option>').val('<%= taller.id %>').text('<%= taller.nombre_taller %>').appendTo('#catalog_workshop_id2');
+    <% end %>
+    $('#catalog_workshop_id2').trigger("chosen:updated");
+<% else %>
+    $("#catalog_workshop_id").empty();
+    $('<option>').val('').text('Seleccione el taller').appendTo('#catalog_workshop_id');
+    <% @taller.each do |taller| %>
+        $('<option>').val('<%= taller.id %>').text('<%= taller.nombre_taller %>').appendTo('#catalog_workshop_id');
+    <% end %>
+    $('#catalog_workshop_id').trigger("chosen:updated");
+<% end %>

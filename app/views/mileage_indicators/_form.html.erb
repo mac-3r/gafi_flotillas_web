@@ -1,0 +1,32 @@
+<%= form_with(model: mileage_indicator, local: true) do |form| %>
+  <% if mileage_indicator.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(mileage_indicator.errors.count, "error") %> prohibited this mileage_indicator from being saved:</h2>
+
+      <ul>
+        <% mileage_indicator.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :vehicle_id %>
+    <%= form.text_field :vehicle_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :km_actual %>
+    <%= form.text_field :km_actual %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fecha %>
+    <%= form.datetime_select :fecha %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

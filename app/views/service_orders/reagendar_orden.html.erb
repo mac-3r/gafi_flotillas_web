@@ -1,0 +1,35 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Registrar nueva fecha </h3>
+                        <%= link_to 'Regresar' ,service_orders_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%= form_for('', url: guardar_fecha_propuesta_path,method: :post, remote: true,authenticity_token: true,onclick: "return validateForm();") do |f|%>
+            
+            <div class="card-body">
+                    <div class="float-right">
+                        <%= submit_tag "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;",:onclick => "return validateForm();"%>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" style="font-family: Arial; font-size:16px;">Nueva fecha propuesta:</label>
+                        <div class="col-sm-6">
+                            <div class="input-group date col-sm-9"  id="datetimepicker_ocurrio" data-target-input="nearest" data-date-format="DD/MM/YYYY LT" style="width: 100%">
+                            <%= f.text_field(:fecha_propuesta, class: "form-control datetimepicker-input",style: "width: 70%; height: 90%;", required: true, autocomplete: "off",autoclose: true)%>
+                            <div class="input-group-append" data-target="#datetimepicker_ocurrio" data-toggle="datetimepicker">
+                                <div class="input-group-text" style="height: 100%;"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+        
+        <% end %>
+    </div>
+</div>

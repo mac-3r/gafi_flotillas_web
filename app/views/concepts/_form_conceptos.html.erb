@@ -1,0 +1,37 @@
+<%= form_for(@concepto, method: @metodo.to_sym, url: eval(@url), remote: true) do |f| %>
+    <div class="form-group">
+        <label>Nombre</label>
+        <%= f.text_field :nombre, class: "form-control", required: true %>
+    </div>
+    <div class="form-group">
+        <label>Clave</label>
+        <%= f.text_field :clave, class: "form-control", required: true %>
+    </div>
+    <div class="form-group">
+        <label>Tipo de afinación</label>
+        <%= f.select(:tipo_afinacion, options_for_select([["Afinación menor" , 0],["Afinación mayor", 1]]), {}, {:class => " form-control m-input m-input--air uneditable-input"})%>
+    </div>
+    <div class="form-group">
+        <label>Bujías</label>
+        <label class="switch">
+            <input type="checkbox" name="concept_description[bujias]"<% if @concepto.bujias%> checked<%end%>>
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="float-right">
+        <%= f.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+    </div>
+<% end %>
+<style>
+    .switch input:checked ~ span:after {
+      opacity: 1;
+      color: #ffffff;
+      background-color:#ffffff;
+  }
+  .switch input:empty ~ span:before {
+      background-color: #ccc;
+  }
+  .switch input:checked ~ span:before {
+      background-color: #1bc5bd;
+  }
+</style>

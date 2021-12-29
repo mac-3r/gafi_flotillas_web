@@ -1,0 +1,42 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Codigo:</strong>
+  <%= @vehicle_item.codigo %>
+</p>
+
+
+
+<p>
+  <strong>Vehicle:</strong>
+  <%= @vehicle_item.vehicle_id %>
+</p>
+
+<p>
+  <strong>Tipo:</strong>
+  <%= @vehicle_item.tipo %>
+</p>
+
+<p>
+  <strong>Fecha compra:</strong>
+  <%= @vehicle_item.fecha_compra %>
+</p>
+
+
+<p>
+  <strong>Estatus:</strong>
+  <%= @vehicle_item.estatus %>
+</p>
+
+<p>
+  <strong>Km inicio:</strong>
+  <%= @vehicle_item.km_inicio %>
+</p>
+
+<p>
+  <strong>Km fin:</strong>
+  <%= @vehicle_item.km_fin %>
+</p>
+
+<%= link_to 'Edit', edit_vehicle_item_path(@vehicle_item) %> |
+<%= link_to 'Back', vehicle_items_path %>

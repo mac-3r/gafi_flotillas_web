@@ -1,0 +1,67 @@
+<% bandera_nombre = "" %>
+<% bandera_opcion = "" %>
+<%= form_tag(seguridad_add_permisos_path(@rol.id), method: "post", remote: true, id: "frmAddPermiso", authenticity_token: true, format: "js") do %>
+    <div class="accordion" id="accordionExample">
+        <% @permisos.each_with_index do |permiso, index| 
+            if permiso.menu == bandera_nombre
+        %>
+        <div class="row" style="padding-left: 2%;">
+            <div class="col-lg-1">
+                <span class="m-switch m-switch--icon m-switch--success" >
+                    <label>
+                        <input type="checkbox" value="<%= permiso.id %>" <% if permiso.seleccionado %>checked="checked" <% end %> name="permisos[]" class="chkpermiso">
+                        <span></span>
+                    </label>
+                </span>
+            </div>
+            <div class="col-lg-10" style="margin-left: 1%;">
+                <%= permiso.nombre %>
+            </div>
+        </div>
+        <hr>
+        <% else 
+            bandera_nombre = permiso.menu
+            if index != 0
+        %>
+                    </div>
+                </div>
+            </div>
+        <% end %>
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn " type="button" data-toggle="collapse" data-target="#collapse<%= index %>" aria-expanded="true" aria-controls="collapseOne">
+                        <%= bandera_nombre %>
+                    </button>
+                </h2>
+            </div>
+            <div id="collapse<%= index %>" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="row" style="padding-left: 2%;">
+                        <div class="col-lg-1">
+                            <span class="m-switch m-switch--icon m-switch--success" >
+                                <label>
+                                    <input type="checkbox" value="<%= permiso.id %>" <% if permiso.seleccionado %>checked="checked" <% end %> name="permisos[]" class="chkpermiso">
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+                        <%#= check_box_tag 'permisos[]', permiso.id, permiso.seleccionado, class: "chkpermiso" %>
+                        <div class="col-lg-10" style="margin-left: 1%;">
+                            <%= permiso.nombre %>
+                        </div>
+                    </div>
+                    <hr>                
+        <% end
+        end%>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>
+<script>
+    $(".chkpermiso").change(function(){
+        form = document.querySelector('#frmAddPermiso');
+        Rails.fire(form, 'submit');
+    });
+</script>

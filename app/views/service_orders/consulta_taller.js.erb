@@ -1,0 +1,13 @@
+<% if @taller %>
+    $("#especialidad").val("<%= @taller.especialidad %>");
+    $("#responsable").val("<%= @taller.responsable %>");
+    $("#telefono").val("<%= @taller.telefono %>");
+    $("#nombre_t").val("<%= @taller.nombre_taller %>");
+    $("#domicilio").val("<%= @taller.domicilio %>");
+<% else %>
+    $("#especialidad").val("");
+    $("#responsable").val("");
+    $("#telefono").val("");
+    $("#nombre_t").val("");
+    $("#domicilio").val("");
+<% end %>

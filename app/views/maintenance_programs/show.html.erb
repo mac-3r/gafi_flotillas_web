@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Vehicle:</strong>
+  <%= @maintenance_program.vehicle_id %>
+</p>
+
+<p>
+  <strong>Km inicio ano:</strong>
+  <%= @maintenance_program.km_inicio_ano %>
+</p>
+
+<p>
+  <strong>Km recorrido curso:</strong>
+  <%= @maintenance_program.km_recorrido_curso %>
+</p>
+
+<p>
+  <strong>Promedio mensual:</strong>
+  <%= @maintenance_program.promedio_mensual %>
+</p>
+
+<p>
+  <strong>Frecuencia mantenimiento:</strong>
+  <%= @maintenance_program.frecuencia_mantenimiento %>
+</p>
+
+<p>
+  <strong>Fecha ultima afinacion:</strong>
+  <%= @maintenance_program.fecha_ultima_afinacion %>
+</p>
+
+<p>
+  <strong>Kms ultima afinacion:</strong>
+  <%= @maintenance_program.kms_ultima_afinacion %>
+</p>
+
+<p>
+  <strong>Kms proximo servicio:</strong>
+  <%= @maintenance_program.kms_proximo_servicio %>
+</p>
+
+<p>
+  <strong>Fecha proximo servicio:</strong>
+  <%= @maintenance_program.fecha_proximo_servicio %>
+</p>
+
+<p>
+  <strong>Km actual:</strong>
+  <%= @maintenance_program.km_actual %>
+</p>
+
+<p>
+  <strong>Observaciones:</strong>
+  <%= @maintenance_program.observaciones %>
+</p>
+
+<%= link_to 'Edit', edit_maintenance_program_path(@maintenance_program) %> |
+<%= link_to 'Back', maintenance_programs_path %>

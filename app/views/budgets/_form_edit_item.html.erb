@@ -1,0 +1,121 @@
+<%= form_for(@budget_item, url: update_item_budget_path(@budget_item.id), method: "PATCH", remote: true) do |form| %>
+    <%= form.hidden_field :budget_id %>
+    <div class="form-row">
+        <div class="form-group col-lg-6">
+            <label>Cantidad</label>
+            <%= form.number_field :cantidad, class: "form-control", required: true, min: 1 %>
+        </div>
+        <div class="form-group col-lg-6">
+            <label>Tipo</label>
+            <%= collection_select(:budget_item,:vehicle_type_id ,VehicleType.listado_tipos, :id, :descripcion, {prompt:"Selecciona el tipo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required: true}) %>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-lg-6">
+            <label>CEDIS</label>
+            <%= collection_select(:budget_item,:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Selecciona el CEDIS"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required: true}) %>
+        </div>
+        <div class="form-group col-lg-6">
+            <label>Área</label>
+            <%= collection_select(:budget_item,:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Selecciona el área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required: true}) %>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-lg-4">
+            <label>Línea</label>
+            <%= collection_select(:budget_item,:catalog_brand_id ,CatalogBrand.listado_lineas, :id, :descripcion, {prompt:"Selecciona el nombre de la linea"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required: true})%>
+        </div>
+        <div class="form-group col-lg-4">
+            <label>Modelo</label>
+            <%= collection_select(:budget_item,:catalog_model_id ,CatalogModel.listado_modelo, :id, :descripcion, {prompt:"Selecciona el modelo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required: true})%>
+        </div>
+        <div class="form-group col-lg-4">
+            <label>Motivo de compra</label>
+            <%= collection_select(:budget_item,:reason_id ,Reason.listado_motivos, :id, :descripcion, {prompt:"Selecciona el motivo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required: true})%>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-lg-4">
+            <label>Importe</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <%= form.number_field(:importe, step: :any, required: true, min: 0) %>
+            </div>
+        </div>
+        <div class="form-group col-lg-4">
+            <label>Plaqueo</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <%= form.number_field(:plaqueo, step: :any, required: true, min: 0) %>
+            </div>
+        </div>
+        <div class="form-group col-lg-4">
+            <label>Seguro</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <%= form.number_field(:seguro, step: :any, required: true, min: 0) %>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-lg-4">
+            <label>Muelle</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <%= form.number_field(:muelle, step: :any, required: true, min: 0) %>
+            </div>
+        </div>
+        <div class="form-group col-lg-4">
+            <label>Caja</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <%= form.number_field(:caja, step: :any, required: true, min: 0) %>
+            </div>
+        </div>
+        <div class="form-group col-lg-4">
+            <label>Rotulación</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <%= form.number_field(:rotulacion, step: :any, required: true, min: 0) %>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-lg-6">
+            <label>Lona</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <%= form.number_field(:lona, step: :any, required: true, min: 0) %>
+            </div>
+        </div>
+    </div>
+
+    <div class="float-right">
+        <br><br>
+        <%= submit_tag "Guardar", class: "btn btn-success m-btn m-btn--custom float-right" %>
+    </div>
+<% end %>
+<script>
+    $(document).ready(function(){
+        $('.chosen-select').chosen();
+    })
+</script>

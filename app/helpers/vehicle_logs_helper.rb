@@ -1,0 +1,2 @@
+module VehicleLogsHelper
+end

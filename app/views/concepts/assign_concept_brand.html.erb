@@ -1,0 +1,35 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Asignar conceptos de mantenimiento a líneas</h3>
+                        <%= link_to 'Regresar', index_conceptos_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+                <div class="container">
+                    <%=form_for('', url: mostrar_acciones_path, remote: true) do |f|%>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Línea:</label>
+                                <%= collection_select('', :catalog_brand_id, CatalogBrand.listado_lineas,:id, :descripcion, {prompt:"Escribe el nombre de la línea"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                            </div>
+                            <div class="col">
+                                <br>
+                                <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                            </div>
+                        </div>      
+                    <% end %>
+                </div>
+            <br>
+            <div style="width: 100%" id="table_container"> </div>
+        </div>
+    </div>
+</div>
+
+ 

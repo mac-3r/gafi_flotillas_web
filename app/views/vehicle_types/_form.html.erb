@@ -1,0 +1,72 @@
+<%= form_with(model: vehicle_type, local: true) do |form| %>
+  <% if vehicle_type.errors.any? %>
+  <div class="alert alert-danger">Error al registrar:
+    <div id="error_explanation">
+      <ul>
+        <% vehicle_type.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+  <br><br>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Clave:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :clave, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Nombre tipo:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :descripcion, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Abreviatura:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :abreviatura, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Rendimiento ideal:</label>
+    <div class="col-sm-0">
+      <%= form.number_field :rendimiento_ideal, class: "form-control", style:"width: 250px !important;", step: :any %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Estatus:</label>
+    <div class="col-sm-0">
+    <div class="form-group col-lg-6">
+      <label class="switch">
+      <input type="checkbox" name="vehicle_type[status]"<% if @vehicle_type.status%> checked<%end%>>
+      <span class="slider round"></span>
+      </label>
+      </div>
+  </div>
+  </div>
+<% end %>
+<style>
+  .switch input:checked ~ span:after {
+    opacity: 1;
+    color: #ffffff;
+    background-color:#ffffff;
+}
+.switch input:empty ~ span:before {
+    background-color: #ccc;
+}
+.switch input:checked ~ span:before {
+    background-color: #1bc5bd;
+}
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0; 
+  }
+</style>

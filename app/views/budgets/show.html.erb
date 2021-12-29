@@ -1,0 +1,52 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row example-screen">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Ver presupuesto</h3>
+                        <div class="float-right">
+                            <%# if can? :request_budget, Budget %>
+                                <%# if @budget.estatus == "Pendiente" %> 
+                                    <%#= link_to 'Solicitar autorización', request_budget_path(@budget.id), class:"btn btn-primary font-weight-bolder", data: {confirm: "¿Deseas solicitar la autorización para este presupuesto? Después de esta acción el presupuesto ya no podrá ser modificado."}%>&nbsp;
+                                <%# end %>
+                            <%# end %>
+                            <%= link_to 'Regresar', budgets_path, class: "btn btn-default" %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-2"><h3>Año: <%= @budget.anio %></h3></div>
+                <div class="col-lg-3">
+                    <select class="form-control m-input m-input--air uneditable-input chosen-select" id="area_select">
+                        <option value="0">Todas las secciones</option>
+                        <% @areas.each do |area| %>
+                            <option value="<%= area.id %>"><%= area.nombre %></option>
+                        <% end %>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div id="container_partidas">
+                <%= render  "table_concepts" %>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('.chosen-select').chosen();
+
+        $("#area_select").change(function(){
+            $.ajax({
+                type: "POST",
+                url: "<%= search_budgets_by_area_path %>",
+                data: {budget_id: "<%= @budget.id %>", area_id: $(this).val(), authenticity_token: $('meta[name=csrf-token]').attr('content')}
+            })
+        })
+    })
+</script>

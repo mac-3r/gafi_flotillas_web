@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_branch: one
+  fecha_entrega: 2020-10-21
+  catalog_area: one
+  catalog_brand: one
+  importe: 9.99
+  reason: one
+  fecha_compra: 2020-10-21
+  plaqueo: 9.99
+  seguro: 9.99
+  muelle: 9.99
+  caja: 9.99
+  rotulacion: 9.99
+
+two:
+  catalog_branch: two
+  fecha_entrega: 2020-10-21
+  catalog_area: two
+  catalog_brand: two
+  importe: 9.99
+  reason: two
+  fecha_compra: 2020-10-21
+  plaqueo: 9.99
+  seguro: 9.99
+  muelle: 9.99
+  caja: 9.99
+  rotulacion: 9.99

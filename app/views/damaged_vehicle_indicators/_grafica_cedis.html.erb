@@ -1,0 +1,78 @@
+<canvas id="bar-chart" width="350" height="150"></canvas>
+<br>
+<div>
+    <%= link_to  "Exportar a Excel", damaged_vehicle_indicators_excel_path, target: "_blank", class: "btn float-right" %>
+</div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Centro de distribución</th>
+            <th>Cantidad</th>
+            <th>Total de vehículos</th>
+            <th>Total siniestros</th>
+            <th>% vehículos siniestrados</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% monto_total = 0
+           total_vehi = 0
+           totales_siniestro = 0
+           porcentaje_total = 0
+            @tabla.each do |resp| %>
+            <tr>
+                <td><%= resp[:sucursal] %></td>
+                <td><%= number_to_currency(resp[:cantidad])%></td>
+                <% monto_total += resp[:cantidad] %>
+                <td><%= number_to_human(resp[:vehiculos]) %></td>
+                <% total_vehi += resp[:vehiculos] %>
+                <td><%= number_to_human(resp[:total]) %></td>
+                <% totales_siniestro += resp[:total] %>
+                <td><%= number_to_percentage(resp[:total_v])%></td>
+                <% porcentaje_total +=resp[:total_v] %>
+
+            </tr>
+            <% end %>
+                <tr> 
+                    <th colSpan="1">Total</th>
+                    <td><b><%= number_to_currency(monto_total) %></b></td>
+                    <td><b><%= number_to_human(total_vehi) %></b> </td>
+                    <td><b><%= number_to_human(totales_siniestro) %></b> </td>
+                    <td><b><%= number_to_percentage(porcentaje_total) %></b></td>
+                    <td></td>
+                </tr>
+    </tbody>
+</table>
+<script>
+    var options = {
+        responsive: true,
+        scales: {
+            yAxes: [{
+                display: true,
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    };
+    var arr_colores = [];
+    for (var index = 0; index < 2; index++) {
+        var o = Math.round, r = Math.random, s = 255;
+        var piv = 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + "0.7" + ')';
+        color = piv;
+        arr_colores.push(piv);
+    };
+    var densityData = {
+        label: ['Flotillas dañadas'],
+        data: [<%= @grafica[1].length %>, <%=(((@grafica[1].length).to_f * 100) / @grafica[0][0].total_vehiculos).round(2) %>],
+        backgroundColor: arr_colores,
+    };
+        
+    var barChart = new Chart(document.getElementById("bar-chart"), {
+        type: 'bar',
+        data: {
+            labels: ["Cantidad", "Porcentaje %"],
+            datasets: [densityData]
+        },
+        options: options
+    });
+</script>

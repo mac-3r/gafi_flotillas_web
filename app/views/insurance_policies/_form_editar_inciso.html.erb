@@ -1,0 +1,19 @@
+<%= form_for(@policy_item, method: "PATCH", url: actualizar_inciso_path(@policy_item.id), remote: true, authenticity_token: true) do |form| %>
+    <div class="form-row">
+        <div class="form-group col-lg-3">
+            <label>Nombre*:</label><br>
+            <%= form.text_field(:nombre, class: "form-control", required: true) %>
+        </div>
+        <div class="form-group col-lg-3">
+            <label>Clave*:</label><br>
+            <%= form.text_field(:clave, class: "form-control", required: true) %>
+        </div>
+        <div class="form-group col-lg-6">
+            <label>Descripción:</label><br>
+            <%= form.text_area(:descripcion, class: "form-control", rows: 5) %>
+        </div>
+    </div>
+    <div class="float-right">
+        <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important; margin-top: 30%;" %>
+    </div>
+<% end %>

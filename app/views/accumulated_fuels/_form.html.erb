@@ -1,0 +1,107 @@
+<%= form_with(model: accumulated_fuel, local: true) do |form| %>
+  <% if accumulated_fuel.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(accumulated_fuel.errors.count, "error") %> prohibited this accumulated_fuel from being saved:</h2>
+
+      <ul>
+        <% accumulated_fuel.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :no_economico %>
+    <%= form.text_field :no_economico %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cedis %>
+    <%= form.text_field :cedis %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tipo_vehicu %>
+    <%= form.text_field :tipo_vehicu %>
+  </div>
+
+  <div class="field">
+    <%= form.label :linea %>
+    <%= form.text_field :linea %>
+  </div>
+
+  <div class="field">
+    <%= form.label :area %>
+    <%= form.text_field :area %>
+  </div>
+
+  <div class="field">
+    <%= form.label :responsable %>
+    <%= form.text_field :responsable %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fecha_carga %>
+    <%= form.date_select :fecha_carga %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fecha_inicio %>
+    <%= form.date_select :fecha_inicio %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fecha_fin %>
+    <%= form.date_select :fecha_fin %>
+  </div>
+
+  <div class="field">
+    <%= form.label :n_factura %>
+    <%= form.text_field :n_factura %>
+  </div>
+
+  <div class="field">
+    <%= form.label :litros_consumidos %>
+    <%= form.text_field :litros_consumidos %>
+  </div>
+
+  <div class="field">
+    <%= form.label :importe_base %>
+    <%= form.text_field :importe_base %>
+  </div>
+
+  <div class="field">
+    <%= form.label :importe_total %>
+    <%= form.text_field :importe_total %>
+  </div>
+
+  <div class="field">
+    <%= form.label :km_inicial %>
+    <%= form.text_field :km_inicial %>
+  </div>
+
+  <div class="field">
+    <%= form.label :km_actual %>
+    <%= form.text_field :km_actual %>
+  </div>
+
+  <div class="field">
+    <%= form.label :gasto %>
+    <%= form.text_field :gasto %>
+  </div>
+
+  <div class="field">
+    <%= form.label :km_recorrido %>
+    <%= form.text_field :km_recorrido %>
+  </div>
+
+  <div class="field">
+    <%= form.label :presupuesto %>
+    <%= form.text_field :presupuesto %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

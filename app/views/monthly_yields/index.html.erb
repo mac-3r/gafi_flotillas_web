@@ -1,0 +1,215 @@
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Reporte de rendimiento mensual de reparto</h3>
+    </div>
+    <div class="float-right">
+      <br>
+      <button type="button" class="btn btn-default float-right" data-toggle="modal" data-target="#exampleModal">
+        Importar Info
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="container">
+      <%= form_tag monthly_yields_path, :method => :get do %>
+      <div class="row">
+        <div class="col">
+          <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">No. Económico: </label>
+          <%= text_field_tag :keyword, params[:keyword], class:"form-control" %>
+        </div>
+        <div class="col">
+          <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Mes: </label>
+          <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="MMMM">
+              <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="start_date" id="start_date">
+              <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+          </div>
+        </div>
+          <div class="col">
+            <br><br>
+            <%= submit_tag "Buscar", class:"btn btn-primary" %>
+          <% end %>
+         </div>
+      </div>
+    </div><br>
+    <div  class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Unidad</th>
+            <th>CEDIS</th>
+            <th>Tipo de vehículo</th>
+            <th>Línea</th>
+            <th>Año</th>
+            <th>Cierre enero</th>
+            <th>Recorrido enero</th>
+            <th>Lts enero</th>
+            <th>Cierre febrero</th>
+            <th>Recorrido febrero</th>
+            <th>Lts febrero</th>
+            <th>Cierre marzo</th>
+            <th>Recorrido marzo</th>
+            <th>Lts marzo</th>
+            <th>Cierre abril</th>
+            <th>Recorrido abril</th>
+            <th>Lts abril</th>
+            <th>Cierre mayo</th>
+            <th>Recorrido mayo</th>
+            <th>Lts mayo</th>
+            <th>Cierre junio</th>
+            <th>Recorrido junio</th>
+            <th>Lts junio</th>
+            <th>Cierre julio</th>
+            <th>Recorrido julio</th>
+            <th>Lts julio</th>
+            <th>Cierre agosto</th>
+            <th>Recorrido agosto</th>
+            <th>Lts agosto</th>
+            <th>Cierre septiembre</th>
+            <th>Recorrido septiembre</th>
+            <th>Lts septiembre</th>
+            <th>Cierre octubre</th>
+            <th>Recorrido octubre</th>
+            <th>Lts octubre</th>
+            <th>Cierre noviembre</th>
+            <th>Recorrido noviembre</th>
+            <th>Lts noviembre</th>
+            <th>Cierre diciembre</th>
+            <th>Recorrido diciembre</th>
+            <th>Lts diciembre</th>
+            <th>Rendimiento enero</th>
+            <th>Rendimiento febrero</th>
+            <th>Rendimiento marzo</th>
+            <th>Rendimiento abril</th>
+            <th>Rendimiento mayo</th>
+            <th>Rendimiento junio</th>
+            <th>Rendimiento julio</th>
+            <th>Rendimiento agosto</th>
+            <th>Rendimiento septiembre</th>
+            <th>Rendimiento octubre</th>
+            <th>Rendimiento noviembre</th>
+            <th>Rendimiento diciembre</th>
+            <th>Rendimiento Ideal</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+        
+        <tbody>
+          <% @monthly_yields.each do |monthly_yield| %>
+          <tr>
+            <td><%= monthly_yield.vehicle.numero_economico %></td>
+            <td><%= monthly_yield.catalog_branch.decripcion %></td>
+            <td><%= monthly_yield.vehicle_type.descripcion %></td>
+            <td><%= monthly_yield.catalog_brand.descripcion %></td>
+            <td><%= monthly_yield.catalog_model.descripcion %></td>
+            <td><%= monthly_yield.cierre_enero %></td>
+            <td><%= monthly_yield.recorrido_enero %></td>
+            <td><%= monthly_yield.lts_enero %></td>
+            <td><%= monthly_yield.cierre_febrero %></td>
+            <td><%= monthly_yield.recorrido_febrero %></td>
+            <td><%= monthly_yield.lts_febrero %></td>
+            <td><%= monthly_yield.cierre_marzo %></td>
+            <td><%= monthly_yield.recorrido_marzo %></td>
+            <td><%= monthly_yield.lts_marzo %></td>
+            <td><%= monthly_yield.cierre_abril %></td>
+            <td><%= monthly_yield.recorrido_abril %></td>
+            <td><%= monthly_yield.lts_abril %></td>
+            <td><%= monthly_yield.cierre_mayo %></td>
+            <td><%= monthly_yield.recorrido_mayo %></td>
+            <td><%= monthly_yield.lts_mayo %></td>
+            <td><%= monthly_yield.cierre_junio %></td>
+            <td><%= monthly_yield.recorrido_junio %></td>
+            <td><%= monthly_yield.lts_junio %></td>
+            <td><%= monthly_yield.cierre_julio %></td>
+            <td><%= monthly_yield.recorrido_julio %></td>
+            <td><%= monthly_yield.lts_julio %></td>
+            <td><%= monthly_yield.cierre_agosto %></td>
+            <td><%= monthly_yield.recorrido_agosto %></td>
+            <td><%= monthly_yield.lts_agosto %></td>
+            <td><%= monthly_yield.cierre_septiembre %></td>
+            <td><%= monthly_yield.recorrido_septiembre %></td>
+            <td><%= monthly_yield.lts_septiembre %></td>
+            <td><%= monthly_yield.cierre_octubre %></td>
+            <td><%= monthly_yield.recorrido_octubre %></td>
+            <td><%= monthly_yield.lts_octubre %></td>
+            <td><%= monthly_yield.cierre_noviembre %></td>
+            <td><%= monthly_yield.recorrido_noviembre %></td>
+            <td><%= monthly_yield.lts_noviembre %></td>
+            <td><%= monthly_yield.cierre_diciembre %></td>
+            <td><%= monthly_yield.recorrido_diciembre %></td>
+            <td><%= monthly_yield.lts_diciembre %></td>
+            <td><%= monthly_yield.rendi_enero %></td>
+            <td><%= monthly_yield.rendi_febrero %></td>
+            <td><%= monthly_yield.rendi_marzo %></td>
+            <td><%= monthly_yield.rendi_abril %></td>
+            <td><%= monthly_yield.rendi_mayo %></td>
+            <td><%= monthly_yield.rendi_junio %></td>
+            <td><%= monthly_yield.rendi_julio %></td>
+            <td><%= monthly_yield.rendi_agosto %></td>
+            <td><%= monthly_yield.rendi_septiembre %></td>
+            <td><%= monthly_yield.rendi_octubre %></td>
+            <td><%= monthly_yield.rendi_noviembre %></td>
+            <td><%= monthly_yield.rendi_diciembre %></td>
+            <td><%= monthly_yield.rendimiento_ideal%></td>
+            <td>
+              <div class="dropdown dropdown-inline">
+                <%= link_to edit_monthly_yield_path(monthly_yield), title: "Editar" do %>
+                <span class="svg-icon svg-icon-md"> 
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                viewBox="0 0 24 24" version="1.1">
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <rect x="0" y="0" width="24" height="24"></rect>
+                <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
+                fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
+                </path>
+                <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+                </g>
+                </svg> 
+                </span>
+                <% end %>
+                </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Importar información</h5>
+        <button type="button" class="close float-right" data-dismiss="modal">&times;</button>   
+      </div>
+      <div class="modal-body">
+          <%= form_tag import_yields_path, multipart: true do %>
+          <%= file_field_tag :file, :class => "form-control-file", accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %>
+          <br>
+      </div>
+      <div class="modal-footer">
+        <%= link_to "Descargar plantilla", template_download_yields_path, class: "btn btn-outline-success mr-2" %>
+        <%= submit_tag "Cargar", class: "form_submit btn btn-primary", :id => "file_button",disabled: true%>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(
+  function(){
+      $('input:file').change(
+          function(){
+              if ($(this).val()) {
+                  $('input:submit').attr('disabled',false);
+              } 
+          }
+          );
+  });
+</script>

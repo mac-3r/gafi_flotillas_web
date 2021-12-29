@@ -1,0 +1,151 @@
+<style>
+    *{
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    a{
+		text-decoration-line: none;
+    }
+    .btn{
+		display: inline-block;
+		font-weight: 400;
+		text-align: center;
+		white-space: nowrap;
+		vertical-align: middle;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		border: 1px solid transparent;
+		padding: 0.375rem 0.75rem;
+		font-size: 1rem;
+		line-height: 1.5;
+		border-radius: 0.25rem;
+		transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .rojo{
+        background-color:  #C5313D;
+        color: #fff;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        text-align: center;
+    }
+</style>
+
+<div class="body">
+    <center>
+        <div class="container" style="padding: 5px;-webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.75);
+        box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.75); width: auto;">
+            <img class="logo-mail" src="http://gafi.com.mx:8081/assets/login_logo-84d0085ea0e2611e7ad049152921cf004fdd6d1c15aa4542bb8ba98b8c8795f1.png" style="width: auto;" height="60">
+            <hr>
+            <div style="text-align: left; padding: 15px;">
+                <p>Hola:</p>
+                <p>Este es el reporte incidencias por responsable de siniestro del mes.</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>CEDIS</th>
+                            <th>Chofer</th>
+                            <th>Costo siniestro</th>
+                            <th>Total siniestros</th>
+                            <th>Costo total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%  costo_siniestro_total = 0
+                            totales_siniestro = 0
+                            costo_totales = 0
+                            
+                            @ticket[0].each do |responsable| %>
+                            <tr>
+                                
+                                <td><%= responsable["empresa"] %></td>
+                                <td><%= responsable["cedis"] %></td>
+                                <td><%= responsable["chofer"] %></td>
+                                <td><%= number_to_currency(responsable["costo_siniestro"]) %></td>
+                                <% costo_siniestro_total += responsable["costo_siniestro"] %>
+                                <td><%= responsable["total_siniestro"] %></td>
+                                <% totales_siniestro +=  responsable["total_siniestro"] %>
+                                <td><%= number_to_currency(responsable["costo_total"]) %></td>
+                                <% costo_totales +=  responsable["costo_total"] %>
+                            </tr>
+                        <% end %>
+                        <tr> 
+                            <th colSpan="3">Total</th>
+                            <td><b><%= number_to_currency(costo_siniestro_total) %></b></td>
+                            <td><b><%= number_to_human(totales_siniestro) %></b> </td>
+                            <td><b><%= number_to_currency(costo_totales) %></b></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <table class="table">
+                    <tbody>
+                        <% @ticket[1].each do |responsable| %>
+                            <tr>
+                                <td><%= responsable["mes"] %></td>
+                                <td><%= responsable["cantidad"] %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Conductor</th>
+                            <th>Agosto</th>
+                            <th>Septiembre</th>
+                            <th>Octubre</th>
+                            <th>Noviembre</th>
+                            <th>Diciembre</th>
+                            <th>Enero</th>
+                            <th>Febrero</th>
+                            <th>Marzo</th>
+                            <th>Abril</th>
+                            <th>Mayo</th>
+                            <th>Junio</th>
+                            <th>Julio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% @responsables.each do |resp| %>
+                            <tr>
+                                <td><%= resp["responsable"] %></td>
+                                <td><%= resp["agosto"] %></td>
+                                <td><%= resp["septiembre"] %></td>
+                                <td><%= resp["octubre"] %></td>
+                                <td><%= resp["noviembre"] %></td>
+                                <td><%= resp["diciembre"] %></td>
+                                <td><%= resp["enero"] %></td>
+                                <td><%= resp["febrero"] %></td>
+                                <td><%= resp["marzo"] %></td>
+                                <td><%= resp["abril"] %></td>
+                                <td><%= resp["mayo"] %></td>
+                                <td><%= resp["junio"] %></td>
+                                <td><%= resp["julio"] %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: left; padding: 15px;">
+                <h6>Si recibiste este correo por error, por favor haga caso omiso.</h6>
+                <h6>Este correo se envía automaticamente. Favor de no responder este correo.</h6>
+            </div>
+            <hr>
+            <div align="right">
+                Powered By: &nbsp;<img src="http://apbsoluciones.com/img/aeb45e_57da454c9def4d9d91c43503212fc73f_mv2.png" style="width: auto; display:inline-block; vertical-align: middle;" height="13">
+                <br><br>
+                </div>
+            <div>
+                <p><%= DateTime.now.year %> &copy; Gafi <a href="https://www.gafi.com.mx" class="m-link">www.gafi.com.mx</a></p>
+            </div>
+        </div>
+    </center>
+</div>

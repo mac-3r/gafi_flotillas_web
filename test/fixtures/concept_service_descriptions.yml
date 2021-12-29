@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  concept_description: one
+  concept_service: one
+
+two:
+  concept_description: two
+  concept_service: two

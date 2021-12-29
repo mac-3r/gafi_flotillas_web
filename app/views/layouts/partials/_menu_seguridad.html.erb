@@ -1,0 +1,85 @@
+<% if can? :index, User %>    
+    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Usuarios"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+        <%= link_to users_path, class: "menu-link" do %>
+            <span class="menu-text">Usuarios</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    </li>
+<% end %>
+<% if can? :index, CatalogBranchesUser %>
+    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Usuarios por CEDIS"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+        <%= link_to users_branches_path, class: "menu-link" do %>
+            <span class="menu-text">Usuarios por CEDIS</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    </li>
+<% end %>
+<% if can? :index, CatalogRole %>    
+    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Roles"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+        <%= link_to catalog_roles_path, class: "menu-link" do %>
+            <span class="menu-text">Roles</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    </li>
+<% end %>
+<% if can? :index, CatalogRolesUser %>
+    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Roles de usuarios"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+        <%= link_to users_rols_path, class: "menu-link" do %>
+            <span class="menu-text">Roles de usuarios</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    </li>
+<% end %>
+<% if can? :index, VehicleLog %>
+    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Bitácora de vehículos"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+        <%= link_to vehicle_logs_path, class: "menu-link" do %>
+            <span class="menu-text">Bitácora de vehículos</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    </li>
+<% end %>
+<% if can? :index, JdeLog %>
+    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Bitácora de pólizas"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+        <%= link_to jde_logs_path, class: "menu-link" do %>
+            <span class="menu-text">Bitácora de pólizas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    </li>
+<% end %>
+<%# if can? :index, JdeVehiclesLog %>
+    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Bitácora de vehículos JDE"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+        <%= link_to jde_vehicles_logs_path, class: "menu-link" do %>
+            <span class="menu-text">Bitácora de vehículos JDE</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    </li>
+<%# end %>
+<% if (can? :index, CatalogoAdaptation ) or (can? :index, AccountingImpact) or (can? :index, CatalogArea) or (can? :index, UserVehicle) or (can? :index, InsuranceBeneficiary) or (can? :index, CostCenter) or ( can? :index, VehicleChecklist) or (can? :index, Customer) or (can? :index, PolicyCoverage) or (can? :index, CatalogConsideration) or (can? :index, DeliveryAddress) or (can? :index, CatalogCompany) or (can? :index, BilledCompany) or (can? :index, PlateState) or (can? :index, VehicleStatus) or (can? :index, VehicleIndicator) or (can? :index, CatalogLicence) or (can? :index, CatalogBrand) or (can? :index, TuningPrice) or (can? :index, CatalogModel)  or (can? :index, Reason) or (can? :index, PerformTarget) or (can? :index, ExpenseVehicleType) or (can? :index, VehiclePermit) or (can? :index, CatalogPersonal) or (can? :index, FuelBudget) or (can? :index, CatalogVendor) or (can? :index, CatalogRepair) or (can? :index, Responsable) or (can? :index, ReviewWorkshop) or (can? :index, MechanicalReview) or (can? :index, CatalogRoute) or (can? :index, CatalogBranch) or (can? :index, CompetitionTable) or (can? :index, CatalogWorkshop) or (can? :index, OrderServiceType) or (can? :index, VehicleType) or (can? :index, TypeSinister) or (can? :index, MaintenanceFrecuency) or (can? :index, Section)%>
+    <li class="nav-item dropdown <% if session["menu2"] == "Catálogos"%> menu-item-active <% end %>" aria-haspopup="true" >
+        <div class="dropdown">
+            <button type="button" style="color: #7E8299;background-color: #ffffff;border: none;font-size: 13.5px;font-weight: 500; display: inline-block; margin: 24px 3px;
+            " class="dropdown-toggle" aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="false">Catálogos <span class="menu-desc"></span>
+            <i class="menu-arrow"></i>
+            </button>
+            <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton">
+                <%= render  "layouts/partials/menu_catalogos"%>
+            </ul>
+        </div>
+    </li>
+<% end %>
+<% if can? :index, Parameter %>
+    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Parámetros"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+        <%= link_to parameters_path, class: "menu-link" do %>
+            <span class="menu-text">Parámetros</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    </li>
+<% end %>
+<% if can? :index, Deadline %>
+    <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Cortes de gastos"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+        <%= link_to deadlines_path, class: "menu-link" do %>
+            <span class="menu-text">Cortes de gastos</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    </li>
+<% end %>

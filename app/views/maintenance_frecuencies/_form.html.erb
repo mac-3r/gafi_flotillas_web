@@ -1,0 +1,57 @@
+<%= form_with(model: maintenance_frecuency, local: true) do |form| %>
+  <% if maintenance_frecuency.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(maintenance_frecuency.errors.count, "error") %> prohibited this maintenance_frecuency from being saved:</h2>
+
+      <ul>
+        <% maintenance_frecuency.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+<br><br>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Tipo*</label>
+    <div class="col-sm-0">
+      <%= form.select :tipo,[
+      ["Seleccione un tipo", ""], 
+      "Por KM", 
+      "Por horas"], 
+      {}, { class: "form form-group form-control"} %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Recorrido mensual:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :mensual_recorrido, class: "form-control", style:"width: 250px !important;",required:true %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Frecuencia:</label>
+    <div class="col-sm-0">
+      <%= form.number_field :frecuencia ,class: "form-control", style:"width: 250px !important;",required:true %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Días:</label>
+    <div class="col-sm-0">
+      <%= form.number_field :dias ,class: "form-control", style:"width: 250px !important;",required:true %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Tipo de vehículo:</label>
+    <div class="col-sm-0">
+      <%= collection_select(:maintenance_frecuency,:vehicle_type_id ,VehicleType.listado_tipos, :id, :descripcion, {prompt:"Seleccione el tipo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true}) %>
+
+    </div>
+  </div><div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Modelo:</label>
+    <div class="col-sm-0">
+      <%= collection_select(:maintenance_frecuency,:catalog_model_id ,CatalogModel.listado_modelo, :id, :descripcion, {prompt:"Seleccione el modelo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+    </div>
+  </div>
+<% end %>

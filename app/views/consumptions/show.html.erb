@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Folio:</strong>
+  <%= @consumption.folio %>
+</p>
+
+<p>
+  <strong>Fecha inicio:</strong>
+  <%= @consumption.fecha_inicio %>
+</p>
+
+<p>
+  <strong>Fecha fin:</strong>
+  <%= @consumption.fecha_fin %>
+</p>
+
+<p>
+  <strong>Cargas:</strong>
+  <%= @consumption.cargas %>
+</p>
+
+<p>
+  <strong>Factura:</strong>
+  <%= @consumption.factura %>
+</p>
+
+<p>
+  <strong>Monto:</strong>
+  <%= @consumption.monto %>
+</p>
+
+<p>
+  <strong>Estatus:</strong>
+  <%= @consumption.estatus %>
+</p>
+
+<%= link_to 'Edit', edit_consumption_path(@consumption) %> |
+<%= link_to 'Back', consumptions_path %>

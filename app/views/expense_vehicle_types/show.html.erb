@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Catalog branch:</strong>
+  <%= @expense_vehicle_type.catalog_branch_id %>
+</p>
+
+<p>
+  <strong>Catalog brand:</strong>
+  <%= @expense_vehicle_type.catalog_brand_id %>
+</p>
+
+<p>
+  <strong>Gasto:</strong>
+  <%= @expense_vehicle_type.gasto %>
+</p>
+
+<p>
+  <strong>Clave:</strong>
+  <%= @expense_vehicle_type.clave %>
+</p>
+
+<%= link_to 'Edit', edit_expense_vehicle_type_path(@expense_vehicle_type) %> |
+<%= link_to 'Back', expense_vehicle_types_path %>

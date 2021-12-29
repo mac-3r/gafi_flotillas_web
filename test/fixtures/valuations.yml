@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tipo_zona: MyString
+  descripcion: MyString
+  valor: 1.5
+  estatus: false
+
+two:
+  tipo_zona: MyString
+  descripcion: MyString
+  valor: 1.5
+  estatus: false

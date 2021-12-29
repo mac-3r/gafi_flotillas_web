@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fecha_inicial: 2021-02-16
+  precio_inicial: 9.99
+  fecha_venta: 2021-02-16
+  precio_final: 9.99
+
+two:
+  fecha_inicial: 2021-02-16
+  precio_inicial: 9.99
+  fecha_venta: 2021-02-16
+  precio_final: 9.99

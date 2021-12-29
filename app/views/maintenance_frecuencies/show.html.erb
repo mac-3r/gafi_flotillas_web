@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Mensual recorrido:</strong>
+  <%= @maintenance_frecuency.mensual_recorrido %>
+</p>
+
+<p>
+  <strong>Frecuencia:</strong>
+  <%= @maintenance_frecuency.frecuencia %>
+</p>
+
+<p>
+  <strong>Vehicle:</strong>
+  <%= @maintenance_frecuency.vehicle_id %>
+</p>
+
+<%= link_to 'Edit', edit_maintenance_frecuency_path(@maintenance_frecuency) %> |
+<%= link_to 'Back', maintenance_frecuencies_path %>

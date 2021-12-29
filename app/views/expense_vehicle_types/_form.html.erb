@@ -1,0 +1,80 @@
+<%= form_with(model: expense_vehicle_type, local: true) do |form| %>
+  <% if expense_vehicle_type.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(expense_vehicle_type.errors.count, "error") %> Error al registrar:</h2>
+
+      <ul>
+        <% expense_vehicle_type.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+  </div><br><br>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Clave:</label>
+    <div class="col-sm-4">
+      <%= form.text_field :clave, class: "form-control", style:"width: 395px !important;" %>
+    </div>
+  </div>  
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Empresa*</label>
+    <div class="col-sm-4">
+      <%= collection_select('', :catalog_company_id, CatalogCompany.listado_empresas,:id, :nombre, {prompt:"Escribe el nombre de la empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">CEDIS*</label>
+    <div class="col-sm-4">
+      <%= collection_select(:expense_vehicle_type,:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Línea*</label>
+    <div class="col-sm-4">
+      <%= collection_select(:expense_vehicle_type,:catalog_brand_id ,CatalogBrand.listado_lineas, :id, :descripcion, {prompt:"Seleccione la linea"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Gasto:</label>
+    <div class="col-sm-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <span class="input-group-text">$</span>
+            </div>
+            <%= form.number_field :gasto, step: :any,class:"form-control",style:"width: 250px !important;" %>
+        </div>
+    </div>
+  </div> 
+
+<% end %>
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('.input-group.date').datetimepicker({
+          locale: 'es',
+      });
+  });
+  $(document).ready(function(){
+      $("#catalog_company_id").change(function(){
+          var empresa = $(this).val();
+          $.ajax({
+              type: "POST",
+              url: "<%= cedis_x_empresa_gasto_path %>",
+              data: {empresa: empresa, authenticity_token: $('meta[name=csrf-token]').attr('content')}
+          })
+      })
+  })
+</script>
+<style>
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+</style>

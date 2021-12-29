@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_vendor: one
+  policy_coverage: one
+  clave_aseguradora: MyString
+  fecha_inicio: 2021-10-01
+  fecha_fin: 2021-10-01
+  estatus: false
+
+two:
+  catalog_vendor: two
+  policy_coverage: two
+  clave_aseguradora: MyString
+  fecha_inicio: 2021-10-01
+  fecha_fin: 2021-10-01
+  estatus: false

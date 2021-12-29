@@ -1,0 +1,66 @@
+<%= form_with(model: catalog_responsife, local: true) do |form| %>
+  <% if catalog_responsife.errors.any? %>
+  <div class="alert alert-danger">Error al registrar:
+    <div id="error_explanation">
+      <ul>
+        <% catalog_responsife.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+   <br><br>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">CEDIS*</label>
+    <div class="col-sm-0">
+      <%= collection_select(:catalog_responsife,:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el CEDIS"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Personal*</label>
+    <div class="col-sm-0">
+      <%= collection_select(:catalog_responsife,:catalog_personal_id ,CatalogPersonal.listado_personal, :id, :nombre, {prompt:"Seleccione el nombre"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Area*</label>
+    <div class="col-sm-0">
+      <%= collection_select(:catalog_responsife,:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Seleccione la area"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Correo:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :correo, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Estatus:</label>
+    <div class="col-sm-0">
+    <div class="form-group col-lg-6">
+      <label class="switch">
+      <input type="checkbox" name="catalog_responsife[status]"<% if @catalog_responsife.status%> checked<%end%>>
+      <span class="slider round"></span>
+      </label>
+      </div>
+  </div>
+  </div>
+<% end %>
+<style>
+  .switch input:checked ~ span:after {
+    opacity: 1;
+    color: #ffffff;
+    background-color:#ffffff;
+}
+.switch input:empty ~ span:before {
+    background-color: #ccc;
+}
+.switch input:checked ~ span:before {
+    background-color: #1bc5bd;
+}
+</style>

@@ -1,0 +1,26 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title example-screen">
+                        <h3 class="card-label float-left">Cotización</h3>
+                        <% if can? :autorizar_cotizacion, ServiceOrder %>
+                            <% if @orden.estatus == "Esperando autorización" %>
+                                <div class="float-right">
+                                    &nbsp;<%= link_to 'Rechazar' ,rechazar_cotizacion_path(@cotizacion.id) ,data: { confirm: '¿Desea rechazar esta cotización?'}, class: "btn btn-danger float-right"%>
+                                </div>
+                                    &nbsp;<%= link_to 'Autorizar' ,autorizar_cotizacion_path(@cotizacion.id) ,data: { confirm: '¿Desea autorizar esta cotización?' }, class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;" %>&nbsp;&nbsp;
+                            <% end %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+          <%= link_to 'Ver archivo PDF' ,rails_blob_path(@orden.cotizacion_servicio, disposition: "preview") ,target: "_blank", class: "btn btn-primary float-right" %>&nbsp;&nbsp;
+          <%= render "cotizacion_detalle" %>
+        </div>
+    </div>
+</div>

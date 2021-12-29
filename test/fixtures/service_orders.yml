@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  n_orden: MyString
+  estatus: 1
+  descripcion: MyString
+  fecha_entrada: 2021-01-20 14:51:38
+  fecha_salida: 2021-01-20 14:51:38
+  maintenance_program: one
+  maintenance_appointment: one
+
+two:
+  n_orden: MyString
+  estatus: 1
+  descripcion: MyString
+  fecha_entrada: 2021-01-20 14:51:38
+  fecha_salida: 2021-01-20 14:51:38
+  maintenance_program: two
+  maintenance_appointment: two

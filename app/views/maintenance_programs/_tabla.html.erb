@@ -1,0 +1,98 @@
+<div class="row">
+  <div class="col-sm-6">
+  </div>
+  <div class="col-sm-4">
+    <% if @mostrar_btn %>
+      <% if @sin_kilometraje %>
+        <%= link_to modal_pendientes_captura_km_path(@branch.id), class: "btn btn-primary float-right", remote: true do %>
+          Pendientes de captura de km <span class="badge badge-light"><%= @contador %></span>
+        <% end %>
+      <% else %>
+        <%= link_to 'Ejecutar programas de mantenimiento' , ejecutar_mantenimiento_notificacion_path, class: "btn btn-primary float-right" %>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="col-sm-2"> 
+    <%= link_to 'Exportar a Excel' , generar_excel_programa_path, target: "_blank", class: "btn btn-success float-right" %>
+  </div>
+</div>
+
+<div class="table-responsive" id="double-scroll"> 
+    <table class="table table-bordered"  style="width:100%" >
+      <thead>
+        <tr>
+          <th style="text-align: center;">Km inicio año en curso</th>
+          <th style="text-align: center;">Km recorrido año en curso</th>
+          <th style="text-align: center;">Promedio mensual recorrido (kms)</th>
+          <th style="text-align: center;">Frecuencia mantenimiento</th>
+          <th>No. Económico</th>
+          <th>Línea</th>
+          <th>Modelo</th>
+          <th>Usuario</th>
+          <th style="text-align: center;">Fecha última afinación</th>
+          <th style="text-align: center;">Kms última afinación</th>
+          <th style="text-align: center;">Kms próximo servicio</th>
+          <th style="text-align: center;">Fecha próximo servicio</th>
+          <th style="text-align: center;">Km actual</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @maintenance_programs.each do |maintenance_program| %>
+          <tr>
+            <td><%= number_with_precision(maintenance_program.km_inicio_ano,precision: 0)  %></td>
+            <td><%= number_with_precision(maintenance_program.km_recorrido_curso,precision: 0) %></td>
+            <td><%= maintenance_program.promedio_mensual %></td>
+            <td><%= number_with_precision(maintenance_program.frecuencia_mantenimiento,precision: 0) %></td>
+            <td><%= maintenance_program.vehicle.numero_economico %></td>
+            <td><%= maintenance_program.vehicle.catalog_brand_id ? maintenance_program.vehicle.catalog_brand.descripcion : "N/A"%></td>
+            <td><%= maintenance_program.vehicle.catalog_model_id ? maintenance_program.vehicle.catalog_model.descripcion : "N/A" %></td>
+            <td><%= maintenance_program.vehicle.catalog_personal_id ? maintenance_program.vehicle.catalog_personal.nombre : "N/A"%></td>
+            <td><%= maintenance_program.fecha_ultima_afinacion.strftime("%d/%m/%y") %></td>
+            <td><%= number_with_precision(maintenance_program.kms_ultima_afinacion,precision: 0)%></td>
+            <td><%= number_with_precision(maintenance_program.kms_proximo_servicio,precision: 0) %></td>
+            <% @fecha_actualizacion =  MileageIndicator.where(vehicle_id: maintenance_program.vehicle_id).last 
+                if @fecha_actualizacion
+                  @fecha = @fecha_actualizacion.fecha.to_date
+                 #byebug
+                end
+            %>
+            <% if @fecha %>
+                <% if  maintenance_program.fecha_proximo == @fecha + 15.day  %>
+                <td style="background-color: yellowgreen;"><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y")  %></td>
+                <% elsif maintenance_program.fecha_proximo == @fecha + 8.day %>
+                <td style="background-color: yellow;"><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y") %></td>
+                <% elsif  @fecha >= maintenance_program.fecha_proximo %>
+                <td style="background-color: tomato;"><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y") %></td>
+                <% else %>
+                <td><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y")%></td>
+                <% end %>
+            <% else %>
+              <td><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y")%></td>
+            <% end %>
+          
+            <td><%= number_with_precision(maintenance_program.km_actual,precision: 0) %></td>
+            <td><%= maintenance_program.observaciones %></td>
+            <!-- <td>
+              <div class="dropdown dropdown-inline">
+                <%= link_to edit_maintenance_program_path(maintenance_program), title: "Editar" do %>
+                <span class="svg-icon svg-icon-md"> 
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                viewBox="0 0 24 24" version="1.1">
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <rect x="0" y="0" width="24" height="24"></rect>
+                <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
+                fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
+                </path>
+                <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+                </g>
+                </svg> 
+                </span>
+                <% end %>
+              </div>    
+            </td> -->
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+</div>

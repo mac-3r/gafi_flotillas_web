@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Vehicle Items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Codigo</th>
+      <th>Vehicle</th>
+      <th>Tipo</th>
+      <th>Fecha compra</th>
+      <th>Estatus</th>
+      <th>Km inicio</th>
+      <th>Km fin</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @vehicle_items.each do |vehicle_item| %>
+      <tr>
+        <td><%= vehicle_item.codigo %></td>
+        <td><%= vehicle_item.vehicle_id %></td>
+        <td><%= vehicle_item.tipo %></td>
+        <td><%= vehicle_item.fecha_compra %></td>
+        <td><%= vehicle_item.estatus %></td>
+        <td><%= vehicle_item.km_inicio %></td>
+        <td><%= vehicle_item.km_fin %></td>
+        <td><%= link_to 'Show', vehicle_item %></td>
+        <td><%= link_to 'Edit', edit_vehicle_item_path(vehicle_item) %></td>
+        <td><%= link_to 'Destroy', vehicle_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Vehicle Item', new_vehicle_item_path %>

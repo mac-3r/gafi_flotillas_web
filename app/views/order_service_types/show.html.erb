@@ -1,0 +1,39 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Concepto de tipos de órdenes de servicio</h3>
+                  <%= link_to 'Regresar',order_service_types_path , class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+       <div class="card-body">
+            <p>
+              <strong>Nombre:</strong>
+              <%= @order_service_type.nombre %>
+            </p>
+
+            <p>
+              <strong>Descripcion:</strong>
+              <%= @order_service_type.descripcion %>
+            </p>
+
+            <p>
+              <strong>Origen:</strong>
+              <%= @order_service_type.origen %>
+            </p>
+
+            <p>
+              <strong>Status:</strong>
+              <%= @order_service_type.status %>
+            </p>
+            <%= link_to 'Editar', edit_order_service_type_path(@order_service_type), class:"btn btn-default" %> 
+           
+       <br><br>                  
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_branch: one
+  catalog_vendor: one
+  valuation: one
+
+two:
+  catalog_branch: two
+  catalog_vendor: two
+  valuation: two

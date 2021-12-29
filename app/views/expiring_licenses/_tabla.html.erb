@@ -1,0 +1,33 @@
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Clave</th>
+            <th>Usuario</th>
+            <th>No. Económico</th>
+            <th>Tipo</th>
+            <th>Número licencia</th>
+            <th>Fecha vencimiento</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <% @licencias.each do |catalog_licence| %>
+        <tr>
+          <td><%= catalog_licence.clave %></td>
+          <td><%= catalog_licence.user.name %> <%= catalog_licence.user.last_name %></td>
+          <td><%= catalog_licence.vehicle.numero_economico %></td>
+          <td><%= catalog_licence.descripcion %></td>
+          <td><%= catalog_licence.numero_licencia %></td>
+          <td><%= l catalog_licence.fecha_vencimiento%></td>
+          <td>
+            <% if catalog_licence.fecha_vencimiento < Time.zone.now.to_date %>
+                <a href="#" class="badge badge-danger">Expirada</a>
+            <% else %>
+                <a href="#" class="badge badge-warning pulsate">Por expirar</a>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+</table>

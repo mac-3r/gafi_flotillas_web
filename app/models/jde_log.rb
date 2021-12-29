@@ -1,0 +1,2 @@
+class JdeLog < ApplicationRecord
+end

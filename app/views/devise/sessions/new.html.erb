@@ -1,0 +1,107 @@
+<!--begin::Login-->
+<div class="login login-5 login-signin-on d-flex flex-row-fluid" id="kt_login">
+  <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid" style="background-image: url(../assets/media/bg/fondo_blanco.jpg);">
+    <div class="login-form text-center text-white p-7 position-relative overflow-hidden">
+      <% if notice %>
+        <p class="alert alert-success"><%= notice %></p>
+        <% end %>
+        <% if alert %>
+        <p class="alert alert-danger"><%= alert %></p>
+        <% end %>
+          <!--begin::Login Header-->
+          <div class="d-flex flex-center mb-15">
+              <a href="#">
+                  <%= image_tag "login_logo.png" %>
+              </a>
+          </div>
+          <!--end::Login Header-->
+          <!--begin::Login Sign in form-->
+          <div class="login-signin" style="color: black; background-color: rgba(255,255,255,0.6); padding: 20px;">
+              <div class="mb-20">
+                  <h3 class="opacity-40 font-weight-normal">Ingresar al sistema</h3>
+                  <p class="opacity-40">Ingresa escribiendo tu RFC y contraseña:</p>
+              </div>
+
+              <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+                  <div class="form-group fv-plugins-icon-container" >
+                  <%#= f.label :email %><br />
+                  <%= f.text_field :user, autocomplete: "email", class: "form-control", style:"background-color:#FFFFF !important;" %>
+                </div>
+
+                <div class="form-group fv-plugins-icon-container">
+                  <%= f.password_field :password, autocomplete: "current-password", class: "form-control",style:"background-color:#FFFFF !important;" %>
+                   <%#= f.label :remember_me, class: "checkbox checkbox-outline checkbox-white text-white m-0" %>
+                </div>
+                
+                <% if devise_mapping.rememberable? %>
+                    <div class="form-group d-flex flex-wrap justify-content-between align-items-center px-8 opacity-60">
+                      <div class="checkbox-inline">
+                    <%#= f.check_box :remember_me %>
+                    <%#= f.label :remember_me, class: "checkbox checkbox-outline checkbox-white text-white m-0" %>
+                    <label class="m-0">
+                      <%= f.check_box :remember_me %>
+                      Recordarme</label>
+                      </div>
+                  </div>
+                <% end %>
+
+                <div class="form-group text-center mt-10">
+                  <%= f.submit "Ingresar" , class: "btn btn-pill btn-primary opacity-90 px-15 py-3"%>
+                </div>
+                <div class="form-group fv-plugins-icon-container">
+                  <p style="font-size:15px;">Soporte</p>
+                  <p>sistemas@gafi.com.mx</p>
+                  <p>871-222-6125.</p>
+                </div>
+              <% end %>
+          </div>
+          <!--end::Login Sign in form-->
+      </div>
+  </div>
+</div>
+<script>
+$("input[type='password']").keypress(function(e) {
+    var kc = e.which; // get keycode
+
+    var isUpperCase = ((kc >= 65 && kc <= 90) || (kc >= 33 && kc <= 34) || (kc >= 36 && kc <= 39) || (kc >= 40 && kc <= 42) || kc == 47 || (kc >= 58 && kc <= 59) || kc == 61 || kc == 63 || kc == 167 || kc == 196 || kc == 214 || kc == 220) ? true : false; // uppercase A-Z or 'Ä', 'Ö', 'Ü', '!', '"', '§', '$', '%', '&', '/', '(', ')', '=', ':', ';'
+    var isLowerCase = ((kc >= 97 && kc <= 122) || (kc >= 48 && kc <= 57) || kc == 35 || (kc >= 43 && kc <= 44) || kc == 46 || kc == 228 || kc == 223 || kc == 246 || kc == 252) ? true : false; // lowercase a-Z or 0-9 or 'ä', 'ö', 'ü', '.', ','
+
+    // event.shiftKey does not seem to be normalized by jQuery(?) for IE8-
+    var isShift = (e.shiftKey) ? e.shiftKey : ((kc == 16) ? true : false); // shift is pressed
+
+    // uppercase w/out shift or lowercase with shift == caps lock
+    if ((isUpperCase && !isShift) || (isLowerCase && isShift)) {
+        $(this).next('.form-control-feedback').show().parent().addClass('has-warning has-feedback').next(".capsWarn").show();
+    } else {
+        $(this).next('.form-control-feedback').hide().parent().removeClass('has-warning has-feedback').next(".capsWarn").hide();
+    }
+}).after('<span class="glyphicon glyphicon-warning-sign form-control-feedback" style="display:none;"></span>').parent().after("<span class='capsWarn text-danger' style='display:none;'>MAYÚS activadas</span>");
+</script>
+<!--end::Login-->
+
+<!-- <h2>Log in</h2>
+
+<%#= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="field">
+    <%#= f.label :email %><br />
+    <%#= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  </div>
+
+  <div class="field">
+    <%#= f.label :password %><br />
+    <%#= f.password_field :password, autocomplete: "current-password" %>
+  </div>
+
+  <%# if devise_mapping.rememberable? %>
+    <div class="field">
+      <%#= f.check_box :remember_me %>
+      <%#= f.label :remember_me %>
+    </div>
+  <%# end %>
+
+  <div class="actions">
+    <%#= f.submit "Log in" %>
+  </div>
+<%# end %> -->
+
+<%#= render "devise/shared/links" %>

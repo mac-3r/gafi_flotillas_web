@@ -1,0 +1,173 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Servicios adicionales</h3>
+                        <div class="float-right">
+                            <% if can? :guardar_servicio, ServiceOrder %>
+                            <% if @orden.estatus == "Pendiente"%>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agregar_datos">Agregar</button>&nbsp;
+                                    <% if  @servicios_pendientes.count > 0 %>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#solicitar">Solicitar autorización</button>&nbsp;
+                                    <% end %>          
+                                <% end %>
+                            <% end %>
+                            
+                            <%= link_to 'Regresar' ,service_orders_path , class: "btn btn-default float-right" %>&nbsp;
+                        </div>
+                        <% if can? :autorizar_servicio_adicional, ServiceOrder %>
+                            <% if @orden.estatus == "Esperando autorización" %>
+                            <div class="float-right">
+                                &nbsp;<%= link_to 'Rechazar servicios' ,rechazar_servicio_adicional_path(@orden.id) ,data: { confirm: '¿Desea rechazar?, se borrarán los servicios adicionales.'}, class: "btn btn-danger float-right"%>
+                            </div>
+                                &nbsp;<%= link_to 'Autorizar servicios' ,autorizar_servicio_adicional_path(@orden.id) ,data: { confirm: '¿Desea autorizar?' }, class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;" %>&nbsp;&nbsp;
+                            <% end %>
+                        <% end %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="float-right">
+                <% if @orden.estatus == "Esperando autorización" or @orden.estatus == "Autorizada" %>
+                    <%= link_to 'Ver archivo' ,rails_blob_path(@orden.adicional_archivo, disposition: "preview") ,target: "_blank", class: "btn btn-primary float-right" %>&nbsp;&nbsp;
+                <% end %> 
+            </div>
+            <div class="row">
+                <div class="col-lg-12">                   
+                    <div class="row" style="text-align: left;">
+                        <div class="col-lg-4">
+                          <p style="font-family: Arial; font-size:16px;">
+                            <strong>No. Orden:</strong>
+                            <%=@orden.n_orden%>
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                          <p style="font-family: Arial; font-size:16px;">
+                            <strong>No. Económico:</strong>
+                            <%=@orden.vehicle.numero_economico%>
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                          <p style="font-family: Arial; font-size:16px;">
+                            <strong>Tipo de vehículo:</strong>
+                            <%=@orden.vehicle.vehicle_type.descripcion%>
+                          </p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>Línea:</strong>
+                              <%=@orden.vehicle.catalog_brand.descripcion%>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <p style="font-family: Arial; font-size:16px;">
+                              <strong>Usuario:</strong>
+                              <%=@orden.vehicle.catalog_personal.nombre%>
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                    <th>Clave</th>
+                    <th>Servicio</th>
+                    <th>Costo</th>
+                    <th>Estatus</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                    <% @servicios.each do |ser| %>
+                        <tr>
+                          <td><%= ser.clave %></td>
+                          <td><%= ser.descripcion %></td>
+                          <td><%= number_to_currency(ser.costo)%></td>
+                          <td><%= ser.estatus %></td>
+                        </tr>
+                    <% end %>
+                </tbody>  
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="agregar_datos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar orden de servicio</h5>
+          <button type="button" class="close float-right" data-dismiss="modal">&times;</button>   
+        </div>
+        <div class="modal-body">
+            <%= form_for('', url: guardar_servicio_path,method: :post, remote: true,authenticity_token: true) do |f|%>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Servicio:</label>
+                    <div class="col-sm-0">
+                        <%= f.text_field :descripcion, class: "form-control", style:"width: 310px !important;",required: true %>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Costo:</label>
+                    <div class="col-sm-0">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <%= f.number_field :costo, step: :any,required: true,class:'form-control',style:"width: 280px !important;"%>
+                        </div>
+                    </div>
+                </div>
+                <%= submit_tag "Guardar", class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;"%>
+                <% end %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="solicitar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Solicitar autorización</h5>
+          <button type="button" class="close float-right" data-dismiss="modal">&times;</button>   
+        </div>
+        <div class="modal-body">
+            <%= form_for('', url: solicitar_servicio_path,method: :post, remote: true,authenticity_token: true) do |f|%>
+                <div class="custom-file">
+                    <%= f.file_field :archivo, required: true, id: "customFile", class: "custom-file-input",accept: 'application/pdf' %>
+                    <label class="custom-file-label" for="customFile">Seleccionar documento</label>
+                    <br>
+                </div> <br><br>
+                <div class="float-right">
+                    <%= submit_tag "Guardar", class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;",disabled:true%>
+                </div>
+            <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="application/javascript">
+    $('input[type="file"]').change(function(e){
+        var fileName = e.target.files[0].name;
+        $('.custom-file-label').html(fileName);
+    });
+    $(document).ready(
+    function(){
+        $('input:file').change(
+            function(){
+                if ($(this).val()) {
+                    $('input:submit').attr('disabled',false);
+                } 
+            }
+            );
+    });
+</script>

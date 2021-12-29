@@ -1,0 +1,62 @@
+<br>
+<div class="container">
+        <div class="card card-custom gutter-b">
+        <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Reporte anual de acumulado de responsivas (<%= @cedis.decripcion%>) </h3>
+        </div>
+        <div class="float-right">  
+            <br>
+            <label for="">Fecha: <%=Time.now.strftime("%d/%m/%Y") %></label>
+        </div>
+        </div>
+        <div class="card-body">
+            <br><br>
+            <%= render "detalle" %>
+            <br><br>
+            <p>Certifico que recibí los vehículos en las condiciones que se detallan en cada uno de los formatos de Entrega de veh&iacute;culo y me hago responsable del uso adecuado, y de que se le hagan los servicios y mantenimientos correspondientes, as&iacute; como se indica en los documentos siguientes:</p>
+            <p>1.-PLCAC005_Mantenimiento vehicular</p>
+            <p>2.-PLCAC007_Activos</p>
+            <p>3.-IFCAC009_Recomendaciones para un buen uso y mantenimiento vehicular</p>
+            <p style="background-color: aqua;">4.-IFCAC015_Descompostura por negligencia</p>
+            <p>5.-FFCAC036_Bitácora de Mantenimiento</p>
+            <br><br>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div style="width:350px;" class="center">
+                        <br><br><br><br>
+                        <hr size="8" width="90%" color="black"> 
+                        <div  style="justify-content:center; align-items:center;display: flex;">
+                            <p><strong style="text-align: center;"><%= @director %></strong></p>
+                        </div>
+                        <div  style="justify-content:center; align-items:center;display: flex;">
+                            <p><strong style="text-align: center;">Firma del director</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div style="width:350px;" class="center">
+                        <br><br><br><br>
+                        <hr size="8" width="90%" color="black"> 
+                        <div  style="justify-content:center; align-items:center;display: flex;">
+                            <p><strong style="text-align: center;"><%= @responsable.nombre%></strong></p>
+                        </div>
+                        <div  style="justify-content:center; align-items:center;display: flex;">
+                            <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.print();
+</script>
+<style>
+    .center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+  }
+  </style>

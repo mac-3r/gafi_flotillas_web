@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Clave:</strong>
+  <%= @catalog_consideration.clave %>
+</p>
+
+<p>
+  <strong>Catalog brand:</strong>
+  <%= @catalog_consideration.catalog_brand_id %>
+</p>
+
+<p>
+  <strong>Descripcion:</strong>
+  <%= @catalog_consideration.descripcion %>
+</p>
+
+<%= link_to 'Edit', edit_catalog_consideration_path(@catalog_consideration) %> |
+<%= link_to 'Back', catalog_considerations_path %>

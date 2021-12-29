@@ -1,0 +1,16 @@
+<% #byebug %>
+<% if @comparacion%>
+    $("#vehicle_id2").empty();
+    $('<option>').val('').text('Seleccione el numero economico').appendTo('#vehicle_id2');
+    <% @numero_economico.each do |numero| %>
+        $('<option>').val('<%= numero.id %>').text('<%= numero.numero_economico %>').appendTo('#vehicle_id2');
+    <% end %>
+    $('#vehicle_id2').trigger("chosen:updated");
+<% else %>
+    $("#vehicle_id").empty();
+    $('<option>').val('').text('Seleccione el numero economico').appendTo('#vehicle_id');
+    <% @numero_economico.each do |numero| %>
+        $('<option>').val('<%= numero.id %>').text('<%= numero.numero_economico %>').appendTo('#vehicle_id');
+    <% end %>
+    $('#vehicle_id').trigger("chosen:updated");
+<% end %>

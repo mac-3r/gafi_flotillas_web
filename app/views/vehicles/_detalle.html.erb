@@ -1,0 +1,32 @@
+<table class="table table-bordered sm">
+    <thead>
+        <tr>
+            <th>No. Económico</th>
+            <th>Tipo de vehículo</th>
+            <th>Línea</th>
+            <th>Modelo</th>
+            <th>Color</th>
+            <th>Serie</th>
+            <th>Motor</th>
+            <th>Placas</th>
+            <th>Responsable</th>
+            <th>Usuario asignado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @index.each do |ind| %>
+            <tr>
+                <td><%= ind.numero_economico%></td>
+                <td><%= ind.vehicle_type.descripcion if ind.vehicle_type %></td>
+                <td><%= ind.catalog_brand.descripcion if ind.catalog_brand %></td>
+                <td><%= ind.catalog_model.descripcion if ind.catalog_model %></td>
+                <td><%= ind.vehicle_color%></td>
+                <td><%= ind.numero_serie%></td>
+                <td><%= ind.numero_motor%></td>
+                <td><%= ind.numero_placa%></td>
+                <td><%= ind.responsable.nombre%></td>
+                <td><%= ind.catalog_personal.nombre if ind.catalog_personal%></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

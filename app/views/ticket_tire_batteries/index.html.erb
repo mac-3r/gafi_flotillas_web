@@ -1,0 +1,112 @@
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Solcitudes de compra
+       <span class="text-muted pt-2 font-size-sm d-block">Solicitudes para compra de baterías y llantas </span>
+      </h3>
+    </div>
+    <div class="float-right">
+      <br>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="container">
+      <%= form_tag ticket_tire_batteries_path, :method => :get do %>
+      <div class="row">
+          <div class="col">
+              <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">No. Económico: </label>
+              <%= text_field_tag :keyword, params[:keyword], class:"form-control" %>
+          </div>
+          <div class="col">
+           <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Estatus:</label>
+           <select name="status" id="status"  class= "form form-group form-control">
+             <option value=""></option>
+             <option value="Pendiente">Pendiente</option>
+             <option value="Autorizado">Autorizado</option>
+             <option value="Atendida sin gasto">Atendida sin gasto</option>
+             <option value="Proceso de compra">Proceso de compra</option>
+             <option value="Pendiente de entrega">Pendiente de entrega</option>
+             <option value="Entregado">Entregado</option>
+           </select>
+          </div>
+          <div class="col">
+            <br><br>
+            <%= submit_tag "Buscar", class:"btn btn-primary" %>
+          <% end %>
+        </div>
+      </div>   
+    </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>No. Económico</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Fecha</th>
+            <th>Estatus</th>
+            <th>Motivo rechazo</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @ticket_tire_batteries.each do |ticket_tire_battery| %>
+            <tr>
+              <td><%= ticket_tire_battery.vehicle.numero_economico %></td>
+              <td><%= ticket_tire_battery.tipo %></td>
+              <td><%= ticket_tire_battery.cantidad %></td>
+              <td><%= ticket_tire_battery.fecha.strftime('%d/%m/%y') %></td>
+              <td><%= ticket_tire_battery.estatus %></td>
+              <td><%= ticket_tire_battery.motivo %></td>
+              <td>
+                <div class="dropdown dropdown-inline">
+                  <%= link_to ver_fotos_path(ticket_tire_battery.id) , title:"Ver fotos" do%>
+                    <span class='far fa-file-image' style='font-size:16px;color:#A6ACAF'></span>
+                    </span>
+                  <% end %>
+                </div>
+              </td>
+              <% if can? :generar_orden, TicketTireBattery %>
+                <% if ticket_tire_battery.estatus == "Autorizado" %>
+                  <td>
+                    <div class="dropdown dropdown-inline">
+                      <%= link_to generar_orden_path(ticket_tire_battery.id) , title:"Generar orden de compra" do%>
+                        <span class='fas fa-cart-plus' style='font-size:16px;color:#A6ACAF'></span>
+                        </span>
+                      <% end %>
+                    </div>
+                  </td>
+                <% end %>
+              <% end %>
+              <% if can? :autorizar_compra_ticket, TicketTireBattery %>
+                <% if ticket_tire_battery.estatus == "Pendiente" %>
+                  <td>
+                    <div class="dropdown dropdown-inline">
+                      <%= link_to autorizar_compra_ticket_path(ticket_tire_battery.id), title:"Autorizar ticket",data: { confirm: '¿Desea autorizar este ticket?' }  do%>
+                        <span class='fas fa-check' style='font-size:16px;color:#A6ACAF'></span>
+                        </span>
+                      <% end %>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="dropdown dropdown-inline">
+                      <%= link_to rechazar_compra_ticket_path(ticket_tire_battery.id), title:"Rechazar ticket",data: { confirm: '¿Desea rechazar este ticket?' } do%>
+                        <span class='fas fa-times' style='font-size:16px;color:#A6ACAF'></span>
+                        </span>
+                      <% end %>
+                    </div>
+                  </td>
+              <% end %>
+
+              <% end %>
+              <!-- <td><%= link_to 'Show', ticket_tire_battery %></td>
+              <td><%= link_to 'Edit', edit_ticket_tire_battery_path(ticket_tire_battery) %></td>
+              <td><%= link_to 'Destroy', ticket_tire_battery, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

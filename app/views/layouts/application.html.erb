@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<!--begin::Head-->
+
+<head>
+	<base href="">
+	<meta charset="utf-8" />
+	<title>GAFI Flotillas</title>
+	<meta name="description" content="Updates and statistics" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<meta name="turbolinks-visit-control" content="reload">
+	<%= csrf_meta_tags %>
+	<%= csp_meta_tag %>
+
+	<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+	<!--begin::Fonts-->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+
+	<!--end::Fonts-->
+
+	<!--begin::Page Vendors Styles(used by this page)-->
+	<link href="/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
+	
+	<!--end::Page Vendors Styles-->
+
+	<!--begin::Global Theme Styles(used by all pages)-->
+	<link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+
+	<!--end::Global Theme Styles-->
+
+	<!--begin::Layout Themes(used by all pages)-->
+
+	<!--end::Layout Themes-->
+	<link rel="shortcut icon" href="/assets/media/logos/favicon.ico" />
+
+	<%= stylesheet_pack_tag "application", media: "all", "data-turbolinks-track": "reload" %>
+	<%= stylesheet_link_tag ('bootsrap-chosen') %>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" />
+</head>
+
+<!--end::Head-->
+
+<!--begin::Body-->
+<% if user_signed_in? %>
+<body id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled page-loading" <%= "data-no-turbolinks='true'".html_safe %>>
+	<!--begin::Main-->
+
+	<% if action_name == "pdf_presupuestos" %>
+		<%= render 'layouts/partials/pdf_presupuestos' %>
+	<% end %>
+	<!--[html-partial:include:{"file":"partials/_header-mobile.html"}]/-->
+	<div class="d-flex flex-column flex-root">
+		<div class="d-flex flex-row flex-column-fluid page">
+			<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+				<%= render 'layouts/partials/header' %>
+				<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+					<% if notice %>
+					<p class="alert alert-success"><%= notice %></p>
+					<% end %>
+					<% if alert %>
+					<p class="alert alert-danger"><%= alert %></p>
+					<% end %>
+		<% else %>
+					<body>
+		<%end%>			
+					<!--[html-partial:include:{"file":"partials/_subheader/subheader-v1.html"}]/-->
+
+					<%= yield %>
+					<% if user_signed_in? %>
+
+				</div>
+				<%= render 'layouts/partials/footer' %>
+			</div>
+		</div>
+	</div>
+<%end%>
+	<!--end::Main-->
+
+	<!--[html-partial:include:{"file":"layout.html"}]/-->
+
+	<!--[html-partial:include:{"file":"partials/_extras/offcanvas/quick-user.html"}]/-->
+
+	<!--[html-partial:include:{"file":"partials/_extras/offcanvas/quick-cart.html"}]/-->
+
+	<!--[html-partial:include:{"file":"partials/_extras/offcanvas/quick-panel.html"}]/-->
+
+	<!--[html-partial:include:{"file":"partials/_extras/chat.html"}]/-->
+
+	<!--[html-partial:include:{"file":"partials/_extras/scrolltop.html"}]/-->
+
+	<!--[html-partial:include:{"file":"partials/_extras/toolbar.html"}]/-->
+
+	<!--[html-partial:include:{"file":"partials/_extras/offcanvas/demo-panel.html"}]/-->
+	<%= render 'layouts/partials/user_profile' %>
+	<script>
+		var HOST_URL = "https://preview.keenthemes.com/metronic/theme/html/tools/preview";
+	</script>
+
+	<!--begin::Global Config(global config for global JS scripts)-->
+	<script>
+		var KTAppSettings = {
+			"breakpoints": {
+				"sm": 576,
+				"md": 768,
+				"lg": 992,
+				"xl": 1200,
+				"xxl": 1200
+			},
+			"colors": {
+				"theme": {
+					"base": {
+						"white": "#ffffff",
+						"primary": "#6993FF",
+						"secondary": "#E5EAEE",
+						"success": "#1BC5BD",
+						"info": "#8950FC",
+						"warning": "#FFA800",
+						"danger": "#F64E60",
+						"light": "#F3F6F9",
+						"dark": "#212121"
+					},
+					"light": {
+						"white": "#ffffff",
+						"primary": "#E1E9FF",
+						"secondary": "#ECF0F3",
+						"success": "#C9F7F5",
+						"info": "#EEE5FF",
+						"warning": "#FFF4DE",
+						"danger": "#FFE2E5",
+						"light": "#F3F6F9",
+						"dark": "#D6D6E0"
+					},
+					"inverse": {
+						"white": "#ffffff",
+						"primary": "#ffffff",
+						"secondary": "#212121",
+						"success": "#ffffff",
+						"info": "#ffffff",
+						"warning": "#ffffff",
+						"danger": "#ffffff",
+						"light": "#464E5F",
+						"dark": "#ffffff"
+					}
+				},
+				"gray": {
+					"gray-100": "#F3F6F9",
+					"gray-200": "#ECF0F3",
+					"gray-300": "#E5EAEE",
+					"gray-400": "#D6D6E0",
+					"gray-500": "#B5B5C3",
+					"gray-600": "#80808F",
+					"gray-700": "#464E5F",
+					"gray-800": "#1B283F",
+					"gray-900": "#212121"
+				}
+			},
+			"font-family": "Poppins"
+		};
+	</script>
+
+	<!--end::Global Config-->
+
+	<!--begin::Global Theme Bundle(used by all pages)-->
+	<script src="/assets/plugins/global/plugins.bundle.js"></script>
+	<script src="/assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+	<script src="/assets/js/scripts.bundle.js"></script>
+
+	<!--end::Global Theme Bundle-->
+
+	<!--begin::Page Vendors(used by this page)-->
+	<script src="/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
+
+	<!--end::Page Vendors-->
+
+	<!--begin::Page Scripts(used by this page)-->
+	<script src="/assets/js/pages/widgets.js"></script>
+
+    <%= javascript_include_tag('chosen.jquery.js') %>
+	<%= javascript_include_tag('scrolling.js') %>
+	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	<!--end::Page Scripts-->
+
+	<div class="modal fade modal_general" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="titulo_modal_general"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						&times;
+					</button>
+				</div>
+				<div class="modal-body" id="contenido">
+
+				</div>
+			  </div>
+		</div>
+	</div>
+
+	<div class="modal fade modal_general_xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="titulo_modal_general_xl"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						&times;
+					</button>
+				</div>
+				<div class="modal-body" id="contenido_xl">
+
+				</div>
+			  </div>
+		</div>
+	</div>
+
+</body>
+<%# byebug %>
+<script>
+	$(".alert").delay(7000).slideUp(1000, function() {$(this).alert('close'); });
+	$(document).ready(function(){
+		$('.chosen-select').chosen();
+	})
+</script>
+<!--end::Body-->
+
+</html>

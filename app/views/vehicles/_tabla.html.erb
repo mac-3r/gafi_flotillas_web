@@ -1,0 +1,83 @@
+<% @vehicles.each do |vehicle| %>
+    <tr>
+        <td><%= vehicle.numero_economico %></td>
+        <td><%= vehicle.company %><%#= vehicle.catalog_company_id ? vehicle.catalog_company.nombre  : "No se asignó"%></td>
+        <td><%= vehicle.branch %><%#= vehicle.catalog_branch_id ? vehicle.catalog_branch.decripcion : "No se asignó"%></td>
+        <td><%= vehicle.personal %><%#= vehicle.catalog_personal_id ? vehicle.catalog_personal.nombre  : "No se asignó"%></td>
+        <td><%= vehicle.vehicle_estatus %><%#= vehicle.vehicle_estatus. %></td>
+        <td><%= vehicle.vehicle_type %><%#= vehicle.vehicle_type_id ? vehicle.vehicle_type.descripcion : "No se asignó"%></td>
+        <td><%= vehicle.brand %><%#= vehicle.catalog_brand_id ? vehicle.catalog_brand.descripcion : "No se asignó"%></td>
+        <td><%= vehicle.model %><%#= vehicle.catalog_model_id  ? vehicle.catalog_model.descripcion : "No se asignó"%></td>
+        <td><%= vehicle.catalog_area %><%#= vehicle.catalog_area_id ? vehicle.catalog_area.descripcion  : "No se asignó"%></td>
+        <td>
+            <div class="dropdown">
+                <button class="btn btn-secondary vehicle_menu" type="button" id="dropdownMenuButton_<%= vehicle.id %>" data-toggle="dropdown" aria-expanded="false" onmouseover="abrirventana(this)">
+                    Acciones
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<%= vehicle.id %>">
+                    <center>
+                        <a class="dropdown-item"><%= "#{vehicle.numero_economico} #{vehicle.brand}" %></a>
+                    </center>
+                    <div class="dropdown-divider"></div>
+                    <% if can? :edit, Vehicle %>
+                        <%= link_to edit_vehicle_path(vehicle.id), class: "dropdown-item" do %>
+                            <span class="svg-icon svg-icon-md"> 
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24"></rect>
+                                        <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
+                                        fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
+                                        </path>
+                                    <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+                                </g>
+                                </svg> 
+                            </span>&nbsp; Ver detalle
+                        <% end %>
+                    <% end %>
+
+                    <% if can? :show, Vehicle %>
+                        <%= link_to vehicle_path(vehicle.id), class: "dropdown-item" do%>
+                            <span class='fas fa-folder' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Ver expediente del vehículo
+                        <% end %>
+                    <% end %>
+
+                    <% if can? :ver_gastos_maestro_vehiculos, Vehicle %>
+                        <%= link_to vehicle_expenses_path(vehicle.id), class: "dropdown-item" do%>
+                            <span class='fas fa-folder' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Ver gastos del vehículo
+                        <% end %>
+                    <% end %>
+
+                    <% if can? :venta, Vehicle %>
+                        <% if vehicle.vehicle_estatus. == "Activo" or vehicle.vehicle_estatus. == "Para venta" %>    
+                            <%= link_to venta_vehiculo_path(vehicle.id), class: "dropdown-item" do %>
+                                <span class='fas fa-dollar-sign' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Vender
+                            <% end %>
+                        <% end %>
+                        <% if vehicle.vehicle_estatus. == "Para venta" %>
+                            <%= link_to cancelar_venta_path(vehicle.id), class: "dropdown-item", data: { confirm: '¿Desea cancelar la venta del vehículo?, esta acción cambiará el estatus del vehículo a Activo en la flotilla' } do %>
+                                <span class='fas fa-times' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Cancelar venta
+                            <% end %>
+                        </td>
+                        <% end %>
+                    <% end %>
+                    <% if can? :agregar_adaptaciones, Vehicle %>
+                        <%= link_to agregar_adaptaciones_path(vehicle.id), class: "dropdown-item" do %>
+                            <span class='fas fa-plus' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Agregar adaptaciones
+                        <% end %>
+                    <% end %>
+                    <% if can? :listado_checklist, Vehicle %>
+                        <%= link_to listado_checklist_path(vehicle.id), class: "dropdown-item" do %>
+                            <span class='fas fa-clipboard-list' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Checklist del vehículo
+                        <% end %>
+                    <% end %>
+                    <% if can? :destroy, Vehicle %>
+                        <%= link_to vehicle_path(vehicle.id), class: "dropdown-item", method: :delete, data: { confirm: '¿Deseas eliminar este vehículo?' } do %>
+                            <span class='fas fa-trash-alt' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Eliminar
+                        <% end %>
+                    <% end %>
+                </div>
+            </div>
+        </td>
+    </tr>
+<% end %>

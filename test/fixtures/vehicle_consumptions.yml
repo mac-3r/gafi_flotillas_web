@@ -1,0 +1,43 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle: one
+  tarjeta: 1
+  placa: MyString
+  catalog_brand: one
+  catalog_area: one
+  estacion: MyString
+  fecha: 2020-10-27
+  hora: 2020-10-27 13:23:08
+  despacho: 1
+  bomba: 1
+  producto: MyString
+  cantidad: 1.5
+  monto: 1.5
+  customer: one
+  datos: MyString
+  responsable: one
+  odometro: 1
+  rendimiento: 1.5
+  recorrido: 1.5
+
+two:
+  vehicle: two
+  tarjeta: 1
+  placa: MyString
+  catalog_brand: two
+  catalog_area: two
+  estacion: MyString
+  fecha: 2020-10-27
+  hora: 2020-10-27 13:23:08
+  despacho: 1
+  bomba: 1
+  producto: MyString
+  cantidad: 1.5
+  monto: 1.5
+  customer: two
+  datos: MyString
+  responsable: two
+  odometro: 1
+  rendimiento: 1.5
+  recorrido: 1.5

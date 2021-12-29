@@ -1,0 +1,69 @@
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Seguimiento de captura de kilometraje </h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="container">
+      <% if @usuario_cedis != nil %>
+      <div class="row">
+        <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Empresa:&nbsp;<%= @usuario_cedis.catalog_branch.catalog_company.nombre %></label> 
+       </div>
+       <div class="row">
+        <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">CEDIS:&nbsp;<%= @usuario_cedis.catalog_branch.decripcion%></label>
+       </div>
+      <% end %>
+       <%= form_tag agency_mileage_indicators_path, :method => :get do %>
+       <div class="row">
+           <div class="col">
+               <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">N° Economico: </label>
+               <%= text_field_tag :keyword, params[:keyword], class:"form-control" %>
+           </div>
+           <div class="col">
+               <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Usuario vehículo:</label>
+               <%= collection_select('',:catalog_personal_id ,CatalogPersonal.listado_personal,:id, :nombre, {prompt:"Seleccione un usuario"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+           </div>
+           <div class="col">
+             <br><br>
+             <%= submit_tag "Buscar", class:"btn btn-primary" %>
+           <% end %>
+         </div>
+       </div>      
+    </div>
+    <br><br>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>N.económico</th>
+            <th>Línea</th>
+            <th>Modelo</th>
+            <th>Usuario</th>
+            <th>Área</th>
+            <th>Km actual</th>
+            <th>Fecha y hora</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @agency_mileage_indicators.each do |agency_mileage_indicator|%>
+            <tr>
+              <td><%= agency_mileage_indicator.vehicle.numero_economico %></td>
+              <td><%= agency_mileage_indicator.vehicle.catalog_brand.descripcion%></td>
+              <td><%= agency_mileage_indicator.vehicle.catalog_model.descripcion %></td>
+              <td><%= agency_mileage_indicator.vehicle.catalog_personal.nombre %></td>
+              <td><%= agency_mileage_indicator.vehicle.catalog_area.descripcion %></td>
+              <% if agency_mileage_indicator.km_actual == 0 %>
+              <td style="background-color: red;"><%= agency_mileage_indicator.km_actual %></td>
+              <% else %>
+              <td><%= agency_mileage_indicator.km_actual %></td>
+              <% end %>
+              <td><%= agency_mileage_indicator.fecha.strftime("%d/%m/%y %I:%M %p") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

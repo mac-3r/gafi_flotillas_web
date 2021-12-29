@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_brand: one
+  medida: MyString
+  modelo: MyString
+  precio: 9.99
+  tipo: MyString
+  moneda: MyString
+  dls: 9.99
+
+two:
+  catalog_brand: two
+  medida: MyString
+  modelo: MyString
+  precio: 9.99
+  tipo: MyString
+  moneda: MyString
+  dls: 9.99

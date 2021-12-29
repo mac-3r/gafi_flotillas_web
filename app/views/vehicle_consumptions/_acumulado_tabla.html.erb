@@ -1,0 +1,34 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>No. Económico</th>
+            <th>CEDIS</th>
+            <th>Tipo de vehículo</th>
+            <th>Línea</th>
+            <th>Área</th>
+            <th>Usuario</th>
+            <th>Fecha de carga de ticket</th>
+            <th>Periodo factura</th>
+            <th>No. Factura</th>
+            <th>Litros</th>
+            <th>Importe</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @listado.each do |lis| %>
+        <tr style="text-align:center;">
+            <td><%= lis.vehicle.numero_economico %></td>
+            <td><%= lis.vehicle.catalog_branch_id  ? lis.vehicle.catalog_branch.decripcion  : "No se asignó" %></td>
+            <td><%= lis.vehicle.vehicle_type.descripcion %></td>
+            <td><%= lis.vehicle.catalog_model.descripcion %></td>
+            <td><%= lis.vehicle.catalog_area_id  ? lis.vehicle.catalog_area.descripcion  : "No se asignó"%></td>
+            <td><%= lis.vehicle.catalog_personal_id  ? lis.vehicle.catalog_personal.nombre  : "No se asignó"%></td>
+            <td><%= lis.fecha ? lis.fecha : "N/A"%></td>
+            <td><%= "Del: #{lis.consumption.fecha_inicio.strftime("%d/%m/%Y")} - #{lis.consumption.fecha_fin.strftime("%d/%m/%Y")}" %></td>
+            <td><%= lis.consumption.n_factura ? lis.consumption.n_factura : "N/A" %></td>
+            <td><%= number_with_delimiter(lis.cantidad) %></td>
+            <td><%= number_to_currency(lis.monto)%></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>

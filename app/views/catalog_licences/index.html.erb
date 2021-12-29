@@ -1,0 +1,38 @@
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Licencias
+      <span class="text-muted pt-2 font-size-sm d-block">Catálogo de licencias</span>
+      </h3>
+    </div>
+    <div class="float-right">
+      <br>
+      <%= link_to 'Nuevo', new_catalog_licence_path,class:"btn btn-primary font-weight-bolder",style:"border-radius: 0.42rem;", data: { turbolinks: false } %>
+    </div>
+  </div>
+  <div class="card-body">
+      <%=form_for('', url: filtrado_licencias_path, remote: true) do |f|%>    <div class="container">
+        <div class="row">
+          <div class="col">
+            <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Usuario:</label>
+            <%= collection_select('',:user_id ,User.listado_usuarios, :id, :nombre_completo, {prompt:"Seleccione un usuario"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",style: "width:100% !important;"})%>          </div>
+          <div class="col">
+            <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">No. Económico:</label>
+            <%= collection_select('',:vehicle_id, Vehicle.listado_vehiculos, :id, :numero_economico, {prompt:"Seleccione el número"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+          </div>
+          <div class="col">
+            <br><br>
+            <%= submit_tag "Buscar", class:"btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <br><br>
+    <div style="width: 100%" id="table_container">
+      <%= render  "tabla" %>
+    </div>
+    </div>
+  </div>
+</div>

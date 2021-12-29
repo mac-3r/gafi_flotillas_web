@@ -1,0 +1,101 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title example-screen">
+                        <h3 class="card-label float-left">Cotización</h3>
+                        <div class="float-right">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agregar_datos">Agregar</button>&nbsp;
+                            <% if  @detalle.count > 0 %>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#solicitar">Solicitar autorización</button>&nbsp;
+                            <% end %>          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+          <%= render "cotizacion_detalle" %>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="agregar_datos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar datos</h5>
+          <button type="button" class="close float-right" data-dismiss="modal">&times;</button>   
+        </div>
+        <div class="modal-body">
+            <%= form_for('', url: guardar_detalle_cotizacion_path,method: :post, remote: true,authenticity_token: true) do |f|%>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Servicio:</label>
+                    <div class="col-sm-0">
+                        <%= f.text_field :descripcion, class: "form-control", style:"width: 310px !important;",required: true %>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Costo:</label>
+                    <div class="col-sm-0">
+                        <div class="input-group mb-3">
+                            <% if @garantia == true %>
+                                <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">0</label>
+                                <%= f.hidden_field :precio, step: :any,value:0,class:'form-control',style:"width: 280px !important;"%>
+                            <% else %>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <%= f.number_field :precio, step: :any,required: true,class:'form-control',style:"width: 280px !important;"%>
+                            <% end %>
+                        </div>
+                    </div>
+                </div>
+                <%= submit_tag "Guardar", class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;"%>
+            <% end %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="solicitar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Solicitar autorización</h5>
+          <button type="button" class="close float-right" data-dismiss="modal">&times;</button>   
+        </div>
+        <div class="modal-body">
+            <%= form_for('', url: solicitar_cotizacion_path,method: :post, remote: true,authenticity_token: true) do |f|%>
+                <div class="custom-file">
+                    <%= f.file_field :archivo_cotizacion, required: true, id: "customFile", class: "custom-file-input",accept: 'application/pdf' %>
+                    <label class="custom-file-label" for="customFile">Seleccionar documento</label>
+                    <br>
+                </div> <br><br>
+                <div class="float-right">
+                    <%= submit_tag "Guardar", class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;",disabled:true%>
+                </div>
+            <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="application/javascript">
+    $('input[type="file"]').change(function(e){
+        var fileName = e.target.files[0].name;
+        $('.custom-file-label').html(fileName);
+    });
+    $(document).ready(
+    function(){
+        $('input:file').change(
+            function(){
+                if ($(this).val()) {
+                    $('input:submit').attr('disabled',false);
+                } 
+            }
+            );
+    });
+</script>

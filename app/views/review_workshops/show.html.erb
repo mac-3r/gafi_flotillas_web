@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Clave:</strong>
+  <%= @review_workshop.clave %>
+</p>
+
+<p>
+  <strong>Descripcion:</strong>
+  <%= @review_workshop.descripcion %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @review_workshop.status %>
+</p>
+
+<%= link_to 'Edit', edit_review_workshop_path(@review_workshop) %> |
+<%= link_to 'Back', review_workshops_path %>

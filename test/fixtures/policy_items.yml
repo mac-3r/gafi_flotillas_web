@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  insurance_policy: one
+  nombre: MyString
+  clave: MyString
+  descripcion: MyText
+  estatus: false
+
+two:
+  insurance_policy: two
+  nombre: MyString
+  clave: MyString
+  descripcion: MyText
+  estatus: false

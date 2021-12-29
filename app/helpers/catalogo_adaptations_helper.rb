@@ -1,0 +1,2 @@
+module CatalogoAdaptationsHelper
+end

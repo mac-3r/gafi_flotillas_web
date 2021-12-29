@@ -1,0 +1,32 @@
+ <br>
+ <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Reparación</th>
+                    <th>Concepto</th>
+                    <th>Fecha</th>
+                    <th>Importe</th>
+                  </tr>
+                </thead>
+          
+                <tbody>
+                  <%  total = 0
+                  @resultados.each do |res| %> 
+                    <% if res.catalog_repair_id %>
+                      
+                      <tr>
+                        <td><%= res.catalog_repair.categoria %></td>
+                        <td><%= res.catalog_repair.subcategoria %></td>
+                        <td><%= res.fecha_factura.strftime('%d/%m/%y')  %></td>
+                        <td><%= number_to_currency(res.importe) %></td>
+                        <%   total += res.importe %>
+                      </tr>
+                    <% end %>
+                    
+                    <% end %>
+                    <tr> 
+                        <th colSpan="3"> Total </th>
+                        <td><%= number_to_currency(total) %> </td>
+                    </tr>
+                </tbody>
+              </table>

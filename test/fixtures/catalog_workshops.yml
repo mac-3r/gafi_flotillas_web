@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  clave: MyString
+  catalog_branch: one
+  nombre_taller: MyString
+  razonsocial: MyString
+  especialidad: MyString
+  responsable: MyString
+  telefono: MyString
+  domicilio: MyString
+  correo: MyString
+  vigente: false
+
+two:
+  clave: MyString
+  catalog_branch: two
+  nombre_taller: MyString
+  razonsocial: MyString
+  especialidad: MyString
+  responsable: MyString
+  telefono: MyString
+  domicilio: MyString
+  correo: MyString
+  vigente: false

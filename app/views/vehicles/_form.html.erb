@@ -1,0 +1,536 @@
+<%= form_with(model: vehicle, local: true) do |form| %>
+  <% if vehicle.errors.any? %>
+    <div class="alert alert-danger">Error al registrar:
+      <div id="error_explanation">
+        <h2><%= pluralize(vehicle.errors.count, "error") %></h2>
+
+        <ul>
+          <% vehicle.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+    <% if  @vehicle.vehicle_status_id %>
+      <% if @vehicle.vehicle_status.descripcion == "Inactivo" %>
+        <%= link_to "Cancelar", cancelar_compra_path(params[:id]), class: "btn btn-danger",data: { confirm: '¿Desea cancelar la compra?, esta función eliminará el vehículo y sus datos en la bitácora.' } %>
+      <% end %>
+    <% end %>
+  </div>
+
+    <!--<div class="float-right">
+    </div>-->
+      <br><br><br>
+      <div class="row">
+        <div class="col-6"><!--left side -->
+
+          <div class="form-group row">
+            <label for="fname" class="col-sm-6 col-form-label">No. Económico*:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_economico, class: "form-control", style:"width: 290px !important;",required:true %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="fname" class="col-sm-6 col-form-label">Empresa*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:catalog_company_id ,CatalogCompany.listado_empresas, :id, :nombre, {prompt:"Seleccione la empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Cedis:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Área*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Seleccione el área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required: true})%>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Estatus*:</label>
+            <div class="col-sm-6">
+              <%# if @vehicle.vehicle_status_id %>
+                <%# if @vehicle.vehicle_status.descripcion == "Inactivo" %>
+                  <%#= collection_select(:vehicle,:vehicle_status_id ,VehicleStatus.listado_status, :id, :descripcion, {prompt:"Seleccione el estado"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",disabled:true})%>
+                <%# else %>
+                  <%= collection_select(:vehicle,:vehicle_status_id ,VehicleStatus.listado_status, :id, :descripcion, {prompt:"Seleccione el estado"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+                <%# end %>
+              <%# end %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Usuario*:</label>
+            <div class="col-sm-6">
+              <%# if @vehicle.catalog_personal_id %>
+                <%# if @vehicle.vehicle_status.descripcion == "Inactivo" %>
+                  <%#= collection_select(:vehicle,:catalog_personal_id ,CatalogPersonal.listado_personal.order('nombre ASC'), :id, :nombre, {prompt:"Seleccione el usuario"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",disabled:true})%>
+                <%# else %>
+                  <%= collection_select(:vehicle,:catalog_personal_id ,CatalogPersonal.listado_personal.order('nombre ASC'), :id, :nombre, {prompt:"Seleccione el usuario"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                <%# end %>
+              <%# end %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Responsable*:</label>
+            <div class="col-sm-6">
+              <%# if @vehicle.responsable_id %>
+                <%# if @vehicle.vehicle_status.descripcion == "Inactivo" %>
+                  <%#= collection_select(:vehicle,:responsable_id ,Responsable.listado_responsables.order('nombre ASC'), :id, :nombre, {prompt:"Seleccione el responsable"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",disabled:true})%>
+                <%# else %>
+                  <%= collection_select(:vehicle,:responsable_id ,Responsable.listado_responsables.order('nombre ASC'), :id, :nombre, {prompt:"Seleccione el responsable"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                <%# end %>
+              <%# end %>
+            </div>
+          </div>
+            
+        
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Ruta*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:catalog_route_id ,CatalogRoute.listado_rutas, :id, :descripcion, {prompt:"Seleccione la ruta"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Centro de costos*:</label>
+            <div class="col-sm-6">
+              <% if @vehicle.cost_center_id %>
+                <%= collection_select(:vehicle,:cost_center_id ,CostCenter.listado_centros, :id, :datoscombo, {prompt:"Seleccione el centro de costos"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"}) %>
+              <% else %>
+                <%= collection_select(:vehicle,:cost_center_id ,CostCenter.listado_centros, :id, :datoscombo, {prompt:"Seleccione el centro de costos"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"}) %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Fecha compra*:</label>
+            <div class="col-sm-6">
+              <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                <% if @vehicle.fecha_compra.nil? %>
+                  <%= form.text_field :fecha_compra, class: "form-control datetimepicker-input", required:true %>
+                <% else %>
+                  <%= form.text_field :fecha_compra, class: "form-control datetimepicker-input", required:true, disabled:true%>
+                <% end %>
+                <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Valor compra:</label>
+            <div class="col-sm-6">
+              <% if @vehicle.valor_compra.nil? %>
+                <%= form.text_field :valor_compra, class: "form-control", style:"width: 290px !important;" %>
+              <% else %>
+                <%= form.text_field :valor_compra, class: "form-control", style:"width: 290px !important;", disabled: true %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Empresa factura*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:billed_company_id ,BilledCompany.listado_emfac, :id, :nombre, {prompt:"Seleccione el empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"}) %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Factura vehículo:</label>
+            <div class="col-sm-6">
+              <% if @vehicle.numero_factura == "" or @vehicle.numero_factura.nil? or (can? :modal_cambio_factura, Consumption) %>
+                <%= form.text_field :numero_factura, class: "form-control", style:"width: 290px !important;"%>
+              <% else %>
+                <%= form.text_field :numero_factura, class: "form-control", style:"width: 290px !important;", disabled:true %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">No. Placa:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_placa, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Estado plaqueo*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:plate_state_id ,PlateState.listado_estado, :id, :descripcion, {prompt:"Seleccione el estado"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Fecha vigencia de placas:</label>
+            <div class="col-sm-6">
+              <div class="input-group date" id="datetimepicker1" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                <%= form.text_field :fecha_vigencia_placas, class: "form-control datetimepicker-input"%>
+                <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Permiso federal:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :permiso_federal_carga, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Permiso fisico mecánico:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :permiso_fisico_mecanico, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Fecha vigencia de permiso fisico mecánico:</label>
+            <div class="col-sm-6">
+              <div class="input-group date" id="datetimepicker3" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                <%= form.text_field :fecha_vigencia_fisico, class: "form-control datetimepicker-input"%>
+                <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Permiso ambiental:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :permiso_ambiental, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Fecha vigencia de permiso ambiental:</label>
+            <div class="col-sm-6">
+              <div class="input-group date" id="datetimepicker4" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                <%= form.text_field :fecha_vigencia_ambiental, class: "form-control datetimepicker-input"%>
+                <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Litros autorizados:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :litros_autorizados, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="email" class="col-sm-6 col-form-label">Almacén*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:warehouse_id ,Warehouse.listado_almacenes, :id, :clave_descripcion, {prompt:"Seleccione el tipo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true}) %>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+
+          <div class="form-group row">
+            <label for="email" class="col-sm-6 col-form-label">Tipo de vehículo*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:vehicle_type_id ,VehicleType.listado_tipos, :id, :descripcion, {prompt:"Seleccione el tipo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true}) %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password" class="col-sm-6 col-form-label">Línea*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:catalog_brand_id ,CatalogBrand.listado_lineas, :id, :descripcion, {prompt:"Seleccione la linea"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Modelo*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:catalog_model_id ,CatalogModel.listado_modelo, :id, :descripcion, {prompt:"Seleccione el modelo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Color:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :vehicle_color, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">No. Serie*:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_serie, class: "form-control", style:"width: 290px !important;",required:true %>
+            </div>
+          </div>
+        
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">No. Motor*:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_motor, class: "form-control", style:"width: 290px !important;",required:true %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Transmisión*:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :transmision, class: "form-control", style:"width: 290px !important;",required:true %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">No. Póliza:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_poliza, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Inciso:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :inciso, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Fecha vigencia de póliza:</label>
+            <div class="col-sm-6">
+              <div class="input-group date" id="datetimepicker2" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                <%= form.text_field :fecha_vigencia_poliza, class: "form-control datetimepicker-input"%>
+                <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Cobertura*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:policy_coverage_id ,PolicyCoverage.listado_cobertura, :id, :descripcion, {prompt:"Seleccione la cobertura"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Beneficiario*:</label>
+            <div class="col-sm-6">
+              <%= collection_select(:vehicle,:insurance_beneficiary_id ,InsuranceBeneficiary.listado_beneficiado, :id, :descripcion, {prompt:"Seleccione el beneficiado"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">No. Factura adaptación:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_factura_adapt, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">No. Serie adaptación:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_serie_adapt, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Valor adaptación:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :valor_adapt, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="lname" class="col-sm-6 col-form-label">Fecha vigencia de licencia:</label>
+            <div class="col-sm-6">
+              <div class="input-group date" id="datetimepicker8" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                <%= form.text_field :fecha_licencia, class: "form-control datetimepicker-input"%>
+                <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">No. Licencia:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_licencia, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <% if @vehicle.vehicle_status.descripcion != "Inactivo"%>
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label">Fecha para verificación:</label>
+              <div class="col-sm-6">
+                <div class="input-group date" id="datetimepicker9" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                  <%= form.text_field :proxima_verificacion, class: "form-control datetimepicker-input"%>
+                  <div class="input-group-append" data-target="#datetimepicker9" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label">Reparto:</label>
+            <div class="col-sm-6">
+              <label class="switch">
+                <input type="checkbox" name="vehicle[reparto]"<% if @vehicle.reparto%> checked<%end%>>
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Permiso SCT:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :permiso_sat, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Número de permiso:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_permiso, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password2" class="col-sm-6 col-form-label">Nombre de aseguradora:</label>
+            <div class="col-sm-6">
+              <%= form.text_field :numero_aseguradora, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="celular" class="col-sm-6 col-form-label">Celular:</label>
+            <div class="col-sm-6">
+              <%= form.phone_field :celular, class: "form-control", style:"width: 290px !important;" %>
+            </div>
+          </div>
+
+          <% if @vehicle.vehicle_status.descripcion == "Inactivo" %>
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label">Tipo de afectación*:</label>
+              <div class="col-sm-6">
+                <%= form.select :cuenta_contable, ["Compras","Maquinaria y equipo"], {}, { class: "form form-group form-control" } %>
+              </div>
+            </div>
+          <% end %>
+
+          <br><br>
+        </div><!--right side -->
+      </div>
+      <div class="row" >
+        <div class="col-lg-12">
+          <h3>Otros datos</h3>
+          <hr>
+          <div class="row">
+            <div class="col-lg-4 auto_data" <% if @vehicle.vehicle_type_id == 10 %> style="display: none;" <% end %>>
+              <label for="password2" class="col-sm-6 col-form-label">Tipo de permiso*:</label>
+              <br>
+              <%= collection_select(:vehicle,:permission_type_id ,PermissionType.listado_tipos_permiso, :id, :clave_nombre, {prompt:"Seleccione el tipo de permiso"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+            </div>
+            <div class="col-lg-4 auto_data" <% if @vehicle.vehicle_type_id == 10 %> style="display: none;" <% end %>>
+              <label for="password2" class="col-sm-6 col-form-label">Configuración*:</label>
+              <br>
+              <%= collection_select(:vehicle,:vehicle_configuration_id ,VehicleConfiguration.listado_configuraciones, :id, :clave_nombre, {prompt:"Seleccione la configuración"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+            </div>
+            <div class="col-lg-4 trailer_data" <% if @vehicle.vehicle_type_id != 10 %> style="display: none;" <% end %>>
+              <label for="password2" class="col-sm-6 col-form-label">Subtipo de remolque*:</label>
+              <br>
+              <%= collection_select(:vehicle,:trailer_subtype_id ,TrailerSubtype.listado_tipos_remolque, :id, :clave_nombre, {prompt:"Seleccione el subtipo de remolque"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $(function () {
+
+    $('#datetimepicker7').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es'
+    });
+
+    $('#datetimepicker8').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es'
+    });
+
+    $('#datetimepicker9').datetimepicker({
+      format: 'DD/MM/YYYY',
+      locale: 'es'
+    });
+
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    $("#vehicle_catalog_company_id").change(function(){
+      var empresa = $(this).val();
+      $.ajax({
+        type: "POST",
+        url: "<%= cedis_x_empresa_vehiculo_path %>",
+        data: {empresa: empresa, authenticity_token: $('meta[name=csrf-token]').attr('content')}
+      })
+    })
+
+    $("#vehicle_vehicle_type_id").change(function(){
+      var valor = $(this).val();
+      if (valor == "10"){
+        $(".trailer_data").css({"display":"block"});
+        $(".auto_data").css({"display":"none"});
+      } else {
+        $(".auto_data").css({"display":"block"});
+        $(".trailer_data").css({"display":"none"});
+      }
+    })
+
+  })
+</script>
+
+<style>
+  .switch input:checked ~ span:after {
+    opacity: 1;
+    color: #ffffff;
+    background-color:#ffffff;
+  }
+
+  .switch input:empty ~ span:before {
+    background-color: #ccc;
+  }
+
+  .switch input:checked ~ span:before {
+    background-color: #1bc5bd;
+  }
+
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+  }
+</style>

@@ -1,0 +1,47 @@
+<%= form_with(model: maintenance_appointment, local: true) do |form| %>
+  <% if maintenance_appointment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(maintenance_appointment.errors.count, "error") %> prohibited this maintenance_appointment from being saved:</h2>
+
+      <ul>
+        <% maintenance_appointment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;", :onclick => "return validateForm();" %>
+  </div>
+  <br><br>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Vehículo</label>
+    <div class="col-sm-0">
+      <%= collection_select(:maintenance_appointment,:vehicle_id ,Vehicle.listado_vehiculos, :id, :numero_economico, {prompt:"Ingrese el número económico"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Fecha</label>
+    <div class="col-sm-0">
+        <div class="input-group date col-sm-9"  id="datetimepicker_ocurrio" data-target-input="nearest" data-date-format="DD/MM/YYYY LT" style="width: 100%">
+          <%if @maintenance_appointment.fecha_cita.nil? %>
+          <%= form.text_field(:fecha_cita, class: "form-control datetimepicker-input",style: "width: 70%; height: 80%;", required: true, autocomplete: "off",autoclose: true)%>
+          <%else%>
+          <%fecha = @maintenance_appointment.fecha_cita.strftime("%d/%m/%Y %H:%M:%S")%>
+          <%= form.text_field(:fecha_cita, value:fecha, class: "form-control datetimepicker-input",style: "width: 80%; height: 70%;", required: true, autocomplete: "off")%>
+          <%end%>
+          <div class="input-group-append" data-target="#datetimepicker_ocurrio" data-toggle="datetimepicker">
+            <div class="input-group-text" style="height: 95%;"><i class="fa fa-calendar"></i></div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+<% end %>
+<script>
+  function validateForm() { 
+        var fecha = document.getElementById("maintenance_appointment_fecha_cita").value;
+        var res = confirm("Se registrara la cita para la fecha  "+ fecha + " ¿Desea continuar?"); 
+    if (res == false) { return false; } 
+  }
+</script>

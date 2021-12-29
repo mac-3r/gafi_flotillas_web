@@ -1,0 +1,305 @@
+    <% if can? :index, CatalogoAdaptation %>    
+        <%= link_to  catalogo_adaptations_path, class: "dropdown-item" do %>
+            <span class="menu-text">Adaptaciones</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, AccountingImpact %>    
+        <%= link_to accounting_impacts_path, class: "dropdown-item" do %>
+            <span class="menu-text">Afectación contable</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :administrar_almacenes, Warehouse %>    
+        <%= link_to warehouses_path, class: "dropdown-item" do %>
+            <span class="menu-text">Almacenes</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogArea %>    
+        <%= link_to catalog_areas_path, class: "dropdown-item" do %>
+            <span class="menu-text">Áreas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <%# if can? :index, UserVehicle %>    
+        <%#= link_to user_vehicles_path, class: "dropdown-item" do %>
+            <!--<span class="menu-text">Asignación de vehículos por usuario</span>
+            <span class="menu-desc"></span>-->
+        <%# end %>
+    <%# end %>
+    <% if can? :index, InsuranceBeneficiary %>
+        <%= link_to insurance_beneficiaries_path, class: "dropdown-item" do %>
+            <span class="menu-text">Beneficiarios</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :binnacles_index, Concept %>
+        <%= link_to binnacles_index_path, class: "dropdown-item" do %>
+            <span class="menu-text">Bitacora de mantenimiento</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CostCenter %>
+        <%= link_to cost_centers_path, class: "dropdown-item" do %>
+            <span class="menu-text">Centros de costos</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, VehicleChecklist %>    
+        <%= link_to vehicle_checklists_path, class: "dropdown-item" do %>
+            <span class="menu-text">Checklist de vehículos</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, Customer %>    
+        <%= link_to customers_path,class: "dropdown-item" do %>
+            <span class="menu-text">Clientes JDE</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, PolicyCoverage %>
+        <%= link_to policy_coverages_path, class: "dropdown-item" do %>
+            <span class="menu-text">Coberturas de pólizas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, Concept %>
+        <%= link_to concepts_index_path, class: "dropdown-item" do %>
+            <span class="menu-text">Categorías de conceptos de mantenimiento</span>
+            <span class="menu-desc"></span>
+        <% end %>
+        <%= link_to index_conceptos_path, class: "dropdown-item" do %>
+            <span class="menu-text">Conceptos de mantenimiento</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogConsideration %>    
+        <%= link_to catalog_considerations_path, class: "dropdown-item" do %>
+            <span class="menu-text">Consideraciones físicas de vehículo</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %> 
+    <% if can? :index, DeliveryAddress %>    
+        <%= link_to delivery_addresses_path, class: "dropdown-item" do %>
+            <span class="menu-text">Direcciones entrega JDE</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogCompany %>    
+        <%= link_to catalog_companies_path, class: "dropdown-item" do %>
+            <span class="menu-text">Empresas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, BilledCompany %>   
+        <%= link_to billed_companies_path, class: "dropdown-item" do %>
+            <span class="menu-text">Empresas Facturables</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, PlateState %>    
+        <%= link_to plate_states_path, class: "dropdown-item" do %>
+            <span class="menu-text">Estados de plaqueo</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, VehicleStatus %>    
+        <%= link_to vehicle_statuses_path, class: "dropdown-item" do %>
+            <span class="menu-text">Estatus de vehículos</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, MaintenanceFrecuency %>
+        <%= link_to maintenance_frecuencies_path, class: "dropdown-item" do %>
+            <span class="menu-text">Frecuencias de mantenimiento</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <!-- <% if can? :index, VehicleIndicator %>    
+        <%= link_to vehicle_indicators_path, class: "dropdown-item" do %>
+            <span class="menu-text">Indicadores entrega de vehiculo</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %> -->
+    <% if can? :index, CatalogTiresBattery %>    
+        <%= link_to catalog_tires_batteries_path, class: "dropdown-item" do %>
+            <span class="menu-text">Llantas y baterías</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogLicence %>    
+        <%= link_to catalog_licences_path, class: "dropdown-item" do %>
+            <span class="menu-text">Licencias</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :reporte_licencias_expirar, :expiring_licenses %>    
+        <%= link_to expiring_licenses_path, class: "dropdown-item" do %>
+            <span class="menu-text">Licencias por expirar</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogBrand %>                                 
+        <%= link_to catalog_brands_path, class: "dropdown-item" do %>
+            <span class="menu-text">Líneas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, TuningPrice %>    
+        <%= link_to tuning_prices_path, class: "dropdown-item" do %>
+            <span class="menu-text">Lista de precios afinaciones</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogModel %>
+        <%= link_to catalog_models_path, class: "dropdown-item" do %>
+            <span class="menu-text">Modelos</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, Reason %>    
+        <%= link_to reasons_path, class: "dropdown-item" do %>
+            <span class="menu-text">Motivos</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>   
+    <!-- <% if can? :index, PerformTarget %>    
+        <%= link_to perform_targets_path, class: "dropdown-item" do %>
+            <span class="menu-text">Objetivos de rendimiento</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %> -->
+    <% if can? :index, ExpenseVehicleType %>    
+        <%= link_to expense_vehicle_types_path, class: "dropdown-item" do %>
+            <span class="menu-text">Objetivo gasto por tipo de vehículo</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <!-- <% if can? :index, VehiclePermit %>    
+        <%= link_to vehicle_permits_path, class: "dropdown-item" do %>
+            <span class="menu-text">Permisos vehículares</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %> -->
+    <% if can? :index, CatalogPersonal %>    
+        <%= link_to catalog_personals_path, class: "dropdown-item" do %>
+            <span class="menu-text">Personal JDE</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, FuelBudget %>    
+        <%= link_to fuel_budgets_path, class: "dropdown-item" do %>
+            <span class="menu-text">Presupuesto de combustible</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, Question %>    
+        <%= link_to questions_path, class: "dropdown-item" do %>
+            <span class="menu-text">Preguntas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogVendor %>   
+        <%= link_to catalog_vendors_path, class: "dropdown-item" do %>
+        <span class="menu-text">Proveedores JDE</span>
+        <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+ 
+    <% if can? :index, CatalogRepair %>
+        <%= link_to catalog_repairs_path, class: "dropdown-item" do %>
+            <span class="menu-text">Reparaciones</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, Responsable %>    
+        <%= link_to responsables_path, class: "dropdown-item" do %>
+            <span class="menu-text">Responsables</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, Answer %>    
+        <%= link_to answers_path, class: "dropdown-item" do %>
+            <span class="menu-text">Respuestas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, ReviewWorkshop %>
+        <%= link_to review_workshops_path, class: "dropdown-item" do %>
+            <span class="menu-text">Revisión de talleres</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, MechanicalReview %>    
+        <%= link_to mechanical_reviews_path, class: "dropdown-item" do %>
+            <span class="menu-text">Revisión mecánica de vehículo </span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogRoute %>    
+        <%= link_to catalog_routes_path, class: "dropdown-item" do %>
+            <span class="menu-text">Rutas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, Section %>    
+        <%= link_to sections_path, class: "dropdown-item" do %>
+            <span class="menu-text">Secciones de áreas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, ConceptService %>    
+        <%= link_to concept_services_path, class: "dropdown-item" do %>
+            <span class="menu-text">Servicios de mantenimiento</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogBranch %>    
+        <%= link_to catalog_branches_path, class: "dropdown-item" do %>
+            <span class="menu-text"> Sucursales (Centros de Distribución CEDIS)</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <%# if can? :index, CatalogBranch %>    
+        <%= link_to insurance_policies_path, class: "dropdown-item" do %>
+            <span class="menu-text"> Pólizas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <%# end %>  
+    <% if can? :index, CompetitionTable %>    
+        <%= link_to competition_tables_path,class: "dropdown-item" do %>
+            <span class="menu-text">Tabla de competencias</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, CatalogWorkshop %>    
+        <%= link_to catalog_workshops_path,class: "dropdown-item" do %>
+            <span class="menu-text">Talleres</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, Valuation %>    
+        <%= link_to valuations_path,class: "dropdown-item" do %>
+            <span class="menu-text">Tasas</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, OrderServiceType %>    
+        <%= link_to order_service_types_path, class: "dropdown-item" do %>
+            <span class="menu-text">Tipos de Ordenes de Servicio</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, VehicleType %>    
+        <%= link_to vehicle_types_path, class: "dropdown-item" do %>
+            <span class="menu-text">Tipos de vehículos</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, TypeSinister %>    
+        <%= link_to type_sinisters_path, class: "dropdown-item" do %>
+            <span class="menu-text">Tipo siniestro</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>

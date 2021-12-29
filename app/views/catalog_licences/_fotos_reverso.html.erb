@@ -1,0 +1,78 @@
+<style>
+    .inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+    label[for="#company_logo"] {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #106BA0;
+    display: inline-block;
+    transition: all .5s;
+    cursor: pointer;
+    padding: 15px 40px !important;
+    text-transform: uppercase;
+    width: fit-content;
+    text-align: center;
+    }
+
+    .fileContainer {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .fileContainer [type=file] {
+        cursor: inherit;
+        display: block;
+        font-size: 999px;
+        filter: alpha(opacity=0);
+        min-height: 100%;
+        min-width: 100%;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        text-align: right;
+        top: 0;
+    }
+</style>
+<%if action_name == "fotos_reverso"%>
+<%= form_for(@documento, method: "post", url: cargar_fotos_reverso_path,remote: true, authenticity_token: true) do |f| %>
+    <%= f.hidden_field :id, value: @licencia_id %>
+    <!--<div class="form-group">
+        <label>Tipo de Documento</label>
+        <%#= f.select :tipo_archivo, [["PDF de CFDI","PDF de CFDI"], ["XML de CFDI","XML de CFDI"], ["Ticket o Recibo","Ticket o Recibo"], ["Otro","Otro"]], { selected: "PDF de CFDI"}, { class: "form-control"} %>
+    </div>-->
+    <div class="form-group">
+        <label>Seleccionar documento</label>
+        <div></div>
+        <div class="custom-file">
+            <%= f.file_field :reverso, required: true, id: "customFile", class: "custom-file-input",accept: 'application/pdf' %>
+            <label class="custom-file-label" for="customFile">Seleccionar documento</label>
+        </div>
+    </div>
+    <!--<div class="form-group">
+        <label>Descripción</label>
+        <%#= f.rich_text_area :descripcion %>
+    </div>-->
+    <div class="float-right">
+        <%= f.submit "Guardar documento", class: "btn btn-success m-btn m-btn--custom float-right" %>
+    </div>
+<% end %>
+<%end%>
+<br>
+<br>
+<br>
+<div style="max-height: 400px;" id="contenedor_documentos">
+    <%= render "foto_reverso" %>
+</div>
+<script type="application/javascript">
+    $('input[type="file"]').change(function(e){
+        var fileName = e.target.files[0].name;
+        $('.custom-file-label').html(fileName);
+    });
+</script>

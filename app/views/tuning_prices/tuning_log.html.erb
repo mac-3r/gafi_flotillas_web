@@ -1,0 +1,35 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Historial</h3>
+                        <%= link_to 'Regresar' ,tuning_prices_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+        <table class="table">
+    
+      <thead>
+        <tr>
+          <th>Descripción</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+
+        <tbody>
+            <% @tuning_log.each do |tuning_log| %>
+            <tr>
+                <td><%= tuning_log.texto %></td>
+                <td><%= tuning_log.created_at.strftime("%d/%m/%y %I:%M %p") %></td>
+            </tr>
+            <%end %>
+        </tbody>
+        </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+<% if action_name != "show" and action_name != "show_budget_requests_concepts" %>
+    <div class="float-right">
+        <%= link_to "Agregar detalle", add_item_budget_path(@budget.id), class: "btn btn-outline-success mr-2 float-right", style:"border-radius: 0.42rem;", data: { turbolinks: false }, remote: true %>
+    </div>
+    <br><br><br>
+<% end %>
+<div style="width: 100%;">
+    <div style="max-width: 100%; overflow: auto">
+        <table id="table" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>CEDIS</th>
+                    <th>Área</th>
+                    <th>Cantidad</th>
+                    <th>Tipo de vehículo</th>
+                    <th>Línea</th>
+                    <th>Modelo</th>
+                    <th>Motivo</th>
+                    <th>Importe con I.V.A</th>
+                    <th>Plaqueo</th>
+                    <th>Seguro</th>
+                    <th>Muelle</th>
+                    <th>Caja</th>
+                    <th>Rotulacion</th>
+                    <th>Lona</th>
+                    <% if action_name != "show" and action_name != "show_budget_requests_concepts" %>
+                        <th colspan="2"></th>
+                    <% end %>
+                </tr>
+            </thead>
+            <tbody>
+                <% total = 0 
+                    @budget_items.each do |budget_item| 
+                        total += (budget_item.importe + budget_item.plaqueo + budget_item.seguro + budget_item.muelle + budget_item.caja + budget_item.rotulacion + budget_item.lona)
+                %>
+                    <tr>
+                        <td><%= budget_item.catalog_branch_id  ? budget_item.catalog_branch.decripcion  : "No se asignó"  %></td>
+                        <td><%= budget_item.catalog_area_id  ? budget_item.catalog_area.descripcion  : "No se asignó"  %></td>
+                        <td><%= budget_item.cantidad %></td>
+                        <td><%= budget_item.vehicle_type_id  ? budget_item.vehicle_type.descripcion  : "No se asignó"  %></td>
+                        <td><%= budget_item.catalog_brand_id ? budget_item.catalog_brand.descripcion  : "No se asignó"  %></td>
+                        <td><%= budget_item.catalog_model_id ? budget_item.catalog_model.descripcion  : "No se asignó"  %></td>
+                        <td><%= budget_item.reason.descripcion %></td>
+                        <td ><%=  number_to_currency(budget_item.importe) %></td>
+                        <td ><%= number_to_currency(budget_item.plaqueo) %></td>
+                        <td ><%= number_to_currency(budget_item.seguro) %></td>
+                        <td ><%= number_to_currency(budget_item.muelle) %></td>
+                        <td ><%= number_to_currency(budget_item.caja) %></td>
+                        <td ><%= number_to_currency(budget_item.rotulacion) %></td>
+                        <td><%= number_to_currency(budget_item.lona) %></td>
+                        <% if action_name != "show" and action_name != "show_budget_requests_concepts" %> 
+                            <td>
+                                <% if budget_item.estatus_autorizacion == "Pendiente" or budget_item.estatus_autorizacion == "Rechazado"  %>
+                                    <%= link_to "Editar", edit_item_budget_path(budget_item.budget_id,budget_item.id), class: "btn btn-outline-warning", remote: true %>
+                                <% end %>
+                            </td>
+                            <td>
+                                <% if budget_item.estatus_autorizacion == "Pendiente" or budget_item.estatus_autorizacion == "Rechazado"  %>
+                                    <%= link_to "Eliminar", destroy_budget_item_path(budget_item.budget_id,budget_item.id), data: { confirm: "¿Deseas eliminar este concepto?" }, class: "btn btn-outline-danger", remote: true %>
+                                <% end %>
+                            </td>
+                        <% end %>
+                    </tr>
+                <% end %>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <% if action_name != "show" and action_name != "show_budget_requests_concepts" %> 
+                        <td colspan="13"></td>
+                    <% else %>
+                        <td colspan="12"></td>
+                    <% end %>
+                    <td><strong>Total:</strong></td>
+                    <td><strong><%= number_to_currency(total) %></strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

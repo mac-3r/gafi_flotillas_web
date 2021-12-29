@@ -1,0 +1,235 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Adaptaciones del vehí­culo</h3>
+                        <div class="float-right">
+                            &nbsp;<%= link_to 'Regresar', vehicles_path, class: "btn btn-default float-right" %>
+                        </div>
+                        &nbsp;<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#agregar_datos">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Adaptación</th>
+                    <th>Proveedor</th>
+                    <th>Fecha</th>
+                    <th>Importe</th>
+                    <th>Importe IVA</th>
+                    <th>Folio factura</th>
+                    <th>Estatus</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% @adaptations.each do |adp| %>
+                    <tr>
+                      <td><%= adp.catalogo_adaptation.descripcion %></td>
+                      <td><%= adp.catalog_vendor_id ? adp.catalog_vendor.razonsocial : "No se asignó" %></td>
+                      <td><%= adp.fecha.strftime("%d/%m/%Y") if adp.fecha %></td>
+                      <td><%= number_to_currency(adp.monto)%></td>
+                      <td><%= number_to_currency(adp.importe_iva)%></td>
+                      <td><%= adp.n_factura%></td>
+                      <td><%= adp.estatus%></td>
+                      <% if can? :solicitar_adaptacion, VehicleAdaptation %>
+                            <% if adp.estatus == "En captura" %>
+                                <td>
+                                    <div class="dropdown dropdown-inline">
+                                    <%= link_to solicitar_adaptacion_path(adp.id), title:"Solicitar autorización" do%>
+                                        <span class='far fa-envelope' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Solicitar
+                                        </span>
+                                    <% end %>
+                                    </div>
+                                </td> 
+                            <% end %>   
+                       <% end %>
+                       <% if can? :factura_adaptacion, VehicleAdaptation %>
+                            <% if adp.estatus == "Autorizado" %>
+                                <td>
+                                    <div class="dropdown dropdown-inline">
+                                    <%= link_to factura_adaptacion_path(adp.id), remote: true, title:"Cargar factura/Descargar factura" do%>
+                                        <span class='fas fa-file-archive' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Factura
+                                        </span>
+                                    <% end %>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown dropdown-inline">
+                                    <%= link_to pdf_adaptacion_path(adp.id), remote: true, title:"Cargar PDF/Descargar PDF" do%>
+                                        <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>&nbsp; PDF
+                                        </span>
+                                    <% end %>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown dropdown-inline">
+                                    <%= link_to modal_cambio_factura_adaptacion_path(adp.id), remote: true, title:"Editar folio factura" do%>
+                                        <span class='fas fa-receipt' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Editar folio
+                                        </span>
+                                    <% end %>
+                                    </div>
+                                </td>
+                            <% end %>
+                        <% end %>
+                    </tr>
+                        <% end %>
+                    </tbody>
+              </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="agregar_datos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar adaptación</h5>
+          <button type="button" class="close float-right" data-dismiss="modal">&times;</button>   
+        </div>
+        <div class="modal-body">
+            <%= form_for('', url: guardar_adaptaciones_path,method: :post, remote: true,authenticity_token: true) do |f|%>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:14px;">Adaptación:&nbsp;</label>
+                    <div class="col-sm-10">
+                    <%= collection_select('',:catalogo_adaptation_id ,CatalogoAdaptation.listado_adaptaciones, :id, :descripcion, {prompt:"Seleccione la adaptación"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:14px;">Proveedor:&nbsp;</label>
+                    <div class="col-sm-10">
+                        <%= collection_select('',:catalog_vendor_id ,CatalogVendor.listado_proveedor, :id, :razonsocial, {prompt:"Seleccione el proveedor"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:14px;">Fecha:</label>
+                    <div class="col-sm-10">
+                        <div class="input-group date" id="datetimepicker9" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                            <%= f.text_field :fecha, class: "form-control datetimepicker-input", required:true%>
+                            <div class="input-group-append" data-target="#datetimepicker9" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:14px;">¿Incluye impuestos?</label>
+                    <div class="col-sm-5">
+                        <div class="form-group col-lg-6">
+                            <label class="switch">
+                                <input id="impuesto_check" onclick="OpenCheck()" type="checkbox" name="impuestos">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_importe" class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:14px;">Importe sin IVA:</label>
+                    <div class="col-sm-10">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <%= f.number_field :monto, step: :any,class:'form-control',oninput:"operacion();"%>
+                        </div>
+                    </div>
+                </div>
+
+                <div  id="div_iva" style="display: none;" class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:14px;">IVA:</label>
+                    <div class="col-sm-10">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <%= f.number_field :importe_iva, step: :any,class:'form-control' %>
+                        </div>
+                    </div>
+                </div>
+                <div  id="div_total" style="display: none;" class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:14px;">Total:</label>
+                    <div class="col-sm-10">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <%= f.number_field :total,class:'form-control', step: :any,:disabled => true %>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:14px;">Base 0%</label>
+                    <div class="col-sm-5">
+                        <div class="form-group col-lg-6">
+                            <label class="switch">
+                                <input type="checkbox" name="base">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <%= submit_tag "Guardar", class: "btn btn-success float-right", style:"background-color: #2dbe06 !important;"%>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var checkBox = document.getElementById("impuesto_check");
+    function OpenCheck() {
+        if (checkBox.checked == true) {
+            document.getElementById("div_importe").style.display = "flex";
+            document.getElementById("div_iva").style.display = "flex";
+            document.getElementById("div_total").style.display = "flex";
+        }
+        else {
+            document.getElementById("div_importe").style.display = "flex";
+            document.getElementById("div_iva").style.display = "none";
+            document.getElementById("div_total").style.display = "none";
+        }
+   }
+   function operacion(){
+    var a = document.getElementById("monto").value
+    var iva = a * 0.16
+    var total = Number(a) + iva
+    document.getElementById("importe_iva").value = iva
+    document.getElementById("total").value = total
+
+    }
+</script>
+
+<style>
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0; 
+  }
+  .switch input:checked ~ span:after {
+      opacity: 1;
+      color: #ffffff;
+      background-color:#ffffff;
+  }
+  .switch input:empty ~ span:before {
+      background-color: #ccc;
+  }
+  .switch input:checked ~ span:before {
+      background-color: #1bc5bd;
+  }
+      input[type=number]::-webkit-inner-spin-button, 
+      input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0; 
+    }
+</style>

@@ -1,0 +1,2 @@
+module CatalogWorkshopsHelper
+end

@@ -1,0 +1,41 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  no_economico: MyString
+  cedis: MyString
+  tipo_vehicu: MyString
+  linea: MyString
+  area: MyString
+  responsable: MyString
+  fecha_carga: 2020-10-28
+  fecha_inicio: 2020-10-28
+  fecha_fin: 2020-10-28
+  n_factura: MyString
+  litros_consumidos: 1.5
+  importe_base: 1.5
+  importe_total: 1.5
+  km_inicial: 1.5
+  km_actual: 1.5
+  gasto: 1.5
+  km_recorrido: 1.5
+  presupuesto: MyString
+
+two:
+  no_economico: MyString
+  cedis: MyString
+  tipo_vehicu: MyString
+  linea: MyString
+  area: MyString
+  responsable: MyString
+  fecha_carga: 2020-10-28
+  fecha_inicio: 2020-10-28
+  fecha_fin: 2020-10-28
+  n_factura: MyString
+  litros_consumidos: 1.5
+  importe_base: 1.5
+  importe_total: 1.5
+  km_inicial: 1.5
+  km_actual: 1.5
+  gasto: 1.5
+  km_recorrido: 1.5
+  presupuesto: MyString

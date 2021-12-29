@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  clave: MyString
+  nombre: MyString
+  fecha_inicio_vigencia: 2021-09-10
+  fecha_fin_vigencia: 2021-09-10
+
+two:
+  clave: MyString
+  nombre: MyString
+  fecha_inicio_vigencia: 2021-09-10
+  fecha_fin_vigencia: 2021-09-10

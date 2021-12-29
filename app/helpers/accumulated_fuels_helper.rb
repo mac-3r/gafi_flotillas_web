@@ -1,0 +1,2 @@
+module AccumulatedFuelsHelper
+end

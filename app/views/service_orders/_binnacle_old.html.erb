@@ -1,0 +1,35 @@
+<div class="form-row">
+    <div class="form-group col-lg-6">
+        <div class="row">
+            <label class="col-sm-8 col-form-label" style="font-family: Arial; font-size:16px;"><strong>Servicio de kms:&nbsp;</strong> <%= number_with_precision(@service_orders.km_actual,precision: 0)  %></label> 
+        </div>
+    </div>
+  </div>
+  <table class="table table-bordered">
+      <thead>
+          <tr>
+              <th colspan="3" style="text-align: center;"><%= @service_orders.vehicle.catalog_brand.descripcion %></th>
+              <th style="text-align: center;">Tipo de frecuencia</th>
+              <th style="text-align: center;">Frecuencia para reemplazo</th>
+              <th style="text-align: center;">Frecuencia para inspección</th>
+              <th style="text-align: center;" >Servicio a realizar</th>
+          </tr>
+      </thead>
+      <tbody>
+          <% @resultados.each do |res| %>
+              <tr> 
+                  <% if res.tipo_afinacion == "Afinación mayor" %>
+                      <td style="background-color: #888787;text-align:center;"><b><%= res.tipo_afinacion %></b></td>
+                  <% else %>
+                      <td style="background-color: #B2B2B2;text-align:center;"><b><%= res.tipo_afinacion %></b></td>
+                  <% end %>
+                  <td><%= res.categoria %></td>
+                  <td><%= res.concepto %></td>
+                  <td><%= res.tipo_frecuencia%></td>
+                  <td><%= number_with_precision( res.frencuencia_reemplazo, precision: 2) %></td>
+                  <td><%= number_with_precision( res.frecuencia_inspeccion, precision: 2) %></td>
+                  <td><%= res.servicio %></td>
+              </tr>
+          <% end%>
+      </tbody>
+  </table>

@@ -1,0 +1,31 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Asignar área</h3>
+                        <%= link_to 'Regresar' ,sections_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <%= form_for('', url: guardar_area_path,method: :post, remote: true,authenticity_token: true) do |f|%>
+            
+            <div class="card-body">
+                <div class="float-right">
+                    <%= submit_tag "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;"%>
+                </div> <br><br>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Área:</label>
+                    <div class="col-sm-0">
+                        <%= collection_select('',:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Seleccione la área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                </div>
+            </div>
+            <% end %>
+        </div>
+    </div>
+</div>

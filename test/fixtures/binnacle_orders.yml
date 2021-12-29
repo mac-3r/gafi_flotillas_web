@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  service_orders: 
+  tipo_afinacion: MyString
+  categoria: MyString
+  concepto: MyString
+  tipo_frecuencia: MyString
+  frencuencia_reemplazo: 9.99
+  frecuencia_inspeccion: 9.99
+  servicio: MyString
+
+two:
+  service_orders: 
+  tipo_afinacion: MyString
+  categoria: MyString
+  concepto: MyString
+  tipo_frecuencia: MyString
+  frencuencia_reemplazo: 9.99
+  frecuencia_inspeccion: 9.99
+  servicio: MyString

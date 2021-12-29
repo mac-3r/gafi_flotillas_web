@@ -1,0 +1,35 @@
+<center>
+    <h3><%= @concepto.descripcion %></h3>
+</center>
+<hr>
+<%= form_for('', url: asignar_categorias_path(@concepto.id),method: :post, remote: true,authenticity_token: true) do |form|%>
+    
+    <% if @conceptos != [] %>
+        <div style="max-height: 700px; overflow: auto;">
+            <% @conceptos.each do |concepto| %>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <%= form.hidden_field :conceptos, name: "conceptos[]", value: concepto.id %>
+                        <span class="m-switch m-switch--icon m-switch--success" >
+                            <label>
+                                <input type="checkbox" <% if concepto.seleccionado %>checked="checked" <% end %> name="chkcategoria_<%= concepto.id %>" class="chkcategoria">
+                                <span></span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="col-lg-10">
+                        <h6><%= concepto.nombre %></h6>
+                    </div>
+                </div>
+                <hr>
+            <% end %>
+        </div>
+        <div class="float-right">
+            <%= form.submit "Terminar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+        </div>
+    <% else %>
+        <div style="max-height: 700px; overflow: auto;">
+           <h2 style="text-align: center;">No se encontraron conceptos verifique el catálogo de conceptos de mantenimiento.<h1>
+        </div>
+    <% end %>
+<% end %>

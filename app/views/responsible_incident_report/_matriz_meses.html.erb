@@ -1,0 +1,41 @@
+<div class="float-right">
+    <%= link_to  "Exportar a excel", responsible_incident_excel_path, target: "_blank", class: "btn" %>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Conductor</th>
+            <th>Agosto</th>
+            <th>Septiembre</th>
+            <th>Octubre</th>
+            <th>Noviembre</th>
+            <th>Diciembre</th>
+            <th>Enero</th>
+            <th>Febrero</th>
+            <th>Marzo</th>
+            <th>Abril</th>
+            <th>Mayo</th>
+            <th>Junio</th>
+            <th>Julio</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @responsables.each do |resp| %>
+            <tr>
+                <td><%= resp["responsable"] %></td>
+                <td><%= resp["agosto"] %></td>
+                <td><%= resp["septiembre"] %></td>
+                <td><%= resp["octubre"] %></td>
+                <td><%= resp["noviembre"] %></td>
+                <td><%= resp["diciembre"] %></td>
+                <td><%= resp["enero"] %></td>
+                <td><%= resp["febrero"] %></td>
+                <td><%= resp["marzo"] %></td>
+                <td><%= resp["abril"] %></td>
+                <td><%= resp["mayo"] %></td>
+                <td><%= resp["junio"] %></td>
+                <td><%= resp["julio"] %></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

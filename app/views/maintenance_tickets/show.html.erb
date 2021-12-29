@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Vehicle:</strong>
+  <%= @maintenance_ticket.vehicle_id %>
+</p>
+
+<p>
+  <strong>Descripcion:</strong>
+  <%= @maintenance_ticket.descripcion %>
+</p>
+
+<p>
+  <strong>Fecha alta:</strong>
+  <%= @maintenance_ticket.fecha_alta %>
+</p>
+
+<p>
+  <strong>Estatus:</strong>
+  <%= @maintenance_ticket.estatus %>
+</p>
+
+<%= link_to 'Edit', edit_maintenance_ticket_path(@maintenance_ticket) %> |
+<%= link_to 'Back', maintenance_tickets_path %>

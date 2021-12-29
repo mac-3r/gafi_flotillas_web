@@ -1,0 +1,24 @@
+<%= form_for(@warehouse, method: "PATCH", url: warehouse_path(@warehouse.id), remote: true, authenticity_token: true) do |form| %>
+    <div class="form-row">
+        <div class="form-group col-lg-4">
+            <label>Clave *:</label><br>
+            <%= form.text_field(:clave, class: "form-control", required: true) %>
+        </div>
+        <div class="form-group col-lg-4">
+            <label>Descripción *:</label><br>
+            <%= form.text_field(:descripcion, class: "form-control", required: true) %>
+        </div>
+        <div class="form-group col-lg-4">
+            <label>Empresa:</label><br>
+            <%= collection_select(:warehouse, :catalog_company_id, CatalogCompany.listado_empresas,:id, :nombre, {prompt:"Escribe el nombre de la empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+        </div>
+    </div>
+    <div class="float-right">
+        <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+    </div>
+<% end %>
+<script type="text/javascript">
+    $(document).ready(function(){
+		$('.chosen-select').chosen();
+	})
+</script>

@@ -1,0 +1,42 @@
+<%= form_with(model: maintenance_ticket, local: true) do |form| %>
+  <% if maintenance_ticket.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(maintenance_ticket.errors.count, "error") %> prohibited this maintenance_ticket from being saved:</h2>
+
+      <ul>
+        <% maintenance_ticket.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+  <br><br>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Descripción:</label>
+    <div class="col-sm-0">
+      <%= form.text_area :descripcion, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <!-- <div class="field">
+    <%= form.label :vehicle_id %>
+    <%= form.text_field :vehicle_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :descripcion %>
+    <%= form.text_field :descripcion %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fecha_alta %>
+    <%= form.date_select :fecha_alta %>
+  </div>
+
+  <div class="field">
+    <%= form.label :estatus %>
+    <%= form.number_field :estatus %>
+  </div> -->
+<% end %>

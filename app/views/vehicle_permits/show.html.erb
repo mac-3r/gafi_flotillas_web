@@ -1,0 +1,30 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Status de vehículo</h3>
+                  <%= link_to 'Regresar', vehicle_permits_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+    <div class="card-body">
+
+      <p>
+        <strong>Nombre permiso:</strong>
+        <%= @vehicle_permit.descripcion %>
+      </p>
+
+      <p>
+        <strong>Status:</strong>
+        <%= @vehicle_permit.get_status %>
+      </p>
+      <%= link_to 'Editar', edit_vehicle_permit_path(@vehicle_permit), class:"btn btn-default" %>
+
+
+    </div>
+  </div>
+</div>

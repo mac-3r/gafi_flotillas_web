@@ -1,0 +1,95 @@
+<% if can? :index, InsuranceReportTicket %>
+	<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Administración de tickets"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+		<%= link_to insurance_report_tickets_path, class: "menu-link" do %>
+			<span class="menu-text">Administración de tickets</span>
+			<span class="menu-desc"></span>
+		<% end %>
+	</li>
+<% end %>
+<% if can? :index, :responsible_incident_report %>
+	<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Reporte de incidencias por responsable de siniestro"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+		<%= link_to responsible_incident_reports_path, class: "menu-link" do %>
+			<span class="menu-text">Reporte de incidencias por responsable de siniestro</span>
+			<span class="menu-desc"></span>
+		<% end %>
+	</li>
+<% end %>
+<% if can? :index, :claim_report %>
+	<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Informe de siniestralidad"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+		<%= link_to claim_report_path, class: "menu-link" do %>
+			<span class="menu-text">Informe de siniestralidad</span>
+			<span class="menu-desc"></span>
+		<% end %>
+	</li>
+<% end %>
+<% if can? :index, :damaged_vehicle_indicator %>
+	<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Indicador flotilla siniestrada"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+		<%= link_to damaged_vehicle_indicators_path, class: "menu-link" do %>
+			<span class="menu-text">Indicador flotilla siniestrada</span>
+			<span class="menu-desc"></span>
+		<% end %>
+	</li>
+<% end %>
+<% if can? :index, :damaged_vehicle_ammount_indicator %>
+	<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Indicador monto flotilla siniestrada"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+		<%= link_to damaged_vehicle_ammount_indicators_path, class: "menu-link" do %>
+			<span class="menu-text">Indicador monto flotilla siniestrada</span>
+			<span class="menu-desc"></span>
+		<% end %>
+	</li>
+<% end %>
+<% if can? :index, :damaged_percentage_indicator %>
+	<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Indicador porcentaje siniestralidad"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+		<%= link_to damaged_percentage_indicators_path, class: "menu-link" do %>
+			<span class="menu-text">Indicador porcentaje siniestralidad</span>
+			<span class="menu-desc"></span>
+		<% end %>
+	</li>
+<% end %>
+<% if can? :claims_branch_indicator, InsuranceReportTicket %>
+	<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Indicador siniestros por cedis"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+		<%= link_to claims_branch_indicator_path, class: "menu-link" do %>
+			<span class="menu-text">Indicador siniestros por cedis</span>
+			<span class="menu-desc"></span>
+		<% end %>
+	</li>
+<% end %>
+	<style>
+			/* body{
+				background-color: #737373 !important;
+			}
+			.header .header-bottom {
+				height: 75px;
+				display: flex;
+				align-items: stretch;
+				background-color: #000000 !important;
+			}
+			.card{
+				background-color: #000000 !important;
+				color: #fff !important;
+			}
+			.card-label{
+				color: #fff !important;
+			}
+			.table{
+				background-color: #000000 !important;
+				color: #fff;
+			}
+			.footer{
+				background-color: #000000 !important;
+				color: #fff;
+			}
+			.header-top{
+				background-color: #821515 !important;
+			}
+			input{
+				background-color: #737373 !important;
+			}
+
+			select{
+				background-color: #737373 !important;
+			}
+			.btn-default{
+				background-color: #737373 !important;
+			}*/
+	</style>

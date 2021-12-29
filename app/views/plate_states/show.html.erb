@@ -1,0 +1,33 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Estado de plaqueo</h3>
+                  <%= link_to 'Regresar', plate_states_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+    <div class="card-body">
+      <p>
+        <strong>Clave:</strong>
+        <%= @plate_state.clave %>
+      </p>
+      
+      <p>
+        <strong>Descripcion:</strong>
+        <%= @plate_state.descripcion %>
+      </p>
+      
+      <p>
+        <strong>Status:</strong>
+        <%= @plate_state.get_status %>
+      </p>
+      <%= link_to 'Editar', edit_plate_state_path(@plate_state),class:"btn btn-default" %>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,483 @@
+<div style="max-width: 100%; overflow:auto;">    
+    <div class="row">
+        <div class="col">
+            <h4>Prima anual pagada: <%= @ciclo ? "#{number_to_currency(@ciclo.cantidad)}" : "Sin capturar"%></h4>
+            <% if @ciclo%>
+                <h4>Año inicio: <%= @ciclo.anio_inicio %></h4>
+                <h4>Año fin: <%= @ciclo.anio_fin %></h4>
+            <% end %>
+        </div>
+        <div class="col">
+            <div class="float-right">
+                <% if @ciclo%>
+                    <%= link_to  "Exportar a Excel", claim_report_excel_path, target: "_blank", class: "btn btn-default" %>
+                <% end %>
+                <%= link_to  "Comparativo por", abrir_modal_comparativo_informe_path, remote: true, class: "btn btn-default" %>
+                <%= link_to  "Capturar prima anual", abrir_modal_prima_path, remote: true, class: "btn btn-default" %>
+            </div>
+        </div>
+    </div>
+    <% if @ciclo%>
+    <% if @ciclo.cantidad != nil
+    fecha_uno = "#{session["anio_informe_sin"]}-11-01".to_date
+    prima_octubre = @ciclo.cantidad/365*17
+    prima_noviembre = @ciclo.cantidad/365*(fecha_uno.end_of_month.day.to_i)
+    prima_diciembre = @ciclo.cantidad/365*((fecha_uno + 1.month).end_of_month.day.to_i)
+    prima_enero = @ciclo.cantidad/365*((fecha_uno + 2.month).end_of_month.day.to_i)
+    prima_febrero = @ciclo.cantidad/365*((fecha_uno + 3.month).end_of_month.day.to_i)
+    prima_marzo = @ciclo.cantidad/365*((fecha_uno + 4.month).end_of_month.day.to_i)
+    prima_abril = @ciclo.cantidad/365*((fecha_uno + 5.month).end_of_month.day.to_i)
+    prima_mayo = @ciclo.cantidad/365*((fecha_uno + 6.month).end_of_month.day.to_i)
+    prima_junio = @ciclo.cantidad/365*((fecha_uno + 7.month).end_of_month.day.to_i)
+    prima_julio = @ciclo.cantidad/365*((fecha_uno + 8.month).end_of_month.day.to_i)
+    prima_agosto = @ciclo.cantidad/365*((fecha_uno + 9.month).end_of_month.day.to_i)
+    prima_septiembre = @ciclo.cantidad/365*14%>
+    <% end %>
+        <table class="table table-hover">
+            <tr style="text-align: center;">
+                <th colspan="1" scope="colgroup">Prima anual pagada</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+                <th colspan="2" scope="colgroup">Prima Devengada en el mes</th>
+            </tr>
+            <tr>
+                <td scope="col"><%= number_to_currency(@ciclo.cantidad) %></td>
+                <td scope="col"><%= number_to_currency(prima_octubre) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_noviembre) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_diciembre) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_enero) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_febrero) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_marzo) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_abril) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_mayo) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_junio) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_julio) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_agosto) %></td>
+                <td scope="col"></td>
+                <td scope="col"><%= number_to_currency(prima_septiembre) %></td>
+                <td scope="col"></td>
+            </tr>
+            <tr style="text-align: center;">
+                <th colspan="1" scope="colgroup">DETALLE</th>
+                <th colspan="2" scope="colgroup">OCTUBRE</th>
+                <th colspan="2" scope="colgroup">NOVIEMBRE</th>
+                <th colspan="2" scope="colgroup">DICIEMBRE</th>
+                <th colspan="2" scope="colgroup">ENERO</th>
+                <th colspan="2" scope="colgroup">FEBRERO</th>
+                <th colspan="2" scope="colgroup">MARZO</th>
+                <th colspan="2" scope="colgroup">ABRIL</th>
+                <th colspan="2" scope="colgroup">MAYO</th>
+                <th colspan="2" scope="colgroup">JUNIO</th>
+                <th colspan="2" scope="colgroup">JULIO</th>
+                <th colspan="2" scope="colgroup">AGOSTO</th>
+                <th colspan="2" scope="colgroup">SEPTIEMBRE</th>
+            </tr>
+            <tr style="text-align: center;">
+                <th scope="col">CEDIS</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+                <th scope="col">Costo</th>
+                <th scope="col">% Prima Devengada del mes</th>
+            </tr>
+            <% 
+            costo_octubre = 0
+            costo_noviembre = 0
+            costo_diciembre = 0
+            costo_enero = 0
+            costo_febrero = 0
+            costo_marzo = 0
+            costo_abril = 0
+            costo_mayo = 0
+            costo_junio = 0
+            costo_julio = 0
+            costo_agosto = 0
+            costo_septiembre = 0
+            porc_octubre = 0
+            porc_noviembre = 0
+            porc_diciembre = 0
+            porc_enero = 0
+            porc_febrero = 0
+            porc_marzo = 0
+            porc_abril = 0
+            porc_mayo = 0
+            porc_junio = 0
+            porc_julio = 0
+            porc_agosto = 0
+            porc_septiembre = 0
+            @consulta[12].each do |cons| 
+            %>
+                <tr>
+                    <td><%= cons.decripcion %></td>
+                    <% 
+                        mes = @consulta[0].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_octubre += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_octubre)*100).round(2)) > 0
+                                porc_octubre += (((mes_costo/prima_octubre)*100).round(2))
+                            else
+                                porc_octubre -= (((mes_costo/prima_octubre)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_octubre)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[1].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_noviembre += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_noviembre)*100).round(2)) > 0
+                                porc_noviembre += (((mes_costo/prima_noviembre)*100).round(2))
+                            else
+                                porc_noviembre -= (((mes_costo/prima_noviembre)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_noviembre)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[2].select  {|item| item.sucursal == cons.decripcion}  
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_diciembre += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_diciembre)*100).round(2)) > 0
+                                 porc_diciembre += (((mes_costo/prima_diciembre)*100).round(2))
+                            else
+                                 porc_diciembre -= (((mes_costo/prima_diciembre)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_diciembre)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[3].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                        mes_costo = 0
+                            mes.each do |m|
+                                costo_enero += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_enero)*100).round(2)) > 0
+                                porc_enero += (((mes_costo/prima_enero)*100).round(2))
+                            else
+                                porc_enero -= (((mes_costo/prima_enero)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_enero)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[4].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_febrero += m.costo
+                                mes_costo += m.costo
+                            end
+
+                            if (((mes_costo/prima_febrero)*100).round(2)) > 0
+                                porc_febrero += (((mes_costo/prima_febrero)*100).round(2))
+                            else
+                                porc_febrero -= (((mes_costo/prima_febrero)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_febrero)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[5].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_marzo += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_marzo)*100).round(2)) > 0
+                                porc_marzo += (((mes_costo/prima_marzo)*100).round(2))
+                            else
+                                porc_marzo -= (((mes_costo/prima_marzo)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_marzo)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[6].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_abril += m.costo
+                                mes_costo += m.costo
+                            end
+                           
+                            if (((mes_costo/prima_abril)*100).round(2)) > 0
+                                porc_abril += (((mes_costo/prima_abril)*100).round(2))
+                            else
+                                porc_abril -= (((mes_costo/prima_abril)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_abril)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[7].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_mayo += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_mayo)*100).round(2)) > 0
+                                porc_mayo += (((mes_costo/prima_mayo)*100).round(2))
+                            else
+                                porc_mayo -= (((mes_costo/prima_mayo)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_mayo)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[8].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_junio += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_junio)*100).round(2)) > 0
+                                porc_junio += (((mes_costo/prima_junio)*100).round(2))
+                            else
+                                porc_junio -= (((mes_costo/prima_junio)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_junio)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[9].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_julio += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_julio)*100).round(2)) > 0
+                                porc_julio += (((mes_costo/prima_julio)*100).round(2))
+                            else
+                                porc_julio -= (((mes_costo/prima_julio)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_julio)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[10].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                            mes_costo = 0
+                            mes.each do |m|
+                                costo_agosto += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_agosto)*100).round(2)) > 0
+                                porc_agosto += (((mes_costo/prima_agosto)*100).round(2))
+                            else
+                                porc_agosto -= (((mes_costo/prima_agosto)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_agosto)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                    <% 
+                        mes = @consulta[11].select {|item| item.sucursal == cons.decripcion}
+                        if mes != []
+                        mes_costo = 0
+                            mes.each do |m|
+                            costo_septiembre += m.costo
+                                mes_costo += m.costo
+                            end
+                            if (((mes_costo/prima_septiembre)*100).round(2)) > 0
+                                porc_septiembre += (((mes_costo/prima_septiembre)*100).round(2))
+                            else
+                                porc_septiembre -= (((mes_costo/prima_septiembre)*100).round(2))
+                            end
+                    %>
+                        <td><%= number_to_currency(mes_costo) %></td>
+                        <td><%= ((mes_costo/prima_septiembre)*100).round(2) %>%</td>
+                    <% else %>
+                        <td>-</td>
+                        <td>-</td>
+                    <% end %>
+                </tr>
+            <% end %>
+            <tr>
+                <td style="background-color: gainsboro;">Total Gafi</td>
+                <% if costo_octubre > 0 %>
+                    <td><%= number_to_currency(costo_octubre) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_octubre.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_noviembre > 0 %>
+                    <td><%= number_to_currency(costo_noviembre) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_noviembre.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_diciembre > 0 %>
+                    <td><%= number_to_currency(costo_diciembre) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_diciembre.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_enero > 0 %>
+                    <td><%= number_to_currency(costo_enero) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_enero.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_febrero > 0 %>
+                    <td><%= number_to_currency(costo_febrero) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_febrero.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_marzo > 0 %>
+                    <td><%= number_to_currency(costo_marzo) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_marzo.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_abril > 0 %>
+                    <td><%= number_to_currency(costo_abril) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_abril.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_mayo > 0 %>
+                    <td><%= number_to_currency(costo_mayo) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_mayo.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_junio > 0 %>
+                    <td><%= number_to_currency(costo_junio) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_junio.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_julio > 0 %>
+                    <td><%= number_to_currency(costo_julio) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_julio.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_agosto > 0 %>
+                    <td><%= number_to_currency(costo_agosto) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_agosto.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+                <% if costo_septiembre > 0 %>
+                    <td><%= number_to_currency(costo_septiembre) %></td>
+                    <td style="background-color: gainsboro;"><%= porc_septiembre.floor(2) %>%</td>
+                <% else %>
+                    <td>-</td>
+                    <td style="background-color: gainsboro;">-</td>
+                <% end %>
+            </tr>
+        </table>
+    <% end %>
+</div>

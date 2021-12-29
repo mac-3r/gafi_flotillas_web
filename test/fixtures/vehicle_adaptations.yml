@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle: one
+  monto: 9.99
+  estatus: 1
+  catalogo_adaptation: one
+
+two:
+  vehicle: two
+  monto: 9.99
+  estatus: 1
+  catalogo_adaptation: two

@@ -1,0 +1,94 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Checklist de vehículo</h3>
+                        <div class="float-right">
+                            &nbsp;<%= link_to 'Regresar', vehicles_path, class: "btn btn-default float-right" %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <%= form_tag listado_checklist_path, :method => :get do %>
+            <div class="row">
+                <div class="col">
+                    <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha inicio:</label>
+                     <div class="input-group date" id="datetimepicker5" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                       <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker5" name="start_date" id="start_date">
+                       <div class="input-group-append" data-target="#datetimepicker5" data-toggle="datetimepicker">
+                           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                       </div>
+                     </div>                 
+                 </div>
+                 <div class="col">
+                   <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha fin:</label>
+                    <div class="input-group date" id="datetimepicker6" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                      <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker6" name="end_date" id="end_date">
+                      <div class="input-group-append" data-target="#datetimepicker6" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>                 
+                </div>
+                <div class="col">
+                  <br><br>
+                  <%= submit_tag "Buscar", class:"btn btn-primary" %>
+                <% end %>
+              </div>
+            </div>
+            <br>   
+            <table class="table table-bordered">
+                <thead>
+                  <tr>
+                      <th>Usuario</th>
+                      <th>Motivo</th>
+                      <th>Fecha de captura</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                    <% @checklist_responses.each do |checklist| %>
+                        <tr>
+                            <td><%= checklist.catalog_personal.nombre%></td>
+                            <td><%= checklist.motivo %></td>
+                            <td><%= checklist.fecha_captura.strftime('%d/%m/%y')%></td>
+                            <td>
+                                <div class="dropdown dropdown-inline">
+                                <%= link_to detalle_checklist_path(checklist.id), title:"Ver detalle" do%>
+                                    <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Ver detalle
+                                    </span>
+                                <% end %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% end %>
+                </tbody>
+              </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker7').datetimepicker({
+        format: 'DD/MM/YYYY',
+        locale: 'es'
+        });
+        $('#datetimepicker8').datetimepicker({
+        format: 'DD/MM/YYYY',
+        locale: 'es',
+        useCurrent: false
+        });
+        
+        $("#datetimepicker7").on("change.datetimepicker", function (e) {
+            $('#datetimepicker8').datetimepicker('minDate', e.date);
+        });
+        $("#datetimepicker8").on("change.datetimepicker", function (e) {
+            $('#datetimepicker7').datetimepicker('maxDate', e.date);
+        });
+    });
+</script>
+

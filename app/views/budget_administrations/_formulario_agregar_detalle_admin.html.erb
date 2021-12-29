@@ -1,0 +1,117 @@
+<!-- modal donde se agrega el detalle -->
+<%= form_for(@budget_administration_detail, url: guardar_detalle_admin_path, remote: true) do |form| %>
+<h5 style="color:black;">Complete los datos</h5>
+<hr>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Cantidad</label><br>
+    <%= form.number_field :cantidad, class: "form-control", style:"width: 250px !important;" %>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Tipo</label><br>
+    <%= collection_select('',:vehicle_type_id ,VehicleType.listado_tipos, :id, :descripcion, {prompt:"Seleccione el tipo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true}) %>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Línea</label><br>
+    <%= collection_select('',:catalog_brand_id ,CatalogBrand.listado_lineas, :id, :descripcion, {prompt:"Seleccione el nombre de la linea"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Modelo</label><br>
+    <%= collection_select('',:catalog_model_id ,CatalogModel.listado_modelo, :id, :descripcion, {prompt:"Seleccione el modelo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",required:true})%>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Motivo de compra</label><br>
+    <%= collection_select('',:reason_id ,Reason.listado_motivos, :id, :descripcion, {prompt:"Seleccione el motivo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Importe</label><br>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+        <span class="input-group-text">$</span>
+        </div>
+        <input step="any" type="number" name="budget_administration_detail[subtotal]" id="budget_administration_detail_subtotal" oninput="operacion();">
+    </div>
+    </div>
+    <br>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Importe con I.V.A</label><br>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+        <span class="input-group-text">$</span>
+        </div>
+        <%= form.number_field :importe, step: :any %>
+    </div>
+    </div>
+    <br>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <label>Plaqueo</label><br>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <span class="input-group-text">$</span>
+            </div>
+            <%= form.number_field :plaqueo, step: :any %>
+        </div>
+    </div>
+    <br>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Seguro</label><br>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <span class="input-group-text">$</span>
+            </div>
+            <%= form.number_field :seguro, step: :any %>
+        </div>
+    </div>
+</div>
+<br>
+</div>
+<div class="float-right">
+<br><br>
+<%= submit_tag "Guardar", class: "btn btn-success m-btn m-btn--custom float-right" %>
+</div>
+<% end %>
+
+
+<script>
+$(document).ready(function(){
+$('.chosen-select').chosen();
+})
+function operacion(){
+
+var a = document.getElementById("budget_administration_detail_cantidad").value
+    var b = document.getElementById("budget_administration_detail_subtotal").value
+    var mult= (a*b)
+    var iva = mult * 0.16
+    var total = mult + iva
+    document.getElementById("budget_administration_detail_importe").value = total;}
+</script>
+<style>
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0; 
+  }
+  </style>

@@ -1,0 +1,62 @@
+<style>
+    *{
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    a{
+		text-decoration-line: none;
+    }
+    .btn{
+		display: inline-block;
+		font-weight: 400;
+		text-align: center;
+		white-space: nowrap;
+		vertical-align: middle;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		border: 1px solid transparent;
+		padding: 0.375rem 0.75rem;
+		font-size: 1rem;
+		line-height: 1.5;
+		border-radius: 0.25rem;
+		transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .rojo{
+        background-color:  #C5313D;
+        color: #fff;
+    }
+</style>
+
+<div class="body">
+    <center>
+        <div class="container" style="padding: 5px;-webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.75);
+        box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.75); width: auto;">
+            <img class="logo-mail" src="http://gafi.com.mx:8081/assets/login_logo-84d0085ea0e2611e7ad049152921cf004fdd6d1c15aa4542bb8ba98b8c8795f1.png" style="width: auto;" height="60">
+            <hr>
+            <div style="text-align: left; padding: 15px;">
+                <p>Hola:</p>
+                <p>Los siguientes empleados no tienen asignado un usuario en el sistema, por lo que no se pudo mandar la notificación. Por favor asigne el usuario para que el programa se ejecute correctamente.</p>
+                <ul>
+                    <% @arreglo_usuarios.each do |personal| %>
+                        <li><%= personal.nombre %></li>
+                    <% end %>
+                </ul>
+            </div>
+            <div style="text-align: left; padding: 15px;">
+                <h6>Si recibiste este correo por error, por favor haga caso omiso.</h6>
+                <h6>Este correo se envía automaticamente. Favor de no responder este correo.</h6>
+            </div>
+            <hr>
+            <div align="right">
+                Powered By: &nbsp;<img src="http://apbsoluciones.com/img/aeb45e_57da454c9def4d9d91c43503212fc73f_mv2.png" style="width: auto; display:inline-block; vertical-align: middle;" height="13">
+                <br><br>
+                </div>
+            <div>
+                <p><%= DateTime.now.year %> &copy; Gafi <a href="https://www.gafi.com.mx" class="m-link">www.gafi.com.mx</a></p>
+            </div>
+        </div>
+    </center>
+</div>

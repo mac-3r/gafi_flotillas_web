@@ -1,0 +1,32 @@
+<label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:14px;"> <strong>Total de registros: <%= @mileage_indicators.count%></strong></label>
+
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>No. Económico</th>
+        <th>Línea</th>
+        <th>Modelo</th>
+        <th>Usuario</th>
+        <th>Área</th>
+        <th>Km</th>
+        <th>Fecha y hora</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @mileage_indicators.each do |mileage_indicator| %>
+        <tr>
+          <td><%= mileage_indicator.vehicle.numero_economico %></td>
+          <td><%= mileage_indicator.vehicle.catalog_brand.descripcion%></td>
+          <td><%= mileage_indicator.vehicle.catalog_model.descripcion %></td>
+          <td><%= mileage_indicator.vehicle.catalog_personal.nombre %></td>
+          <td><%= mileage_indicator.vehicle.catalog_area.descripcion %></td>
+          <% if mileage_indicator.km_actual == 0 %>
+          <td style="background-color: red;"><%= number_with_precision(mileage_indicator.km_actual,precision: 0) %></td>
+          <% else %>
+          <td><%= number_with_precision(mileage_indicator.km_actual,precision: 0) %></td>
+          <% end %>
+          <td><%= mileage_indicator.fecha.strftime("%d/%m/%y %I:%M %p") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

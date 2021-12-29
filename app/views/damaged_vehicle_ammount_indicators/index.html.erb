@@ -1,0 +1,101 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="card-header ">
+            <div class="card-title">
+                <h3 class="card-label">Tickets de siniestralidad
+                    <span class="text-muted pt-2 font-size-sm d-block">Indicador monto flotilla siniestrada</span>
+                </h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <%=form_for('', url: filtrado_indicadores_monto_path, remote: true) do |f|%>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Empresa:</label>
+                        <%= collection_select('', :catalog_company_id, CatalogCompany.listado_empresas,:id, :nombre, {prompt:"Escribe el nombre de la empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">CEDIS:</label>
+                        <select name="catalog_branch_id" id="catalog_branch_id" class="form-control m-input m-input--air uneditable-input chosen-select">
+                            <option value="">Seleccione el cedis</option>
+                        </select>
+                        <%#= collection_select('',:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha inicio: </label>
+                        <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="start_date" id="start_date">
+                            <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha fin: </label>
+                        <div class="input-group date" id="datetimepicker8" data-target-input="nearest" data-date-format="DD/MM/YYYY">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker8" name="end_date" id="end_date">
+                            <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Área:</label>
+                        <%= collection_select('', :area_id, CatalogArea.listado_areas,:id, :descripcion, {prompt:"Escribe el nombre del área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Vehículo:</label>
+                        <%= collection_select('', :vehicle_id, Vehicle.listado_vehiculos,:id, :nombre_p_vehiculo, {prompt:"Escribe el número económico del vehículo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    </div>
+                    <div class="col">
+                        <br><br>
+                        <div>
+                            <%= submit_tag "Buscar", class:"btn btn-primary float-right" %>
+                            &nbsp;
+                            <%#= link_to 'Exportar a excel' ,reporte_tickets_siniestrabilidad_excel_path, class: "btn btn-default" %>
+                            &nbsp;
+                            <%#= link_to 'Realizar corte' , corte_ticket_aseguradora_path, class: "btn btn-default", data: {confirm: "¿Deseas realizar el corte con los tickets seleccionados? Esta operación no se puede cancelar."} %>
+                        </div>
+                    </div>
+                </div>
+            <% end %>
+            <div style="width: 100%" id="table_container">
+                <%#= render  "grafica_cedis" %>
+			    <%#= render  "tabla" %>
+            </div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker7').datetimepicker({
+        format: 'DD/MM/YYYY',
+        locale: 'es'
+        });
+        $('#datetimepicker8').datetimepicker({
+        format: 'DD/MM/YYYY',
+        locale: 'es',
+        useCurrent: false
+        });
+        
+        $("#datetimepicker7").on("change.datetimepicker", function (e) {
+            $('#datetimepicker8').datetimepicker('minDate', e.date);
+        });
+        $("#datetimepicker8").on("change.datetimepicker", function (e) {
+            $('#datetimepicker7').datetimepicker('maxDate', e.date);
+        });
+    });
+    $(document).ready(function(){
+        $("#catalog_company_id").change(function(){
+            var empresa = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "<%= cedis_x_empresa_siniestralidad_path %>",
+                data: {empresa: empresa, authenticity_token: $('meta[name=csrf-token]').attr('content')}
+            })
+        })
+    })
+</script>

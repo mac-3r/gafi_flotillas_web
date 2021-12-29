@@ -1,0 +1,326 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Enero">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Enero</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Enero</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Enero</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Enero</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @enero.each do |ene| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= ene.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= ene.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= ene.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ene.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ene.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ene.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ene.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ene.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? ene.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Febrero">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Febrero</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Febrero</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Febrero</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Febrero</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @febrero.each do |feb| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= feb.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= feb.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= feb.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(feb.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(feb.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(feb.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(feb.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(feb.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? feb.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Marzo">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Marzo</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Marzo</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Marzo</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Marzo</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @marzo.each do |mar| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= mar.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= mar.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= mar.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(mar.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(mar.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(mar.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(mar.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(mar.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? mar.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Abril">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Abril</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Abril</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Abril</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Abril</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @abril.each do |abr| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= abr.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= abr.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= abr.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(abr.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(abr.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(abr.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%=number_with_precision(abr.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(abr.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? abr.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Mayo">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Mayo</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Mayo</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Mayo</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Mayo</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @mayo.each do |may| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= may.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= may.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= may.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(may.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(may.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(may.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(may.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(may.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? may.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Junio">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Junio</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Junio</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Junio</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Junio</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @junio.each do |jun| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= jun.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= jun.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= jun.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jun.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jun.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jun.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jun.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jun.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? jun.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Julio">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Julio</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Julio</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Julio</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Julio</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @julio.each do |jul| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= jul.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= jul.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= jul.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jul.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jul.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jul.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jul.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(jul.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? jul.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Agosto">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Agosto</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Agosto</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Agosto</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Agosto</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @agosto.each do |ago| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= ago.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= ago.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= ago.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ago.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ago.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ago.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ago.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(ago.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? ago.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Septiembre">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Septiembre</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Septiembre</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Septiembre</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Septiembre</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @septiembre.each do |sep| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= sep.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= sep.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= sep.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(sep.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(sep.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(sep.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(sep.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(sep.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? sep.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Octubre">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Octubre</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Octubre</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Octubre</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Octubre</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @octubre.each do |oct| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= oct.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= oct.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= oct.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(oct.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(oct.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(oct.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(oct.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(oct.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? oct.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Noviembre">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Noviembre</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Noviembre</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Noviembre</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Noviembre</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @noviembre.each do |nov| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= nov.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= nov.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= nov.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(nov.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(nov.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(nov.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(nov.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(nov.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? nov.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Diciembre">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Unidad</Data></Cell>
+        <Cell><Data ss:Type="String">Cedis</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo de vehículo</Data></Cell>
+        <Cell><Data ss:Type="String">Cierre Diciembre</Data></Cell>
+        <Cell><Data ss:Type="String">Recorrido Diciembre</Data></Cell>
+        <Cell><Data ss:Type="String">Lts Diciembre</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento Diciembre</Data></Cell>
+        <Cell><Data ss:Type="String">Rendimiento ideal</Data></Cell>
+      </Row>
+    <% @diciembre.each do |dic| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= dic.vehicle.numero_economico %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= dic.vehicle.catalog_model.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= dic.vehicle.vehicle_type.descripcion%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(dic.cierre, precision: 2)%></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(dic.recorrido, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(dic.lts, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(dic.rendimiento, precision: 2) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= number_with_precision(dic.vehicle.vehicle_type.rendimiento_ideal, precision: 2) ? dic.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></Data></Cell>
+
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

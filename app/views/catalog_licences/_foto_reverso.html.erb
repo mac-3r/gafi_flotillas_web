@@ -1,0 +1,43 @@
+<div class="row">
+    <% @documentos.each do |doc| %>
+        <div class="col-lg-4">
+            <div class="card bg-light" style="max-width: 100%; ">
+                <div class="card-body">
+                    <center>
+                        <% if doc.reverso.attached? and doc.reverso.content_type == "application/pdf" %>
+                            <embed src="<%= url_for(doc.reverso) %>" type="application/pdf" style="max-width: 100%; max-height:100px;" />
+                            <br><br>
+                            <%= link_to "Descargar", rails_blob_path(doc.reverso, disposition: 'attachment'), class: "btn btn-primary m-btn m-btn--custom" %>
+                            <br><br>
+                            <%#if doc.expenses_trips_expense.expenses_trip.status != "En comprobación" and doc.expenses_trips_expense.expenses_trip.status != "En revisión"%>
+                                <%#= link_to "Eliminar", eliminar_documento_path(doc.id), class: "btn btn-danger m-btn m-btn--custom", data: {confirm: "¿Desea eliminar este documento?"}, remote: true %>
+                            <%#end%>
+                        <% elsif doc.reverso.attached? and (doc.reverso.content_type == "image/png" or doc.reverso.content_type == "image/jpg" or doc.reverso.content_type == "image/jpeg" or doc.reverso.content_type == "image/gif") %>
+                            <%= image_tag doc.reverso, style: "max-height:100px; max-width:100%;" %>
+                            <br><br>
+                            <%= link_to "Descargar", rails_blob_path(doc.reverso, disposition: 'attachment'), class: "btn btn-primary m-btn m-btn--custom" %>
+                            <br><br>
+                            <%#if doc.expenses_trips_expense.expenses_trip.status != "En comprobación" and doc.expenses_trips_expense.expenses_trip.status != "En revisión"%>
+                                <%#= link_to "Eliminar", eliminar_documento_path(doc.id), class: "btn btn-danger m-btn m-btn--custom", data: {confirm: "¿Desea eliminar este documento?"}, remote: true %>
+                            <%#end%>
+                        <% elsif doc.reverso.attached? %>
+                            <h6><%= doc.reverso.filename %></h6>
+                            <br>
+                            <%= link_to "Descargar", rails_blob_path(doc.reverso, disposition: 'attachment'), class: "btn btn-primary m-btn m-btn--custom" %>
+                            <br><br>
+                            <%#if doc.expenses_trips_expense.expenses_trip.status != "En comprobación" and doc.expenses_trips_expense.expenses_trip.status != "En revisión"%>
+                                <%#= link_to "Eliminar", eliminar_documento_path(doc.id), class: "btn btn-danger m-btn m-btn--custom", data: {confirm: "¿Desea eliminar este documento?"}, remote: true %>
+                            <%#end%>
+                        <% end %>  
+                    </center>                  
+                    <div class="row">                        
+                        <div class="float-right">
+                            <%#= link_to 'Editar', editar_reembolso_path(card.id), :class => "btn btn-primary m-btn m-btn--custom", style:'text-decoration:none' %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    <% end %>
+</div>    

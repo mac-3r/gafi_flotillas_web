@@ -1,0 +1,32 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Tipo siniestro</h3>
+                <%= link_to 'Regresar', type_sinisters_path, class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+    <div class="card-body">
+    <p>
+      <strong>Nombresiniestro:</strong>
+      <%= @type_sinister.nombreSiniestro %>
+    </p>
+
+    <p>
+      <strong>Descripcion:</strong>
+      <%= @type_sinister.descripcion %>
+    </p>
+
+    <p>
+      <strong>Status:</strong>
+      <%= @type_sinister.get_status %>
+    </p>
+    <%= link_to 'Editar', edit_type_sinister_path(@type_sinister),class:"btn btn-default" %>
+    </div>
+  </div>
+</div>

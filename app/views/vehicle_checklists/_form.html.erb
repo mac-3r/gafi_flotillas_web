@@ -1,0 +1,36 @@
+<%= form_with(model: vehicle_checklist, local: true) do |form| %>
+  <% if vehicle_checklist.errors.any? %>
+  <div class="alert alert-danger">Error al registrar:
+    <div id="error_explanation">
+      <ul>
+        <% vehicle_checklist.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <% end %>
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+   <br><br>
+   <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Clasificación:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :clasificacionvehiculo, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Concepto:</label>
+    <div class="col-sm-0">
+      <%= form.text_field :conceptovehiculo, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Tipo de vehículo*</label>
+    <div class="col-sm-0">
+      <%= collection_select(:vehicle_checklist,:vehicle_type_id ,VehicleType.listado_tipos, :id, :descripcion, {prompt:"Seleccione el tipo del vehículo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    </div>
+  </div>
+
+<% end %>

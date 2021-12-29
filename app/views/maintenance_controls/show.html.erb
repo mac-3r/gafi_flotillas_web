@@ -1,0 +1,86 @@
+
+ <br>
+ <div class="container">
+     <div class="card card-custom gutter-b">
+         <div class="row">
+             <div class="col-lg-12">
+                 <div class="card-header">
+                     <div class="card-title">
+                         <h3 class="card-label float-left">Detalle de mantenimiento</h3>
+                         <%= link_to 'Regresar' ,maintenance_controls_path , class: "btn btn-default float-right" %>
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <div class="card-body">
+          <div class="row">
+            
+            <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">No. Económico:&nbsp;<%= @maintenance_control.vehicle.numero_economico %>
+            </label>
+          </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">CEDIS:&nbsp;<%= @maintenance_control.vehicle.catalog_branch.decripcion%></label>
+           </div>
+           <% if @maintenance_control.catalog_workshop_id %>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:18px;">Clave taller:&nbsp;<%= @maintenance_control.catalog_workshop.clave%></label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Taller:&nbsp;<%= @maintenance_control.catalog_workshop.nombre_taller%></label>
+                </div>
+            <% end %>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Clave reparación:&nbsp;<%= @maintenance_control.catalog_repair_id ? @maintenance_control.catalog_repair.clave : "N/A"%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-5 col-form-label" style="font-family: Arial; font-size:18px;">Subcategoría:&nbsp;<%= @maintenance_control.catalog_repair_id ? @maintenance_control.catalog_repair.subcategoria : "N/A"%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Categoría:&nbsp;<%=@maintenance_control.catalog_repair_id ? @maintenance_control.catalog_repair.categoria : "N/A"%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-5 col-form-label" style="font-family: Arial; font-size:18px;">Observaciones:&nbsp;<%= @maintenance_control.observaciones%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Fecha Factura:&nbsp;<%= @maintenance_control.fecha_factura%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Año:&nbsp;<%=@maintenance_control.año%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Importe:&nbsp;<%=number_to_currency(@maintenance_control.importe, :unit => "$", :separator => ".", :delimiter => ",") %> 
+            </label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Importe con I.V.A:&nbsp;<%=number_to_currency(@maintenance_control.importe_iva, :unit => "$", :separator => ".", :delimiter => ",")%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">KM:&nbsp;<%= @maintenance_control.km_actual%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Año:&nbsp;<%=@maintenance_control.año%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Ciudad actual:&nbsp;<%= @maintenance_control.ciudad%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Tipo de vehículo:&nbsp;<%= @maintenance_control.vehicle.vehicle_type.descripcion%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Línea de vehículo:&nbsp;<%= @maintenance_control.vehicle.catalog_brand.descripcion%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Ciudad actual:&nbsp;<%= @maintenance_control.ciudad%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Modelo:&nbsp;<%= @maintenance_control.vehicle.catalog_model.descripcion%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Área:&nbsp;<%= @maintenance_control.vehicle.catalog_area.descripcion%></label>
+           </div>
+           <div class="row">
+            <label class="col-sm-4 col-form-label" style="font-family: Arial; font-size:18px;">Responsable:&nbsp;<%= @maintenance_control.vehicle.responsable.nombre%></label>
+           </div>
+         </div>
+     </div>
+ </div>

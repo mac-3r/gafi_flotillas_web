@@ -1,0 +1,36 @@
+<% if action_name != "show" %>
+<div class="float-right">
+<%= link_to "Agregar detalle", formulario_agregar_mantenimiento_detalle_path, class: "btn btn-outline-success mr-2 float-right", style:"border-radius: 0.42rem;", data: { turbolinks: false }, remote: true %>
+<br><br>
+</div>
+<% end %>
+<br>
+<table id="table" class="table table-bordered">
+  <br>
+    <thead>
+      <tr>
+        <th>Categoría</th>
+        <th>Descripción</th>
+        <th>Frecuencia de reemplazo(kms)</th>
+        <th>Frecuencia de inspección(kms u hrs)</th>
+        <th>Servicio</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @maintenance_details.each do |maintenance_detail| %>
+        <tr>
+          <td><%= maintenance_detail.categoria %></td>
+          <td><%= maintenance_detail.descripcion %></td>
+          <td><%= maintenance_detail.frecuencia_reemplazo %></td>
+          <td><%= maintenance_detail.frecuencia_inspeccion %></td>
+          <td><%= maintenance_detail.servicio %></td>
+          <td>
+            <% if action_name != "show" %>
+            <%= link_to "Eliminar", eliminar_detalle_path(maintenance_detail.id), data: { confirm: "¿Deseas eliminar esta partida?" }, class: "btn btn-outline-danger float-right", style:"border-radius: 0.42rem;", remote: true %>
+            <% end %>
+         <td>
+        </tr>
+    </tbody>
+    <% end %>
+</table>

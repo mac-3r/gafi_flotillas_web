@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  texto: MyString
+  user: one
+  tuning_price: one
+
+two:
+  texto: MyString
+  user: two
+  tuning_price: two

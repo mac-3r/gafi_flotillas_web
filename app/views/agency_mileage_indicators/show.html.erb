@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Km actual:</strong>
+  <%= @agency_mileage_indicator.km_actual %>
+</p>
+
+<p>
+  <strong>Vehicle:</strong>
+  <%= @agency_mileage_indicator.vehicle_id %>
+</p>
+
+<p>
+  <strong>Fecha:</strong>
+  <%= @agency_mileage_indicator.fecha %>
+</p>
+
+<p>
+  <strong>Tipo:</strong>
+  <%= @agency_mileage_indicator.tipo %>
+</p>
+
+<%= link_to 'Edit', edit_agency_mileage_indicator_path(@agency_mileage_indicator) %> |
+<%= link_to 'Back', agency_mileage_indicators_path %>

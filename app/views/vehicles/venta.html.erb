@@ -1,0 +1,80 @@
+
+<%= form_with(model: @vehicle, local: true) do |form| %>
+   <br>
+   <div class="container">
+       <div class="card card-custom gutter-b">
+           <div class="row">
+               <div class="col-lg-12">
+                   <div class="card-header">
+                       <div class="card-title">
+                           <h3 class="card-label float-left">Venta de vehículo</h3>
+                           <%= link_to 'Regresar', vehicles_path, class:"btn btn-default float-right" %>
+                            <% if @encabezado.count == 0 %>
+                            <%= link_to "Registrar fechas y precios", registrar_encabezado_path(@vehicle.id), class: "btn btn-outline-secondary mr-2 float-right"%>
+                            <% end %>
+                            <% if @costos.count == 0 %>
+                            <%= link_to "Registrar costos aproximados", registrar_costos_path(@vehicle.id), class: "btn btn-outline-secondary mr-2 float-right"%>
+                            <% end %>
+                            <% if @vehicle.vehicle_status.descripcion == "Activo" %>
+                            <%= link_to "Registrar mantenimiento para rehabilitación de vehículo", registrar_mantenimiento_path(@vehicle.id), class: "btn btn-outline-secondary mr-2 float-right"%>
+                            <% end %>
+                            <% if @encabezado.count == 1 and @costos.count == 1 and @vehicle.vehicle_status.descripcion == "Activo" and @matenimiento_rehabilitar.count >= 1 %>
+                            <%= link_to "Solicitar autorización", solicitar_venta_path(@vehicle.id), class: "btn btn-outline-success mr-2 float-right",:data => {:confirm => '¿Esta seguro? No se podra modificar los datos.'}%>
+                            <% end %>
+                            <% if @vehicle.vehicle_status.descripcion == "Para venta" %>
+                            <%= link_to "Generar formato de venta", imprimir_formato_venta_path(@vehicle.id), class: "btn btn-outline-success mr-2 float-right", target: "_blank" %>
+                            <% end %>
+                       </div>
+                   </div>
+               </div>
+           </div>
+        <div class="card-body">
+            <h3 style="text-align: center;">INFORMACIÓN DEL VEHÍCULO</h3><br>
+            <div class="row" style="text-align: center;">
+                <div class="col-lg-4">
+                  <p style="font-family: Arial; font-size:16px;">
+                    <strong>Número Económico:</strong>
+                    <%=@vehicle.numero_economico %>
+                  </p>
+                </div>
+                <div class="col-lg-4">
+                  <p style="font-family: Arial; font-size:16px;">
+                    <strong>Línea:</strong>
+                    <%= @vehicle.catalog_brand.descripcion%>
+                  </p>
+                </div>
+                <div class="col-lg-4">
+                  <p style="font-family: Arial; font-size:16px;">
+                    <strong>Modelo:</strong>
+                    <%=@vehicle.catalog_model.descripcion %>
+                  </p>
+                </div>
+            </div>
+            <div class="row" style=" text-align: center;">
+                <div class="col-lg-4">
+                    <p style="font-family: Arial; font-size:16px;">
+                    <strong>CEDIS:</strong>
+                    <%=@vehicle.catalog_branch.decripcion %>
+                    </p>
+                </div>
+                <div class="col-lg-4">
+                    <p style="font-family: Arial; font-size:16px;">
+                      <strong>Número placa:</strong>
+                      <%=@vehicle.numero_placa %>
+                    </p>
+                </div>
+                <div class="col-lg-4">
+                    <p style="font-family: Arial; font-size:16px;">
+                      <strong>Número serie:</strong>
+                      <%=@vehicle.numero_serie %>
+                    </p>
+                </div>
+            </div>
+            <% end %>
+        </div>
+            <br>
+            <%= render "costos" %>
+        </div>
+       </div>
+   </div>
+  </div>

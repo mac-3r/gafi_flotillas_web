@@ -1,0 +1,16 @@
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Número Económico</th>
+            <th>Responsable</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @arreglo_pendientes.each do |pendiente| %>
+            <tr>
+                <td><%= pendiente.numero_economico %></td>
+                <td><%= pendiente.catalog_personal.nombre %></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

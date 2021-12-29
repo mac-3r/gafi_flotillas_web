@@ -1,0 +1,39 @@
+<br><br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label float-left ">Concepto de indicador</h3>
+                  <%= link_to 'Regresar', vehicle_indicators_path , class:"btn btn-default float-right" %>
+                </div>
+             </div>
+         </div>
+      </div>
+       <div class="card-body">
+       <p>
+          <strong>Tipo de vehículo:</strong>
+          <%= @vehicle_indicator.vehicle_type_id %>
+        </p>
+        
+        <p>
+          <strong>Activación:</strong>
+          <%= @vehicle_indicator.activacion %>
+        </p>
+        
+        <p>
+          <strong>Dias hábiles:</strong>
+          <%= @vehicle_indicator.dias_habiles %>
+        </p>
+        
+        <p>
+          <strong>Descripción:</strong>
+          <%= @vehicle_indicator.descripcion %>
+        </p>
+
+          <%= link_to 'Editar', edit_vehicle_indicator_path(@vehicle_indicator) %> 
+        <br><br>                  
+    </div>
+  </div>
+</div>

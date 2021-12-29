@@ -1,0 +1,82 @@
+<br>
+<div class="container">
+  	<div class="card card-custom gutter-b">
+  		<div class="card-header">
+    		<div class="card-title">
+      			<h3 class="card-label">Presupuestos
+      				<span class="text-muted pt-2 font-size-sm d-block">Catálogo de presupuestos de compra.</span>
+      			</h3>
+    		</div>
+    		<div class="float-right">
+				<% if can? :new, Budget %>
+					<br>
+					<%= link_to 'Nuevo', new_budget_path,class:"btn btn-primary font-weight-bolder",style:"border-radius: 0.42rem;", data: { turbolinks: false }, remote: true %>
+				<% end %>
+			</div>
+		</div>
+		<div class="card-body">
+			<table class="table table-bordered" id="table">
+				<thead>
+					<tr>
+						<th>Año</th>
+						<th>Cantidad de Vehículos</th>
+						<th>Total ($)</th>
+						<th colspan="2"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @budget_distributions.each do |budget_distribution| %>
+						<tr>
+							<td><%= budget_distribution.anio %></td>
+							<td><%= budget_distribution.cantidad_vehiculos %></td>
+							<td><%= number_to_currency(budget_distribution.total_importe) %></td>
+							<td style="text-align: center;">
+								<div class="dropdown dropdown-inline">
+									<%= link_to show_budget_path(budget_distribution), title: "Ver conceptos" do %>
+										<span class='far fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>
+									<% end %>
+								</div>
+							</td>
+							<% if can? :edit, Budget %>
+								<%# if budget_distribution.estatus == "Pendiente" %>
+									<td style="text-align: center;">
+										<div class="dropdown dropdown-inline">
+											<%= link_to  edit_budget_path(budget_distribution), title: "Editar" do %>
+												<span class="svg-icon svg-icon-md"> 
+													<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+													viewBox="0 0 24 24" version="1.1">
+														<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+															<rect x="0" y="0" width="24" height="24"></rect>
+															<path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
+																fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
+															</path>
+															<rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+														</g>
+													</svg> 
+												</span>
+											<% end %>
+										</div>    
+									</td>
+								<%# end %>
+							<% else %>
+								<td></td>
+							<% end %>
+							<%# if can? :solicitar_autorizacion_presupuestos, Budget 
+								if budget_distribution.estatus == "Pendiente" 
+							%>
+									<!--<td style="text-align: center;">
+										<div class="dropdown dropdown-inline">
+											<%#= link_to  request_budget_path(budget_distribution), title: "Solicitar autorización", data: {confirm: "¿Deseas solicitar la autorización para este presupuesto? Después de esta acción el presupuesto ya no podrá ser modificado."} do %>
+												<span class='far fa-folder' style='font-size:16px;color:#A6ACAF'></span>
+											<%# end %>
+										</div>    
+									</td>-->
+							<%# end
+							end %>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+  	</div>
+</div>

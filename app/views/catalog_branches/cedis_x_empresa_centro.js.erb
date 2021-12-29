@@ -1,0 +1,15 @@
+<% if @comparacion%>
+    $("#cost_center_catalog_branch_id2").empty();
+    $('<option>').val('').text('Seleccione el cedis').appendTo('#cost_center_catalog_branch_id2');
+    <% @cedis.each do |cedis| %>
+        $('<option>').val('<%= cedis.id %>').text('<%= cedis.decripcion %>').appendTo('#cost_center_catalog_branch_id2');
+    <% end %>
+    $('#catalog_branch_id2').trigger("chosen:updated");
+<% else %>
+    $("#cost_center_catalog_branch_id").empty();
+    $('<option>').val('').text('Seleccione el cedis').appendTo('#cost_center_catalog_branch_id');
+    <% @cedis.each do |cedis| %>
+        $('<option>').val('<%= cedis.id %>').text('<%= cedis.decripcion %>').appendTo('#cost_center_catalog_branch_id');
+    <% end %>
+    $('#cost_center_catalog_branch_id').trigger("chosen:updated");
+<% end %>

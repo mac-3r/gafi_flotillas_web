@@ -1,0 +1,23 @@
+<div class="row row-cols-1 row-cols-md-6">
+    <%# @documents = VehicleFile.where(vehicle_id: session["vehicle_id_arch"]) %>
+    <% VehicleFile.where(vehicle_id: session["vehicle_id_arch"]).each do |documento| %>
+        <% if documento.documento.attached? %>
+            <div class="col mb-2">
+                <div class="card">
+                    <% if documento%>
+                        <%= image_tag documento.documento.preview(resize_to_limit: [10, 10]), class: "card-img-top" %>
+                        <!--<embed src="http://example.com/the.pdf" width="500" height="375" type="application/pdf">-->
+                        <!--<img src="..." class="card-img-top" alt="...">-->
+                    <% end %>
+                    <!--<div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <p class="card-text"></p>
+                    </div>-->
+                    <div class="card-footer">
+                        <small class="text-muted"><%= time_ago_in_words(Time.zone.now - documento.created_at) %></small>
+                    </div>
+                </div>
+            </div>
+        <% end %>
+    <% end %>
+</div>

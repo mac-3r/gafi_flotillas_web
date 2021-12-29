@@ -1,0 +1,2 @@
+module PlateStatesHelper
+end

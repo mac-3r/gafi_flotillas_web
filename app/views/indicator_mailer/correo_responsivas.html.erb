@@ -1,0 +1,149 @@
+<style>
+    *{
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    a{
+		text-decoration-line: none;
+    }
+    .btn{
+		display: inline-block;
+		font-weight: 400;
+		text-align: center;
+		white-space: nowrap;
+		vertical-align: middle;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		border: 1px solid transparent;
+		padding: 0.375rem 0.75rem;
+		font-size: 1rem;
+		line-height: 1.5;
+		border-radius: 0.25rem;
+		transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .rojo{
+        background-color:  #C5313D;
+        color: #fff;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        text-align: center;
+    }
+</style>
+
+<div class="body">
+    <center>
+        <div class="container" style="padding: 5px;-webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.75);
+        box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.75); width: auto;">
+            <img class="logo-mail" src="http://gafi.com.mx:8081/assets/login_logo-84d0085ea0e2611e7ad049152921cf004fdd6d1c15aa4542bb8ba98b8c8795f1.png" style="width: auto;" height="60">
+            <hr>
+            <div style="text-align: left; padding: 15px;">
+                <p>Hola:</p>
+                <p>Este es el maestro de vehículos actualmente. Favor de revisarlo y validar los usuarios de cada vehículo. En caso de no coincidir un vehículo con el usuario actual, por favor realiza el cambio.</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No. Económico</th>
+                            <th>Empresa</th>
+                            <th>Centro de distribución</th>
+                            <th>Centro de costos</th>
+                            <th>Usuario asignado</th>
+                            <th>Responsable</th>
+                            <th>Estatus</th>
+                            <th>Tipo de vehículo</th>
+                            <th>Línea</th>
+                            <th>Modelo</th>
+                            <th>No. Serie</th>
+                            <th>No. Motor</th>
+                            <th>Tipo transmisión</th>
+                            <th>Empresa facturable</th>
+                            <th>No. Fact vehículo</th>
+                            <th>Fecha de compra</th>
+                            <th>Valor de compra</th>
+                            <th>No. Fact adopt</th>
+                            <th>No. Serie adopt</th>
+                            <th>Valor adaptación</th>
+                            <th>Ruta</th>
+                            <th>No. póliza</th>
+                            <th>Inciso</th>
+                            <th>Cobertura</th>
+                            <th>Beneficiario</th>
+                            <th>No. placa</th>
+                            <th>Estado plaqueo</th>
+                            <th>No. Permiso federal de carga</th>
+                            <th>No. Permiso fisico de mecanico</th>
+                            <th>No. Permiso ambiental</th>
+                            <th>Litros autorizados</th>
+                            <th>Área</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% @listado.each do |lis| %>
+                            <tr>
+                                <td><%= lis.numero_economico%></td>
+                                <td><%= lis.catalog_company.nombre if lis.catalog_company%></td>
+                                <td><%= lis.catalog_branch.decripcion if lis.catalog_branch%></td>
+                                <td><%= lis.cost_center.descripcion if lis.cost_center%></td>
+                                <td><%= lis.catalog_personal.nombre if lis.catalog_personal%></td>
+                                <td><%= lis.responsable.nombre if lis.responsable%></td>
+                                <td><%= lis.vehicle_status.descripcion if lis.vehicle_status%></td>
+                                <td><%= lis.vehicle_type.descripcion if lis.vehicle_type %></td>
+                                <td><%= lis.catalog_brand.descripcion if lis.catalog_brand %></td>
+                                <td><%= lis.catalog_model.descripcion if lis.catalog_model %></td>
+                                <td><%= lis.numero_serie%></td>
+                                <td><%= lis.numero_motor%></td>
+                                <td><%= lis.transmision%></td>
+                                <td><%= lis.billed_company.nombre if lis.billed_company %></td>
+                                <td><%= lis.numero_factura%></td>
+                                <td><%= lis.fecha_compra%></td>
+                                <td><%= lis.valor_compra%></td>
+                                <td><%= lis.numero_factura_adapt%></td>
+                                <td><%= lis.numero_serie_adapt%></td>
+                                <td><%= lis.valor_adapt%></td>
+                                <td><%= lis.catalog_route.descripcion if lis.catalog_route%></td>
+                                <td><%= lis.numero_poliza%></td>
+                                <td><%= lis.inciso%></td>
+                                <td><%= lis.policy_coverage.descripcion%></td>
+                                <td><%= lis.insurance_beneficiary.descripcion if lis.insurance_beneficiary%></td>
+                                <td><%= lis.numero_placa%></td>
+                                <td><%= lis.plate_state.descripcion%></td>
+                                <td><%= lis.permiso_federal_carga%></td>
+                                <td><%= lis.permiso_fisico_mecanico%></td>
+                                <td><%= lis.permiso_ambiental%></td>
+                                <td><%= lis.litros_autorizados%></td>
+                                <td><%= lis.catalog_area.descripcion if lis.catalog_area%></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <br><br>
+                 <div style="width:350px;" class="center">
+                    <br><br><br><br>
+                    <hr size="8" width="90%" color="black"> 
+                    <div  style="justify-content:center; align-items:center;display: flex;">
+                        <p><strong style="text-align: center;"><%= @nombre%></strong></p>
+                    </div>
+                    <div  style="justify-content:center; align-items:center;display: flex;">
+                        <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: left; padding: 15px;">
+                <h6>Si recibiste este correo por error, por favor haga caso omiso.</h6>
+                <h6>Este correo se envía automaticamente. Favor de no responder este correo.</h6>
+            </div>
+            <hr>
+            <div align="right">
+                Powered By: &nbsp;<img src="http://apbsoluciones.com/img/aeb45e_57da454c9def4d9d91c43503212fc73f_mv2.png" style="width: auto; display:inline-block; vertical-align: middle;" height="13">
+                <br><br>
+                </div>
+            <div>
+                <p><%= DateTime.now.year %> &copy; Gafi <a href="https://www.gafi.com.mx" class="m-link">www.gafi.com.mx</a></p>
+            </div>
+        </div>
+    </center>
+</div>

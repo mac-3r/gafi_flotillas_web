@@ -1,0 +1,40 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Llantas y baterías
+        <span class="text-muted pt-2 font-size-sm d-block">Catálogo de llantas y baterías</span>
+        </h3>
+      </div>
+      <div class="float-right">
+        <br>
+        <%= link_to 'Nuevo', new_catalog_tires_battery_path,class:"btn btn-primary font-weight-bolder",style:"border-radius: 0.42rem;", data: { turbolinks: false } %>
+      </div>
+    </div>
+    <div class="card-body">
+      <%=form_for('', url: filtrado_llantas_path, remote: true) do |f|%>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Tipo:</label>
+            <%= f.select(:tipo,  [['Todos', ''],['Batería', 'Batería'],['Extintor', 'Extintor'],['Llanta','Llanta']], {}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+          </div>
+          <div class="col">
+            <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Línea:</label>
+            <%= collection_select('',:catalog_brand_id, CatalogBrand.listado_lineas, :id, :descripcion, {prompt:"Seleccione la línea"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+          </div>
+          <div class="col">
+            <br><br>
+            <%= submit_tag "Buscar", class:"btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <br><br>
+    <div style="width: 100%" id="table_container">
+      <%= render  "tabla" %>
+    </div>
+    </div>
+  </div>
+</div>

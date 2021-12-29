@@ -1,0 +1,24 @@
+<%= form_with(model: reason, local: true) do |form| %>
+  <% if reason.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(reason.errors.count, "error") %> Error al registrar:</h2>
+
+      <ul>
+        <% reason.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="float-right">
+    <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+   </div>
+<br><br>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:15px;">Descripción del motivo:</label>
+    <div class="col-sm-0">
+      <%= form.text_area :descripcion, class: "form-control", style:"width: 250px !important;" %>
+    </div>
+  </div>
+<% end %>

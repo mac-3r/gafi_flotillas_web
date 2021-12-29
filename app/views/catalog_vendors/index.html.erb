@@ -1,0 +1,57 @@
+
+<br>
+<div class="container">
+  <div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Proveedores JDE
+      <span class="text-muted pt-2 font-size-sm d-block">Catálogo de proveedores de administración de flotilla</span>
+      </h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Clave</th>
+          <th>Razón social</th>
+          <th>Nombre comercial</th>
+          <th>RFC</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Correo</th>
+          <th>Estatus</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @catalog_vendors.each do |catalog_vendor| %>
+          <tr>
+            <td><%= catalog_vendor.clave %></td>
+            <td><%= catalog_vendor.razonsocial %></td>
+            <td><%= catalog_vendor.nombre %></td>
+            <td><%= catalog_vendor.rfc %></td>
+            <td><%= catalog_vendor.contacto %></td>
+            <td><%= catalog_vendor.direccion %></td>
+            <td><%= catalog_vendor.correo %></td>
+            <% if catalog_vendor.estatus == 1 %>
+                <td>Activo</td>
+              <% else %>
+                <td>Inactivo</td>
+            <% end %>
+            <td>
+              <% if !catalog_vendor.es_taller %>
+                <%= link_to modal_convertir_a_taller_path(catalog_vendor.id), title: 'Convertir a taller', data: { confirm: '¿Deseas convertir a taller este proveedor?' }, class: "btn_#{catalog_vendor.id}", remote: true do %>
+                  <span class='fas fa-sync' style='font-size:16px;color:#A6ACAF'></span>
+                <%end%>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+

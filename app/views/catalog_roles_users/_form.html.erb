@@ -1,0 +1,15 @@
+<%= form_for(@rol_user, url: asignar_rol_path, method: "POST", remote: true, authenticity_token: true) do |f| %>
+    <div class="form-row">
+        <div class="form-group col-lg-6">
+            <%= f.label :user_id, "Usuario" %>
+            <%= f.select(:user_id, options_for_select(@usuarios.map{ |x| [x.nombre_completo, x.id]}), {}, { class: 'form-control m-input m-input--air uneditable-input chosen-select' }) %>
+        </div>
+        <div class="form-group col-lg-6">
+            <%= f.label :catalog_role_id, "Rol" %>
+            <%= f.select(:catalog_role_id, options_for_select(@roles.map{ |x| [x.nombre, x.id]}), {}, { class: 'form-control m-input m-input--air uneditable-input chosen-select' }) %>
+        </div>
+    </div>
+    <div class="float-right">
+        <%= f.submit "Listo", class: "btn btn-brand btn-elevate btn-icon-sm blanco", data: { turbolinks: false } %>
+    </div>
+<% end %>

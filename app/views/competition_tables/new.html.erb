@@ -1,0 +1,19 @@
+<br>
+<div class="container">
+    <div class="card card-custom gutter-b">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label float-left">Nueva competencia</h3>
+                        <%= link_to 'Regresar' , competition_tables_path , class: "btn btn-default float-right" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <%= render 'form', competition_table: @competition_table %>
+        </div>
+    </div>
+</div>
+
