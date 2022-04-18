@@ -92,9 +92,9 @@ class ResponsibleIncidentReportController < ApplicationController
 				sheet.add_row ["Tabla"],:height => 20, :b => true, :sz => 20, :font_name => 'Arial'
 				sheet.add_row [""]
 				sheet.add_row [""]
-				sheet.add_row ["Empresa","CEDIS","Chofer","Costo siniestro", "Total siniestros", "Costo total"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
+				sheet.add_row ["Empresa","CEDIS","Chofer","Costo siniestro", "Total siniestros", "Número económico" , "Costo total"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
 				ticket[0].each do |responsable|
-					sheet.add_row ["#{responsable["empresa"]}", "#{responsable["cedis"]}", "#{responsable["chofer"]}", "#{responsable["costo_siniestro"]}", "#{responsable["total_siniestro"]}", "#{responsable["costo_total"]}"], style: [nil, nil, nil,miles_decimal, nil, miles_decimal]
+					sheet.add_row ["#{responsable["empresa"]}", "#{responsable["cedis"]}", "#{responsable["chofer"]}", "#{responsable["costo_siniestro"]}", "#{responsable["total_siniestro"]}", "#{responsable["vehiculos"]}", "#{responsable["costo_total"]}"], style: [nil, nil, nil,miles_decimal, nil, miles_decimal]
 				end
 			end
 			workbook.add_worksheet(name: "Matríz Reponsable") do |sheet|

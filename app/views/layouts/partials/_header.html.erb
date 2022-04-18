@@ -21,29 +21,33 @@
                 <ul class="header-tabs nav align-self-end font-size-lg" role="tablist">
 
                     <!--begin::Item-->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Maestro de vehículos" %>active<% end %>" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Maestro de vehículos</a>
-                    </li>
-                    <li class="nav-item mr-3">
-                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Siniestralidad" %>active<% end %>" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Siniestralidad</a>
-                    </li>
-                    <li class="nav-item mr-3">
-                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Combustible" %>active<% end %>" data-toggle="tab" data-target="#kt_header_tab_3" role="tab">Combustible</a>
-                    </li>
-                    
-                    <li class="nav-item mr-3">
-                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Mantenimiento" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_4">Mantenimiento</a>  
-                    </li>
-                    <% if can? :index, WorkshopCertification %>
+                    <% if current_user.catalog_workshops.length == 0%>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Maestro de vehículos" %>active<% end %>" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Maestro de vehículos</a>
+                        </li>
                         <li class="nav-item mr-3">
-                            <a class="nav-link py-4 px-3 <% if session["menu1"] == "Certificación de talleres" %>active<% end %>" href="/workshop_certifications">
-                            Certificación de talleres</a>                    
+                            <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Siniestralidad" %>active<% end %>" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Siniestralidad</a>
+                        </li>
+                        <li class="nav-item mr-3">
+                            <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Combustible" %>active<% end %>" data-toggle="tab" data-target="#kt_header_tab_3" role="tab">Combustible</a>
+                        </li>
+                        <li class="nav-item mr-3">
+                            <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Mantenimiento" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_4">Mantenimiento</a>  
+                        </li>
+                        <% if can? :index, WorkshopCertification %>
+                            <li class="nav-item mr-3">
+                                <a class="nav-link py-4 px-3 <% if session["menu1"] == "Certificación de talleres" %>active<% end %>" href="/workshop_certifications">
+                                Certificación de talleres</a>                    
+                            </li>
+                        <% end %>
+                        <li class="nav-item mr-2">
+                            <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Seguridad" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_5">Seguridad</a>  
+                        </li>
+                    <% else %>
+                        <li class="nav-item mr-3">
+                            <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Mantenimiento" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_4">Mantenimiento</a>  
                         </li>
                     <% end %>
-                    <li class="nav-item mr-2">
-                        <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Seguridad" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_5">Seguridad</a>  
-                    </li>
-                    
                                    
                 </ul>
             </div>
@@ -237,15 +241,41 @@
                                     </li>
                                     <% end %>
                                 <% end %>
-                                <% if can? :reporte_documentos, Vehicle %>
-                                <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Reporte de documentos"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
-                                    <%= link_to reporte_documentos_path, class: "menu-link" do %>
-                                        <span class="menu-text">Reporte de documentos</span>
-                                        <span class="menu-desc"></span>
-                                </li>
+                                <% if (can? :reporte_documentos, Vehicle) or (can? :expediente_vehiculo, Vehicle) %>
+                                    <li class="nav-item dropdown <% if session["menu2"] == "Reporte de documentos"%> menu-item-active <% end %>" aria-haspopup="true" >
+                                        <div class="dropdown">
+                                            <button type="button" style="color: #7E8299;background-color: #ffffff;border: none;font-size: 13.5px;font-weight: 500; display: inline-block; margin: 24px 3px;
+                                            " class="dropdown-toggle" aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="false">Documentos <span class="menu-desc"></span>
+                                            <i class="menu-arrow"></i>
+                                            </button>
+                                            <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton">
+                                               <% if (can? :reporte_documentos, Vehicle) or (can? :expediente_vehiculo, Vehicle) %>   
+                                                    <% if can? :expediente_vehiculo, Vehicle %>    
+                                                        <%= link_to carga_general_documentos_path, class: "dropdown-item" do %>
+                                                            <span class="menu-text">Carga de documentos</span>
+                                                            <span class="menu-desc"></span>
+                                                        <% end %>
+                                                    <% end %> 
+                                                    <% if can? :reporte_documentos, Vehicle %> 
+                                                        <%= link_to reporte_documentos_path, class: "dropdown-item" do %>
+                                                            <span class="menu-text">Reporte de documentos</span>
+                                                            <span class="menu-desc"></span>
+                                                        <% end %>
+                                                    <% end %> 
+                                                <% end %>
+                                            </ul>
+                                        </div>
+                                    </li>
                                 <% end %>
+                                <!--<%# if can? :reporte_documentos, Vehicle %>
+                                    <li class="menu-item menu-item-submenu menu-item-rel <%# if session["menu2"] == "Reporte de documentos"%> menu-item-active <%# end %>" data-menu-toggle="click" aria-haspopup="true">
+                                        <%#= link_to reporte_documentos_path, class: "menu-link" do %>
+                                            <span class="menu-text">Reporte de documentos</span>
+                                            <span class="menu-desc"></span>
+                                    </li>
+                                <%# end %>-->
                                 
-                            <% end %>
+                            <%# end %>
                             </ul>
                             
                             <!--end::Nav-->

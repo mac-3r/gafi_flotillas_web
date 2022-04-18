@@ -17,20 +17,31 @@
 	<br>
 	<br>
 	<div class="form-row">
+		<div class="form-group col-sm-6">
+			<% if @insurance_report_ticket.id != nil %>
+				<div class="row">
+					<%= form.label :numero_economico, "No. Económico:", class: "col-form-label col-sm-2" %>
+					<%= form.select(:numero_economico, options_from_collection_for_select(@vehiculos, "numero_economico", "nombre_p_vehiculo", @insurance_report_ticket.vehicle.numero_economico),{prompt: "Selecciona un vehículo"}, {class: "form-control chosen-select col-sm-9"}) %>
+				</div>
+			<% else %>
+				<div class="row">
+					<%= form.label :numero_economico, "No. Económico:", class: "col-form-label col-sm-2" %>
+					<%= form.select(:numero_economico, options_from_collection_for_select(@vehiculos, "numero_economico", "nombre_p_vehiculo"),{prompt: "Selecciona un vehículo"}, {class: "form-control chosen-select col-sm-9"}) %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+	<div class="form-row">
 		<div class="form-group col-lg-6">
 			<div class="row">
-				<%= form.label :numero_siniestro, "No. Siniestro:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :numero_siniestro, class: "form-control col-sm-9" %>
-			</div><br>
-			<div class="row">
 				<%= form.label :numero_poliza, "No. Póliza:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :numero_poliza, class: "form-control col-sm-9" %>
+				<%= form.text_field :numero_poliza, class: "form-control col-sm-9", disabled: true %>
 			</div>
 		</div>
 		<div class="form-group col-lg-6">
 			<div class="row">
 				<%= form.label :inciso, "Inciso:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :inciso, class: "form-control col-sm-9" %>
+				<%= form.text_field :inciso, class: "form-control col-sm-9", disabled: true %>
 			</div>
 		</div>
 	</div>
@@ -38,14 +49,60 @@
 	<div class="form-row">
 		<div class="form-group col-lg-6">
 			<div class="row">
-				<%= form.label :contacto, "Contacto:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :contacto, class: "form-control col-sm-9" %>
+				<%= form.label :numero_serie, "No. Serie:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :numero_serie, class: "form-control col-sm-9", disabled: true %>
 			</div>
 		</div>
 		<div class="form-group col-lg-6">
 			<div class="row">
-				<%= form.label :registro, "¿Quién registra?:", class: "col-form-label col-sm-2" %>
-				<%= form.select(:registro, [['Aseguradora', 'Aseguradora'], ['Administrador', 'Administrador']],{}, {class: "form-control col-sm-9"}) %>
+				<%= form.label :vehiculo, "Vehículo:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :vehiculo, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :modelo, "Modelo:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :modelo, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :estatus_vehiculo, "Estatus vehículo:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :estatus_vehiculo, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :responsable, "Responsable:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :responsable, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :cedis, "CEDIS", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :cedis, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+	</div>
+
+			
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :numero_siniestro, "No. Siniestro:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :numero_siniestro, class: "form-control col-sm-9" %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :contacto, "Contacto:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :contacto, class: "form-control col-sm-9" %>
 			</div>
 		</div>
 	</div>
@@ -91,69 +148,23 @@
 	<div class="form-row">
 		<div class="form-group col-lg-6">
 			<div class="row">
-				<%= form.label :numero_economico, "No. Económico:", class: "col-form-label col-sm-2" %>
-				<%= form.search_field :numero_economico, class: "form-control col-sm-7", required: true%>
-				<input type="button" class="btn col-sm-3", id="btn_num_serie" value="Buscar">
+				<%= form.label :registro, "¿Quién registra?:", class: "col-form-label col-sm-2" %>
+				<%= form.select(:registro, [['Aseguradora', 'Aseguradora'], ['Administrador', 'Administrador']],{}, {class: "form-control col-sm-9"}) %>
 			</div>
 		</div>
-		<div class="form-group col-lg-6">
-			<div class="row">
-				<%= form.label :cedis, "CEDIS", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :cedis, class: "form-control col-sm-9", disabled: true %>
-			</div>
-		</div>
-	</div>
-
-	<div class="form-row">
-		<div class="form-group col-lg-6">
-			<div class="row">
-				<%= form.label :numero_serie, "No. Serie:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :numero_serie, class: "form-control col-sm-9", disabled: true %>
-			</div>
-		</div>
-		<div class="form-group col-lg-6">
-			<div class="row">
-				<%= form.label :vehiculo, "Vehículo:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :vehiculo, class: "form-control col-sm-9", disabled: true %>
-			</div>
-		</div>
-	</div>
-
-	<div class="form-row">
-		<div class="form-group col-lg-6">
-			<div class="row">
-				<%= form.label :modelo, "Modelo:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :modelo, class: "form-control col-sm-9", disabled: true %>
-			</div>
-		</div>
-		<div class="form-group col-lg-6">
-			<div class="row">
-				<%= form.label :estatus_vehiculo, "Estatus vehículo:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :estatus_vehiculo, class: "form-control col-sm-9", disabled: true %>
-			</div>
-		</div>
-	</div>
-
-	<div class="form-row">
 		<div class="form-group col-lg-6">
 			<div class="row">
 				<%= form.label :type_sinisters_id, "Tipo de siniestro:", class: "col-form-label col-sm-2" %>
 				<%= form.select(:type_sinisters_id, options_from_collection_for_select(@tipos_siniestro, "id", "nombreSiniestro"),{}, {class: "form-control  col-sm-9"}) %>
 			</div>
 		</div>
-		<div class="form-group col-lg-6">
-			<div class="row">
-				<%= form.label :ubicacion_siniestro, "Ubicación siniestro:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :ubicacion_siniestro, class: "form-control col-sm-9" %>
-			</div>
-		</div>
 	</div>
 
 	<div class="form-row">
 		<div class="form-group col-lg-6">
 			<div class="row">
-				<%= form.label :responsable, "Responsable:", class: "col-form-label col-sm-2" %>
-				<%= form.text_field :responsable, class: "form-control col-sm-9", disabled: true %>
+				<%= form.label :ubicacion_siniestro, "Ubicación siniestro:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :ubicacion_siniestro, class: "form-control col-sm-9" %>
 			</div>
 		</div>
 		<div class="form-group col-lg-6">
@@ -265,18 +276,19 @@
 				consulta_coincide();
 			})
 
-			$("#btn_num_serie").click(function(){
+			/*$("#btn_num_serie").click(function(){
 				var valor = $("#insurance_report_ticket_numero_economico").val();
 				if (valor == "") {
 					alert("Ingresa un número de serie.");
 				} else {
 					$.ajax({
 						type: "POST",
-						url: "<%= consulta_numero_serie_siniestrabilidad_path %>",
+						url: "<%#= consulta_numero_serie_siniestrabilidad_path %>",
 						data: {num_economico: valor,authenticity_token: $('meta[name=csrf-token]').attr('content')}
 					})
 				}
-			})
+			})*/
+			
 		})
         
 		function consulta_coincide(){
@@ -324,5 +336,18 @@
         $("#insurance_report_ticket_imagen_despues").change(function() {
             readURL2(this);
         });
+
+		$("#insurance_report_ticket_numero_economico").change(function(){
+			var valor = $(this).val();
+			if (valor == "") {
+				alert("Ingresa un número de serie.");
+			} else {
+				$.ajax({
+					type: "POST",
+					url: "<%= consulta_numero_serie_siniestrabilidad_path %>",
+					data: {num_economico: valor,authenticity_token: $('meta[name=csrf-token]').attr('content')}
+				})
+			}
+		})
     })
 </script>

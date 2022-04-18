@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  clave: 1
+  nombre_archivo: MyString
+  tipo_archivo: MyString
+  fecha_vencimiento: 2022-01-09
+  documento: MyString
+
+two:
+  clave: 1
+  nombre_archivo: MyString
+  tipo_archivo: MyString
+  fecha_vencimiento: 2022-01-09
+  documento: MyString

@@ -1,0 +1,144 @@
+<div class="">
+    <div class="m-portlet" id="m_portlet">
+        <div class="m-portlet__body">
+            <br><br>
+            <div class="container">
+                <div class="card card-custom gutter-b">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card-header" style="border-bottom: #ffff">
+                                <div class="example-screen" style="float: right;">
+                                <button onclick="window.print()" class="btn btn-primary font-weight-bolder" style="border-radius: 0.42rem;">Generar PDF</button>&nbsp;&nbsp;
+                                <%= link_to 'Regresar' ,purchase_orders_path , class: "btn btn-default float-right" %>&nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="card-body">
+                        <h3 style="text-align: center;"><img style="float: left;" src="https://www.gafi.com.mx/Content/themes/images/logo.jpg" alt="" width="119" height="164" /></h3>
+                        <h4 style="text-align: center;"> <%= @adaptacion.catalog_branch.catalog_company.nombre %></h4>
+                        <h4 style="text-align: center;"> <%= @adaptacion.catalog_branch.catalog_company.domicilio %></h4>
+                        <h4 style="text-align: center;">C.P <%= @adaptacion.catalog_branch.catalog_company.codigo_postal %></h4>
+                        <h4 style="text-align: center;"> <%= @adaptacion.catalog_branch.catalog_company.telefono %></h4>
+                        <br>
+                        <h4 style="text-align: center;">Orden de compra de adaptaciones</h4>
+                        <br>
+                        <br>
+                        <h4>No. Orden:&nbsp;&nbsp; <%= @adaptacion.catalogo_adaptation.clave%> </h4>
+                        <h4>Orden de compra:&nbsp;&nbsp; <%= @adaptacion.id%> </h4>
+                        <!--<h4>Rango de presupuesto:&nbsp;&nbsp; <%#= @adaptacion.budget_id ? "Dentro de presupuesto" : "Fuera de presupuesto" %> </h4>-->
+                        <h4 >Titular de pago:&nbsp;&nbsp; <%= @adaptacion.catalog_vendor.razonsocial %></h4>
+                        <h4 >Contacto:&nbsp;&nbsp;<%= @adaptacion.catalog_vendor.contacto %></h4>
+                        <h4 >Dirección:&nbsp;&nbsp;<%= @adaptacion.catalog_vendor.direccion %></h4>
+                        <h4 >R.F.C:&nbsp;&nbsp;<%= @adaptacion.catalog_vendor.rfc %></h4>
+                        <br>
+                        <!--<h4>Condición de pago:&nbsp;&nbsp;<%#= @adaptacion.condicion%></h4>
+                        <%# if @adaptacion.condicion == "Plazo días" %>
+                        <h4>Días:&nbsp;&nbsp;<%#= @adaptacion.plazo_dias%></h4>
+                        <%# end %>
+                        <%# if @adaptacion.condicion == "En parcialidades" %>
+                        <h4>Meses:&nbsp;&nbsp;<%#= @adaptacion.plazo_dias %></h4>
+                        <h4>Última fecha de pago:&nbsp;&nbsp;<%#= @adaptacion.ultima_fecha_pago %></h4>
+                        <%# end %>
+                        <h4>Centro de costo:&nbsp;&nbsp;<%#= @adaptacion.cost_center.descripcion %></h4>-->
+                    <div id="contenedor_partidas">
+                        <%= render "partidas" %>
+                    </div>
+                    <br><br>
+                    <div class="row">
+                        <div class="col-sm-6">
+                        </div>
+                        <div class="col-sm-6">
+                            <% if @firma %>
+                                <center>
+                                    <%= image_tag(url_for(@firma.firma), style: "max-height: 300px; max-width: 80%;", class: "float-right") if @firma and @adaptacion.estatus == "Autorizado" %>
+                                </center>
+                            <% end %>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <center>
+                                <hr size="8" width="50%" color="black">
+                                <h5><%= current_user.name%> <%= current_user.last_name %></h5>
+                                <p><strong style="text-align: center;">Firma de quien elaboró</strong></p>
+                            </center>
+                        </div>
+                        <div class="col-sm-6">
+                            <% if @firma and @adaptacion.estatus == "Autorizado" %>
+                                <center>
+                                    <hr size="8" width="50%" color="black">
+                                    <h5><%= @firma.user.name %> <%= @firma.user.last_name %></h5>
+                                    <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                                </center>
+                            <% else %>
+                                 <center>
+                                    <hr size="8" width="50%" color="black">
+                                    <h5></h5>
+                                    <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                                </center>
+                            <% end %>
+                        </div>
+                    </div>
+                    <!--<table class="center">
+                        <tr>
+                        <th>
+                            <br>
+                            <div style="width:350px;">
+                            <br><br><br><br><br><br><br><br><br><br>
+                            <hr size="8" width="90%" color="black"> 
+                            <div  style="justify-content:center; align-items:center;display: flex;">
+                                <%# if @usuario %>
+                                <p><strong style="text-align: center;"><%#= @usuario.name%> <%#= @usuario.last_name %></strong></p>
+                                <%# end %>
+                            </div>
+                            <div  style="justify-content:center; align-items:center;display: flex;">
+                                <p><strong style="text-align: center;">Firma de quien elaboró</strong></p>
+                            </div>
+                            </div>
+                        </th>
+                        <%# if @firma %>
+                        <th style="text-align: center;">
+                            <div style=" width:350px;">
+                            <%#= image_tag(url_for(@firma.firma)) %>
+                            <hr size="8" width="90%" color="black"> 
+                            <div  style="justify-content:center; align-items:center;display: flex;">
+                                <p><strong style="text-align: center;"><%#= @firma.user.name %> <%#= @firma.user.last_name %></strong></p>
+                            </div>
+                            <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                            </div>
+                        </th>
+                            <%# else %>
+                            <th style="text-align: center;">
+                            <div style=" width:350px;">
+                                <hr size="8" width="90%" color="black"> 
+                                <div  style="justify-content:center; align-items:center;display: flex;">
+                                <strong style="text-align: center;">Firma de autorización</strong>
+                                </div>
+                            </div>
+                            </th>
+                        <%# end %>
+                        </tr>
+                    </table>
+                    </div>-->
+                </div>
+            </div>
+            <style>
+            @media print {
+                .example-screen {
+                    display: none;
+                }
+            
+            }
+            .center {
+            margin-left: auto;
+            margin-right: auto;
+            }
+            </style>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+  window.print();
+</script>

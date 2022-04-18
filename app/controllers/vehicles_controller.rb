@@ -1,27 +1,31 @@
 class VehiclesController < ApplicationController
   before_action :set_vehicle, only: [:show, :edit, :update, :destroy, :vehicle_expenses, :gastos_vehiculo_x_fecha]
   rescue_from ActiveRecord::InvalidForeignKey, with: :invalid_foreign_key
-  load_and_authorize_resource except: [:index,:generar_excel,:filtrado_maestro, :reasignacion_vehiculos, :checklist_asignacion, :importar_maestro_vehiculos]
+  load_and_authorize_resource except: [:index,:generar_excel,:filtrado_maestro, :reasignacion_vehiculos, :checklist_asignacion, :importar_maestro_vehiculos, :imprimir_adaptacion]
   after_action :validacion_menu
   skip_forgery_protection only: [:upload_document] 
   # GET /vehicles
   # GET /vehicles.json
   def index
-    session["vehiculo"] = "" if session["vehiculo"] == "" or session["vehiculo"] == nil
-    session["cedis"] = "" if session["cedis"] == "" or session["cedis"] == nil
-    session["area"] = "" if session["area"] == "" or session["area"] == nil
-    session["tipovehiculo"] = "" if session["tipovehiculo"] == "" or session["tipovehiculo"] == nil
-    session["empresa"] = "" if session["empresa"] == "" or session["empresa"] == nil
-    session["fecha_inicio_maestro"] = ""  if session["fecha_inicio_maestro"] == "" or session["fecha_inicio_maestro"] == nil
-    session["fecha_fin_maestro"] = "" if session["fecha_fin_maestro"] == "" or session["fecha_fin_maestro"] == nil
-    session["vendidos"] = "" if session["vendidos"] == "" or session["vendidos"] == nil
-    validacion_menu()
-    @vehicles = VehiclesMaster.consulta_maestro( session["vehiculo"],session["cedis"], session["area"], session["tipovehiculo"], session["empresa"], session["fecha_inicio_maestro"],session["fecha_fin_maestro"], session["vendidos"] = "", params[:page])
-    #@vehicles = @vehicles.page(params[:page]).per(30)
-    #byebug
-    respond_to do |format|
-      format.html
-      format.js
+    if current_user.catalog_workshops.length > 0
+      redirect_to service_orders_path
+    else
+      session["vehiculo"] = "" if session["vehiculo"] == "" or session["vehiculo"] == nil
+      session["cedis"] = "" if session["cedis"] == "" or session["cedis"] == nil
+      session["area"] = "" if session["area"] == "" or session["area"] == nil
+      session["tipovehiculo"] = "" if session["tipovehiculo"] == "" or session["tipovehiculo"] == nil
+      session["empresa"] = "" if session["empresa"] == "" or session["empresa"] == nil
+      session["fecha_inicio_maestro"] = ""  if session["fecha_inicio_maestro"] == "" or session["fecha_inicio_maestro"] == nil
+      session["fecha_fin_maestro"] = "" if session["fecha_fin_maestro"] == "" or session["fecha_fin_maestro"] == nil
+      session["vendidos"] = "" if session["vendidos"] == "" or session["vendidos"] == nil
+      validacion_menu()
+      @vehicles = VehiclesMaster.consulta_maestro( session["vehiculo"],session["cedis"], session["area"], session["tipovehiculo"], session["empresa"], session["fecha_inicio_maestro"],session["fecha_fin_maestro"], session["vendidos"] = "", params[:page])
+      #@vehicles = @vehicles.page(params[:page]).per(30)
+      #byebug
+      respond_to do |format|
+        format.html
+        format.js
+      end
     end
   end
  
@@ -54,19 +58,39 @@ class VehiclesController < ApplicationController
     #resultados = Consumption.joins(:vehicle_consumptions)
     resultados = Vehicle.all.order(numero_economico: :asc)
     workbook.styles do |s|
+			img = File.expand_path("#{Rails.root}/app/assets/images/excel_logo.png", __FILE__)
+			col_widths= [3,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30] 
+			celda_tabla = s.add_style :bg_color => "BFBFBF", :fg_color => "00", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
+			celda_cabecera= s.add_style :bg_color => "919191", :fg_color => "ff", :height => 20 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :center}
+      celda_cabecera2= s.add_style :height => 25 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :right, :vertical => :center}
+			celda_categoria = s.add_style :bg_color => "D9D9D9", :fg_color => "00", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
+			celda_tabla_td = s.add_style :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
+			celda_notas = s.add_style :fg_color => "FF0000" ,:sz => 12
+			celda_afi_mayor = s.add_style :bg_color => "808080", :fg_color => "ff", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
+			celda_afi_menor = s.add_style :bg_color => "F2F2F2", :fg_color => "ff", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
       miles_decimal = s.add_style(:format_code => "$###,###.00")
       centered = { alignment: { horizontal: :center } }
       #img = File.expand_path(Rails.root+'app/assets/images/image001.jpg')
       workbook.add_worksheet(name: "Maestro de vehículos") do |sheet|
+        sheet.add_image(:image_src => img, :noSelect => true, :noMove => true,) do |image|
+					image.width = 105
+					image.height = 137
+					image.start_at 1, 0
+				end
+				sheet.merge_cells("B1:D7")
+				sheet.add_row ["","Maestro de vehículos","","","","", ""], :style => [nil, celda_cabecera2, nil, nil, nil, nil,nil]
+        sheet.add_row ["","","","","","","",""], :style => [nil, nil, nil, nil, nil, nil]
+        sheet.add_row ["","","","","","","",""]
+        sheet.add_row ["","","","","","","",""]
         sheet.add_row [""]
         sheet.add_row [""]
-        sheet.add_row ["","Maestro de vehículos"],:height => 20, :b => true, :sz => 20, :font_name => 'Arial'
         sheet.add_row [""]
         sheet.add_row [""]
-        sheet.add_row ["Número Económico","Empresa", "Centro de distribución","Centro de costos","Responsable","Estatus", "Tipo de vehículo","Línea","Modelo","No.Serie","No.Motor","Tipo transmisión","Empresa facturable","No. Fact vehículo","Fecha de compra","Valor de compra","No. Fact adopt","No. Serie adopt","Valor adaptación","Ruta","No. Póliza","Inciso","Cobertura","Beneficiario","No. Placa","Estado plaqueo","No. Permiso federal de carga","No. Permiso fisico de mecanico","No. Permiso ambiental","Litros autorizados","Usuario","Área"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
+        sheet.add_row ["","Número Económico","Empresa", "Centro de distribución","Centro de costos","Responsable","Estatus", "Tipo de vehículo","Línea","Modelo","No.Serie","No.Motor","Tipo transmisión","Empresa facturable","No. Fact vehículo","Fecha de compra","Valor de compra","No. Fact adopt","No. Serie adopt","Valor adaptación","Ruta","No. Póliza","Inciso","Cobertura","Beneficiario","No. Placa","Estado plaqueo","No. Permiso federal de carga","No. Permiso fisico de mecanico","No. Permiso ambiental","Litros autorizados","Usuario","Área", "Reparto"], :style => [nil,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera]
         resultados.all.each do |resultado|
-          sheet.add_row [resultado.numero_economico,resultado.catalog_company ? resultado.catalog_company.nombre : "No se asignó",resultado.catalog_branch ? resultado.catalog_branch.decripcion : "No se asignó",resultado.cost_center ? resultado.cost_center.descripcion : "No se asignó",resultado.responsable ? resultado.responsable.nombre : "No se asignó",resultado.vehicle_status.descripcion,resultado.vehicle_type_id ? resultado.vehicle_type.descripcion : "No se asignó",resultado.catalog_brand_id ? resultado.catalog_brand.descripcion : "No se asignó",resultado.catalog_model_id ? resultado.catalog_model.descripcion : "No se asignó",resultado.numero_serie,resultado.numero_motor,resultado.transmision,resultado.billed_company_id ? resultado.billed_company.nombre : "No se asignó",resultado.numero_factura,resultado.fecha_compra,resultado.valor_compra,resultado.numero_factura_adapt,resultado.numero_serie_adapt,resultado.valor_adapt,resultado.catalog_route ? resultado.catalog_route.descripcion : "No se asignó",resultado.numero_poliza,resultado.inciso,resultado.policy_coverage ? resultado.policy_coverage.descripcion : "No se asignó",resultado.insurance_beneficiary ? resultado.insurance_beneficiary.descripcion : "No se asignó",resultado.numero_placa,resultado.plate_state ? resultado.plate_state.descripcion : "No se asignó",resultado.permiso_federal_carga,resultado.permiso_fisico_mecanico,resultado.permiso_ambiental,resultado.litros_autorizados,resultado.catalog_personal ? resultado.catalog_personal.nombre : "No se asignó",resultado.catalog_area ? resultado.catalog_area.descripcion : "No se asignó"]
+          sheet.add_row ["",resultado.numero_economico,resultado.catalog_company ? resultado.catalog_company.nombre : "No se asignó",resultado.catalog_branch ? resultado.catalog_branch.decripcion : "No se asignó",resultado.cost_center ? resultado.cost_center.descripcion : "No se asignó",resultado.responsable ? resultado.responsable.nombre : "No se asignó",resultado.vehicle_status.descripcion,resultado.vehicle_type_id ? resultado.vehicle_type.descripcion : "No se asignó",resultado.catalog_brand_id ? resultado.catalog_brand.descripcion : "No se asignó",resultado.catalog_model_id ? resultado.catalog_model.descripcion : "No se asignó",resultado.numero_serie,resultado.numero_motor,resultado.transmision,resultado.billed_company_id ? resultado.billed_company.nombre : "No se asignó",resultado.numero_factura,resultado.fecha_compra,resultado.valor_compra,resultado.numero_factura_adapt,resultado.numero_serie_adapt,resultado.valor_adapt,resultado.catalog_route ? resultado.catalog_route.descripcion : "No se asignó",resultado.numero_poliza,resultado.inciso,resultado.policy_coverage ? resultado.policy_coverage.descripcion : "No se asignó",resultado.insurance_beneficiary ? resultado.insurance_beneficiary.descripcion : "No se asignó",resultado.numero_placa,resultado.plate_state ? resultado.plate_state.descripcion : "No se asignó",resultado.permiso_federal_carga,resultado.permiso_fisico_mecanico,resultado.permiso_ambiental,resultado.litros_autorizados,resultado.catalog_personal ? resultado.catalog_personal.nombre : "No se asignó",resultado.catalog_area ? resultado.catalog_area.descripcion : "No se asignó", resultado.reparto], :style => [nil,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td]
         end
+        sheet.column_widths *col_widths
       end
     end
     send_data package.to_stream.read, type: "application/xlsx", filename: "Maestro de vehículos.xlsx"
@@ -278,6 +302,21 @@ class VehiclesController < ApplicationController
     else
       params[:vehicle][:trailer_subtype_id] = nil
     end
+    #byebug
+    emple = CatalogPersonal.find_by(id: params[:vehicle][:catalog_personal_id])
+    if emple
+      if emple.user
+        lice = CatalogLicence.find_by(user_id: emple.user_id)
+        if lice
+          params[:vehicle][:numero_licencia] = lice.numero_licencia
+        else
+          params[:vehicle][:numero_licencia] = params[:vehicle][:numero_licencia] 
+        end
+      else
+        params[:vehicle][:numero_licencia] = params[:vehicle][:numero_licencia] 
+      end
+    end
+    
     respond_to do |format|
       Vehicle.transaction do
         if @vehicle.update(vehicle_params)
@@ -351,17 +390,22 @@ class VehiclesController < ApplicationController
             #Vehicle.actualizar_vehiculo_jde(@vehicle.id)
           #si no es inactivo
           else
-            envio_jde = Vehicle.actualizar_vehiculo_jde(@vehicle.id)
-            if envio_jde[0] == true
+            if @vehicle.reparto
+              envio_jde = Vehicle.actualizar_vehiculo_jde(@vehicle.id)
+              if envio_jde[0] == true
+                format.html { redirect_to vehicles_path, notice: 'El vehículo se actualizó con exito.' }
+                format.json { render :show, status: :ok, location: @vehicle }
+              else
+                mensaje = "Error en la solicitud a JD Edwards: "
+                envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
+                  mensaje += "#{error}. "
+                end
+                format.html { redirect_to edit_vehicle_path(@vehicle.id), alert: mensaje }
+                raise ActiveRecord::Rollback
+              end
+            else
               format.html { redirect_to vehicles_path, notice: 'El vehículo se actualizó con exito.' }
               format.json { render :show, status: :ok, location: @vehicle }
-            else
-              mensaje = "Error en la solicitud a JD Edwards: "
-              envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
-                mensaje += "#{error}. "
-              end
-              format.html { redirect_to edit_vehicle_path(@vehicle.id), alert: mensaje }
-              raise ActiveRecord::Rollback
             end
           end
         else
@@ -435,6 +479,27 @@ class VehiclesController < ApplicationController
     file = VehicleFile.find_by(id: params[:file_id])
     send_file "#{Rails.root}/public/uploads/#{file.nombre_archivo}"
   end
+
+  def destroy_vehicle_file
+    file = VehicleFile.find_by(id: params[:file_id])
+    if file
+      if file.destroy
+        @bandera_error = false
+        @mensaje = "Archivo eliminado exitosamente."
+      else
+        errores = ""
+        file.errors.full_messages.each do |error|
+          errores += "#{error}. "
+        end
+        @bandera_error = true
+        @mensaje = "No se pudo eliminar el archivo. Inténtelo de nuevo más tarde."
+      end
+    else
+      @bandera_error = true
+      @mensaje = "No se encontró el archivo seleccionado."
+    end
+  end
+  
 
   # DELETE /vehicles/1
   # DELETE /vehicles/1.json
@@ -637,7 +702,7 @@ class VehiclesController < ApplicationController
 
         @vehicle = Vehicle.find_by(id: params[:id])
         if @vehicle
-          registro = VehicleAdaptation.create(vehicle_id: @vehicle.id,monto: params[:monto],catalogo_adaptation_id: params[:catalogo_adaptation_id],catalog_vendor_id: params[:catalog_vendor_id],importe_iva: params[:importe_iva],estatus:"En captura",impuestos:params[:impuestos],fecha:params[:fecha],base:bandera_base)
+          registro = VehicleAdaptation.create(vehicle_id: @vehicle.id, catalog_area_id: @vehicle.catalog_area_id, catalog_branch_id: @vehicle.catalog_branch_id, monto: params[:monto],catalogo_adaptation_id: params[:catalogo_adaptation_id],catalog_vendor_id: params[:catalog_vendor_id],importe_iva: params[:importe_iva],estatus:"En captura",impuestos:params[:impuestos],fecha:params[:fecha],base:bandera_base)
           flash[:notice] = "Se registro la adaptación con éxito."
           redirect_to agregar_adaptaciones_path
         else
@@ -650,6 +715,15 @@ class VehiclesController < ApplicationController
       redirect_to agregar_adaptaciones_path
     end
   end
+
+  def imprimir_adaptacion
+    usuario = User.find_by(user: 'oorozco')
+    @firma = UserSignature.find_by(user_id: usuario.id)
+    @adaptacion = VehicleAdaptation.find_by(id: params[:vehicle_adaptation_id])
+  end
+  # numero economico
+  # empresa
+  # cedis
 
   def listado_checklist
     if params[:start_date] != "" and params[:end_date] != ""
@@ -902,7 +976,7 @@ class VehiclesController < ApplicationController
 			col_widths= [3,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30] 
 			celda_tabla = s.add_style :bg_color => "BFBFBF", :fg_color => "00", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
 			celda_cabecera= s.add_style :bg_color => "919191", :fg_color => "ff", :height => 20 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :center}
-      celda_cabecera2= s.add_style :height => 25 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :right}
+      celda_cabecera2= s.add_style :height => 25 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :right, :vertical => :center}
 			celda_categoria = s.add_style :bg_color => "D9D9D9", :fg_color => "00", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
 			celda_tabla_td = s.add_style :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
 			celda_notas = s.add_style :fg_color => "FF0000" ,:sz => 12
@@ -916,7 +990,7 @@ class VehiclesController < ApplicationController
 					image.start_at 1, 0
 				end
         vehiculos = Vehicle.all.order(numero_economico: :asc)
-				sheet.merge_cells("B1:D1")
+				sheet.merge_cells("B1:D7")
 				sheet.add_row ["","Importación de datos de maestro de vehículos","","","","", "", "Notas:"], :style => [nil, celda_cabecera2, nil, nil, nil, nil,nil,celda_notas]
         sheet.add_row ["","","","","","","","Los campos con * deben de ser completados con los identificadores de las hojas correspondientes"], :style => [nil, nil, nil, nil, nil, nil]
         sheet.add_row ["","","","","","","","El campo 'Identificador' no debe ser modificado. El ser modificado puede causar que el vehículo no se encuentre o se modifique el vehículo incorrecto."]
@@ -924,9 +998,9 @@ class VehiclesController < ApplicationController
         sheet.add_row [""]
         sheet.add_row [""]
         sheet.add_row [""]
-        sheet.add_row ["", "Identificador", "Número económico", "Empresa *", "Centro de costo *", "Responsable *", "Usuario *", "Celular responsable", "Celular usuario", "Estatus del vehículo *", "Tipo de vehículo *", "Número de serie", "Número de motor", "Transimisión (Std/Aut)", "Empresa facturable *", "Número de factura", "Fecha de compra", "Valor de compra", "Número de factura de adaptación", "Número de serie de adaptación", "Valor de adaptación", "Ruta *", "Número de póliza", "Inciso", "Cobertura de póliza *", "Beneficiario *", "Número de placa", "Estado de plaqueo *", "Permiso federal de carga", "Permiso fisicomecánico", "Permiso ambiental", "Litros autorizados", "Modelo *", "Año *", "Cedis *", "Área *", "Almacén *", "Color", "Impuestos", "Fecha de licencia", "Número de licencia", "Fecha de vigencia de placas", "Fecha de vigencia de póliza", "Fecha de vigencia fisicomecánica", "Fecha de vigencia ambiental", "Permiso SCT", "Número de permiso", "Nombre de aseguradora", "Tipo de permiso * (opcional)", "Configuración del vehículo * (opcional)", "Subtipo de remolque * (opcional)"], :style => [nil,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera]
+        sheet.add_row ["", "Identificador", "Número económico", "Empresa *", "Centro de costo *", "Responsable *", "Usuario *", "Celular responsable", "Celular usuario", "Estatus del vehículo *", "Tipo de vehículo *", "Número de serie", "Número de motor", "Transimisión (Std/Aut)", "Empresa facturable *", "Número de factura", "Fecha de compra", "Valor de compra", "Número de factura de adaptación", "Número de serie de adaptación", "Valor de adaptación", "Ruta *", "Número de póliza", "Inciso", "Cobertura de póliza *", "Beneficiario *", "Número de placa", "Estado de plaqueo *", "Permiso federal de carga", "Permiso fisicomecánico", "Permiso ambiental", "Litros autorizados", "Modelo *", "Año *", "Cedis *", "Área *", "Almacén *", "Color", "Impuestos", "Fecha de licencia", "Número de licencia", "Fecha de vigencia de placas", "Fecha de vigencia de póliza", "Fecha de vigencia fisicomecánica", "Fecha de vigencia ambiental", "Permiso SCT", "Número de permiso", "Nombre de aseguradora", "Tipo de permiso * (opcional)", "Configuración del vehículo * (opcional)", "Subtipo de remolque * (opcional)", "Reparto"], :style => [nil,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera, celda_cabecera]
         vehiculos.each do |vehicle|
-          sheet.add_row ["", vehicle.id, vehicle.numero_economico, vehicle.catalog_company_id, vehicle.cost_center_id, vehicle.responsable_id, vehicle.catalog_personal_id, vehicle.celular_responsable, vehicle.celular, vehicle.vehicle_status_id, vehicle.vehicle_type_id, vehicle.numero_serie, vehicle.numero_motor, vehicle.transmision, vehicle.billed_company_id, vehicle.numero_factura, vehicle.fecha_compra, vehicle.valor_compra, vehicle.numero_factura_adapt, vehicle.numero_serie_adapt, vehicle.valor_adapt, vehicle.catalog_route_id, vehicle.numero_poliza, vehicle.inciso, vehicle.policy_coverage_id, vehicle.insurance_beneficiary_id, vehicle.numero_placa, vehicle.plate_state_id, vehicle.permiso_federal_carga, vehicle.permiso_fisico_mecanico, vehicle.permiso_ambiental, vehicle.litros_autorizados, vehicle.catalog_brand_id, vehicle.catalog_model_id, vehicle.catalog_branch_id, vehicle.catalog_area_id, vehicle.warehouse_id, vehicle.vehicle_color, vehicle.impuestos, vehicle.fecha_licencia, vehicle.numero_licencia, vehicle.fecha_vigencia_placas, vehicle.fecha_vigencia_poliza, vehicle.fecha_vigencia_fisico, vehicle.fecha_vigencia_ambiental, vehicle.permiso_sat, vehicle.numero_permiso, vehicle.numero_aseguradora, vehicle.permission_type_id, vehicle.vehicle_configuration_id, vehicle.trailer_subtype_id], :style => [nil,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td]
+          sheet.add_row ["", vehicle.id, vehicle.numero_economico, vehicle.catalog_company_id, vehicle.cost_center_id, vehicle.responsable_id, vehicle.catalog_personal_id, vehicle.celular_responsable, vehicle.celular, vehicle.vehicle_status_id, vehicle.vehicle_type_id, vehicle.numero_serie, vehicle.numero_motor, vehicle.transmision, vehicle.billed_company_id, vehicle.numero_factura, vehicle.fecha_compra, vehicle.valor_compra, vehicle.numero_factura_adapt, vehicle.numero_serie_adapt, vehicle.valor_adapt, vehicle.catalog_route_id, vehicle.numero_poliza, vehicle.inciso, vehicle.policy_coverage_id, vehicle.insurance_beneficiary_id, vehicle.numero_placa, vehicle.plate_state_id, vehicle.permiso_federal_carga, vehicle.permiso_fisico_mecanico, vehicle.permiso_ambiental, vehicle.litros_autorizados, vehicle.catalog_brand_id, vehicle.catalog_model_id, vehicle.catalog_branch_id, vehicle.catalog_area_id, vehicle.warehouse_id, vehicle.vehicle_color, vehicle.impuestos, vehicle.fecha_licencia, vehicle.numero_licencia, vehicle.fecha_vigencia_placas, vehicle.fecha_vigencia_poliza, vehicle.fecha_vigencia_fisico, vehicle.fecha_vigencia_ambiental, vehicle.permiso_sat, vehicle.numero_permiso, vehicle.numero_aseguradora, vehicle.permission_type_id, vehicle.vehicle_configuration_id, vehicle.trailer_subtype_id, vehicle.reparto], :style => [nil,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td,celda_tabla_td, celda_tabla_td]
         end
         sheet.column_widths *col_widths
       end
@@ -1368,7 +1442,9 @@ class VehiclesController < ApplicationController
         vehiculos.each do |vehicle|
           vehicle.permission_type ? tipopermiso = vehicle.permission_type.clave : tipopermiso = "NA"
           vehicle.vehicle_configuration ? configvehiculo = vehicle.vehicle_configuration.clave : configvehiculo = "NA"
-          vehicle.trailer_subtype ? subtiporem = vehicle.trailer_subtype.clave : subtiporem = "NA"
+          #vehicle.trailer_subtype ? subtiporem = vehicle.trailer_subtype.clave : subtiporem = "NA"
+          vehicle.trailer_subtype ? subtiporem = vehicle.trailer_subtype.clave : subtiporem = ""
+          #subtiporem = ""
           vehicle.vehicle_type.clave == "010" ? tipovehiculo = 1 : tipovehiculo = 0
           if vehicle.reparto == true 
             repartoveh = 1
@@ -1486,15 +1562,39 @@ class VehiclesController < ApplicationController
 
   def vehicle_files
     @vehicle = Vehicle.find_by(id: params[:id])
-    @documents = VehicleFile.where(vehicle_id:params[:id])
+    @documents = VehicleFile.where(vehicle_id:params[:id]) + GeneralVehicleFile.all
     session["vehicle_id_arch"] = params[:id]
   end
   
   def upload_document
-    vehicle = Vehicle.find_by(id: params[:id])
-    archivo = VehicleFile.new(documento: params[:file], vehicle_id: vehicle.id, nombre_archivo: params[:file].original_filename)
+    @vehicle = Vehicle.find_by(id: params[:id_vehicle])
+    separacion = params[:file].original_filename.split(" ")
+    if separacion[1].nil?
+      tipo_documento = nil
+    else
+      tipo_documento = separacion[1]
+    end
+    
+    if separacion[2].nil?
+      fecha_vigencia = nil
+    else
+      begin
+        fecha_vigencia = Date.strptime(separacion[2], "%d_%m_%Y")
+      rescue Exception => e
+        fecha_vigencia = nil
+      end
+    end
+    if @vehicle
+      archivo = VehicleFile.new(documento: params[:file], vehicle_id: @vehicle.id, nombre_archivo: params[:file].original_filename, tipo_archivo: VehicleFile.cambio_tipo(tipo_documento), fecha_vencimiento: fecha_vigencia)
+    else
+      archivo = GeneralVehicleFile.new(documento: params[:file], nombre_archivo: params[:file].original_filename, tipo_archivo: VehicleFile.cambio_tipo(tipo_documento), fecha_vencimiento: fecha_vigencia)
+    end
     if archivo.save
-      @documents = VehicleFile.where(vehicle_id: params[:id])
+      if @vehicle
+        @documents = VehicleFile.where(vehicle_id: params[:id_vehicle])
+      else
+        @documents = GeneralVehicleFile.all
+      end
       @bandera_error = false
     else
       @mensaje = ""

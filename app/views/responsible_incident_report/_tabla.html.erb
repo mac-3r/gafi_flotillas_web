@@ -9,6 +9,7 @@
             <th>Chofer</th>
             <th>Costo siniestro</th>
             <th>Total siniestros</th>
+            <th>Número económico</th>
             <th>Costo total</th>
         </tr>
     </thead>
@@ -27,6 +28,7 @@
                 <% costo_siniestro_total += responsable["costo_siniestro"] %>
                 <td><%= responsable["total_siniestro"] %></td>
                 <% totales_siniestro +=  responsable["total_siniestro"] %>
+                <td><%= responsable["vehiculos"] %></td>
                 <td><%= number_to_currency(responsable["costo_total"]) %></td>
                 <% costo_totales +=  responsable["costo_total"] %>
             </tr>
@@ -35,6 +37,7 @@
             <th colSpan="3">Total</th>
             <td><b><%= number_to_currency(costo_siniestro_total) %></b></td>
             <td><b><%= number_to_human(totales_siniestro) %></b> </td>
+            <td></td>
             <td><b><%= number_to_currency(costo_totales) %></b></td>
             <td></td>
         </tr>

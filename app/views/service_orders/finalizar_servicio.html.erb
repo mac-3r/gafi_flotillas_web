@@ -1,3 +1,7 @@
+<%
+    precios = ServiceOrder.revision_precios(@service_order)
+%>
+
 <br>
 <div class="container">
     <div class="card card-custom gutter-b">
@@ -12,7 +16,7 @@
             </div>
         </div>
         <div class="card-body">
-            <%= form_for('', url: registrar_control_path,method: :post, remote: true,authenticity_token: true) do |form|%>
+            <%= form_for('', url: registrar_control_path,method: :post,authenticity_token: true) do |form|%>
                 <div class="float-right">
                     <%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
                 </div><br><br><br>
@@ -51,7 +55,7 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Reparación*</label>
                     <div class="col-sm-0">
-                    <%= collection_select('',:catalog_repair_id ,CatalogRepair.listado_reparaciones, :id, :subcategoria, {prompt:"Seleccione la reparacion"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+                    <%= collection_select('',:catalog_repair_id ,CatalogRepair.listado_reparaciones, :id, :categoria, {prompt:"Seleccione la reparacion"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select", required: true})%>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -83,17 +87,25 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Factura:</label>
+                    <div class="col-sm-0">
+                        <div class="input-group mb-3">
+                            <%= form.text_field :factura, value: precios[2], class: "form-control", disabled: true %>
+                        </div>
+                    </div>
+                </div> 
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Importe:</label>
                     <div class="col-sm-0">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
                             </div>
-                            <% if @service_order.factura.attached? %>
-                                <%= form.number_field :importe, step: :any%>
-                            <% else %>
-                                <%= form.number_field :importe, step: :any, value:0%>
-                            <% end %>
+                            <%# if @service_order.factura.attached? %>
+                                <%= form.number_field :importe, step: :any, value: precios[0] %>
+                            <%# else %>
+                                <%#= form.number_field :importe, step: :any, value:0%>
+                            <%# end %>
                         </div>
                     </div>
                 </div>       
@@ -104,20 +116,20 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
                             </div>
-                            <% if @service_order.factura.attached? %>
-                                <%= form.number_field :importe_iva, step: :any%>
-                            <% else %>
-                                <%= form.number_field :importe_iva, step: :any, value:0%>
-                            <% end %>
+                            <%# if @service_order.factura.attached? %>
+                                <%#= form.number_field :importe_iva, step: :any%>
+                            <%# else %>
+                                <%= form.number_field :importe_iva, step: :any, value: precios[1]%>
+                            <%# end %>
                         </div>
                     </div>
                 </div>
-                <div class="form-group row">
+                <!--<div class="form-group row">
                     <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">KM actual:</label>
                     <div class="col-sm-0">
-                        <%= form.number_field :km_actual, class: "form-control", style:"width: 250px !important;",value:@service_order.km_actual %>
+                        <%#= form.number_field :km_actual, class: "form-control", style:"width: 250px !important;",value:@service_order.km_actual %>
                     </div>
-                </div>        
+                </div>-->     
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Ciudad:</label>
                     <div class="col-sm-0">

@@ -51,22 +51,24 @@ class InsuranceReportTicketsController < ApplicationController
   # GET /insurance_report_tickets/new
   def new
     @tipos_siniestro = TypeSinister.where(status: true).order(nombreSiniestro: :asc)
+    @vehiculos = Vehicle.listado_vehiculos
     @insurance_report_ticket = InsuranceReportTicket.new
   end
 
   # GET /insurance_report_tickets/1/edit
   def edit
     @tipos_siniestro = TypeSinister.where(status: true).order(nombreSiniestro: :asc)
+    @vehiculos = Vehicle.listado_vehiculos
   end
 
   # POST /insurance_report_tickets
   # POST /insurance_report_tickets.json
   def create
     begin
-      vehiculo = Vehicle.consulta_x_numeconomico(params[:insurance_report_ticket][:numero_economico])
+      vehiculo = Vehicle.find_by(numero_economico: params[:insurance_report_ticket][:numero_economico])
       siniestro = TypeSinister.find_by(id: params[:insurance_report_ticket][:type_sinisters_id], status: true)
       params[:insurance_report_ticket][:vehicle_id] = vehiculo.id
-  
+      #params[:insurance_report_ticket][:numero_economico_veh] = vehiculo.numero_economico
       params[:insurance_report_ticket][:cedis] = vehiculo.catalog_branch.decripcion
       params[:insurance_report_ticket][:numero_serie] = vehiculo.numero_serie
       params[:insurance_report_ticket][:vehiculo] = "#{vehiculo.catalog_brand.descripcion}"
@@ -75,6 +77,8 @@ class InsuranceReportTicketsController < ApplicationController
       params[:insurance_report_ticket][:type_sinisters_id] = siniestro.id
       params[:insurance_report_ticket][:tipo_siniestro] = siniestro.nombreSiniestro
       params[:insurance_report_ticket][:responsable] = vehiculo.catalog_personal.nombre
+      params[:insurance_report_ticket][:inciso] = vehiculo.inciso
+      params[:insurance_report_ticket][:numero_poliza] = vehiculo.numero_poliza
       params[:insurance_report_ticket][:estatus] = "Abierto"
       params[:insurance_report_ticket][:fecha_ocurrio] = params[:insurance_report_ticket][:fecha_ocurrio].to_datetime.strftime("%Y-%m-%d %H:%M:%S")
       params[:insurance_report_ticket][:fecha_reporte] = params[:insurance_report_ticket][:fecha_reporte].to_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -98,6 +102,7 @@ class InsuranceReportTicketsController < ApplicationController
             format.json { render :show, status: :created, location: @insurance_report_ticket }
           else
             @tipos_siniestro = TypeSinister.where(status: true).order(nombreSiniestro: :asc)
+            @vehiculos = Vehicle.listado_vehiculos
             format.html { render :new }
             format.json { render json: @insurance_report_ticket.errors, status: :unprocessable_entity }
           end
@@ -113,11 +118,12 @@ class InsuranceReportTicketsController < ApplicationController
   # PATCH/PUT /insurance_report_tickets/1.json
   def update
     begin
-      vehiculo = Vehicle.consulta_x_numeconomico(params[:insurance_report_ticket][:numero_economico])
+      vehiculo = Vehicle.find_by(numero_economico: params[:insurance_report_ticket][:numero_economico])
       siniestro = TypeSinister.find_by(id: params[:insurance_report_ticket][:type_sinisters_id], status: true)
       params[:insurance_report_ticket][:vehicle_id] = vehiculo.id
       params[:insurance_report_ticket][:cedis] = vehiculo.catalog_branch.decripcion
       params[:insurance_report_ticket][:numero_serie] = vehiculo.numero_serie
+      #params[:insurance_report_ticket][:numero_economico_veh] = vehiculo.numero_economico
       params[:insurance_report_ticket][:vehiculo] = "#{vehiculo.catalog_brand.descripcion}"
       params[:insurance_report_ticket][:modelo] = vehiculo.catalog_model.descripcion
       params[:insurance_report_ticket][:estatus_vehiculo] = vehiculo.vehicle_status.descripcion
@@ -125,6 +131,8 @@ class InsuranceReportTicketsController < ApplicationController
       params[:insurance_report_ticket][:tipo_siniestro] = siniestro.nombreSiniestro
       params[:insurance_report_ticket][:responsable] = vehiculo.catalog_personal.nombre
       #params[:insurance_report_ticket][:estatus] = "Abierto"
+      params[:insurance_report_ticket][:inciso] = vehiculo.inciso
+      params[:insurance_report_ticket][:numero_poliza] = vehiculo.numero_poliza
       params[:insurance_report_ticket][:fecha_ocurrio] = params[:insurance_report_ticket][:fecha_ocurrio].to_datetime.strftime("%Y-%m-%d %H:%M:%S")
       params[:insurance_report_ticket][:fecha_reporte] = params[:insurance_report_ticket][:fecha_reporte].to_datetime.strftime("%Y-%m-%d %H:%M:%S")
       if params[:insurance_report_ticket][:estatus_responsabilidad_gafi] == params[:insurance_report_ticket][:estatus_responsabilidad_aseguradora]
@@ -144,6 +152,7 @@ class InsuranceReportTicketsController < ApplicationController
             format.json { render :show, status: :ok, location: @insurance_report_ticket }
           else
             @tipos_siniestro = TypeSinister.where(status: true).order(nombreSiniestro: :asc)
+            @vehiculos = Vehicle.listado_vehiculos
             format.html { render :edit }
             format.json { render json: @insurance_report_ticket.errors, status: :unprocessable_entity }
           end
@@ -156,7 +165,8 @@ class InsuranceReportTicketsController < ApplicationController
   end
 
   def consulta_vehiculo_serie
-    @vehiculo = Vehicle.consulta_x_numeconomico(params[:num_economico])
+    #@vehiculo = Vehicle.consulta_x_numeconomico(params[:num_economico])
+    @vehiculo = Vehicle.find_by(numero_economico: params[:num_economico])
     respond_to do |format|
       format.js
     end

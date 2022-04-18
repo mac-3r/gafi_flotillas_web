@@ -101,6 +101,7 @@ Rails.application.routes.draw do
   post 'bimonthly_img', to: "movil_api#bimonthly_img"
   get 'ver_biomonthly_img/:bimonthly_verification_id', to: "movil_api#bimonthly_img"
   post 'cargar_imagen_licencia', to: "movil_api#cargar_imagen_licencia"
+  post 'cargar_imagen_siniestro', to: "movil_api#cargar_imagen_siniestro"
   get 'ver_firma_usuario/:user_id', to: "movil_api#ver_firma_usuario"
   post 'firma_usuario', to: "movil_api#firma_usuario"
   get 'ver_licencias/:user_id', to: "movil_api#ver_licencias"
@@ -176,6 +177,8 @@ Rails.application.routes.draw do
   get 'documentos_pdf/:id_consumo', to: "consumptions#documentos_pdf", as: "documentos_pdf"
   post 'cargar_pdf', to: "consumptions#cargar_pdf", as: "cargar_pdf"
   post 'solicitar_autorizacion/:folio', to: "consumptions#solicitar_autorizacion", as: "solicitar_autorizacion"
+  post 'solicitar_autorizacion8/:folio', to: "consumptions#solicitar_autorizacion8", as: "solicitar_autorizacion8"
+  post 'solicitar_autorizacion16/:folio', to: "consumptions#solicitar_autorizacion16", as: "solicitar_autorizacion16"
   get 'borrar_carga/:id',to: "consumptions#borrar_carga", as: "borrar_carga"
   get '/ver_encabezado/:consumption_id', to: "consumptions#ver_encabezado", as: "ver_encabezado"
   get '/imprimir_encabezado_excel/:consumption_id', to: "consumptions#imprimir_encabezado_excel", as: "imprimir_encabezado_excel"
@@ -202,7 +205,7 @@ Rails.application.routes.draw do
   patch 'editar_usuario/:id', to: "consumptions#editar_usuario_aut", as: "editar_usuario_aut"
   get 'cambio_factura/:id', to: "consumptions#modal_cambio_factura", as: "modal_cambio_factura"
   patch 'editar_factura/:id', to: "consumptions#editar_factura", as: "editar_factura"
-  get 'consumptions/:consumption_id/imprimir_solicitud', to: "consumptions#imprimir_solicitud", as: "imprimir_solicitud"
+  get 'consumptions/:consumption_id,:iva/imprimir_solicitud', to: "consumptions#imprimir_solicitud", as: "imprimir_solicitud"
   # 7.23.	Registro de tickets reportados por aseguradora
   post '/consulta_numero_serie', to: "insurance_report_tickets#consulta_vehiculo_serie", as: "consulta_numero_serie_siniestrabilidad"
   get '/generar_ticket_siniestrabilidad/:id', to: "insurance_report_tickets#generar_ticket_siniestrabilidad", as: "generar_ticket_siniestrabilidad"
@@ -273,7 +276,12 @@ Rails.application.routes.draw do
   get 'vehicles/:vehicle_id/imprimir_formato_venta', to: "vehicles#imprimir_formato_venta", as: "imprimir_formato_venta"
   get 'cancelar_venta/:id',to: 'vehicles#cancelar_venta', as:"cancelar_venta"
   get 'vehicle_files/:id', to: "vehicles#vehicle_files", as: "vehicle_files"
-  post 'upload_document/:id', to: "vehicles#upload_document", as: "upload_document"
+  post 'upload_document/:id_vehicle', to: "vehicles#upload_document", as: "upload_document"
+  get 'destroy_vehicle_file/:file_id', to: "vehicles#destroy_vehicle_file", as: "destroy_vehicle_file"
+
+  get 'carga_general_documentos', to: "general_vehicle_files#index", as: "carga_general_documentos"
+  get 'buscar_vehiculo_carga_doc/:id_vehicle', to: "general_vehicle_files#buscar_vehiculo_carga_doc", as: "buscar_vehiculo_carga_doc"
+  get 'destroy_general_vehicle_file/:file_id,:tipo', to: "general_vehicle_files#destroy_vehicle_file", as: "destroy_general_vehicle_file"
   #licencias
   get 'fotos_anverso/:id', to: "catalog_licences#fotos_anverso", as: "fotos_anverso"
   post 'cargar_fotos_anverso', to: "catalog_licences#cargar_fotos_anverso", as: "cargar_fotos_anverso"
@@ -440,6 +448,7 @@ Rails.application.routes.draw do
   post 'cargar_factura_adaptacion', to: "vehicle_adaptations#cargar_factura_adaptacion", as: "cargar_factura_adaptacion"
   get 'cambio_factura_adaptacion/:id', to: "vehicle_adaptations#modal_cambio_factura_adaptacion", as: "modal_cambio_factura_adaptacion"
   patch 'editar_factura_adaptacion/:id', to: "vehicle_adaptations#editar_factura_adaptacion", as: "editar_factura_adaptacion"
+  get 'imprimir_adaptacion/:vehicle_adaptation_id', to: "vehicles#imprimir_adaptacion", as: "imprimir_adaptacion"
   # Responsivas
   get 'responsible_reassignment/catalog_branch/:catalog_branch_id/responsible/:responsable_id/:catalog_area_id', to: "vehicles#reasignar_responsables_modal", as: "reasignar_responsables_modal"
   get 'reassing_responsible/responsible/:responsable_ant/responsible/:responsable_nvo/catalog_branch/:cedis/:catalog_area_id', to: "vehicles#reasignar_responsable", as: "reasignar_responsable"
@@ -470,6 +479,13 @@ Rails.application.routes.draw do
   get 'importa_tipos_permiso_remolque', to: 'emergency_querys#importa_tipos_permiso_remolque', as: 'importa_tipos_permiso_remolque'
   get 'importa_subtipo_remolque', to: 'emergency_querys#importa_subtipo_remolque', as: 'importa_subtipo_remolque'
   get 'importa_configuracion_vehiculo', to: 'emergency_querys#importa_configuracion_vehiculo', as: 'importa_configuracion_vehiculo'
+  post 'actualiza_programa_mtto', to: 'emergency_querys#actualiza_programa_mtto', as: 'actualiza_programa_mtto'
+  post 'upload_documents_emergency', to: "emergency_querys#upload_documents_emergency", as: "upload_documents_emergency"
+  get 'actualiza_km_programa_mtto', to: 'emergency_querys#actualiza_km_programa_mtto', as: 'actualiza_km_programa_mtto'
+  get 'primera_carga_transfer_veh', to: "emergency_querys#primera_carga_transfer_veh", as: "primera_carga_transfer_veh"
+  get 'cedis_consumo_combustible', to: "emergency_querys#cedis_consumo_combustible", as: "cedis_consumo_combustible"
+  post 'importar_usuarios', to: "emergency_querys#importar_usuarios", as: "importar_usuarios"
+  get 'corregir_economicos_siniestralidad', to: "emergency_querys#corregir_economicos_siniestralidad", as: "corregir_economicos_siniestralidad"
 
   get 'importar_frecuencias', to: "maintenance_frecuencies#importar_frecuencias", as: "importar_frecuencias"
   post 'importar_frecuencias', to: "maintenance_frecuencies#importar_frecuencias"
@@ -552,6 +568,7 @@ Rails.application.routes.draw do
   post '/filtrado_citas', to: "maintenance_appointments#filtrado_citas", as: "filtrado_citas"
   post '/filtrado_auditorias', to: "vehicles#filtrado_auditorias", as: "filtrado_auditorias"
   get 'modal_pendientes_captura_km/:branch_id', to: "maintenance_programs#modal_pendientes_captura_km", as: "modal_pendientes_captura_km"
+  post 'filtrado_reporte_mensual', to: "vehicle_consumptions#filtrado_reporte_mensual", as: "filtrado_reporte_mensual"
 
   # Correos
   get 'correo_incidencias_responsable_siniestro', to: "movil_api#correo_incidencias_responsable_siniestro", as: "correo_incidencias_responsable_siniestro"
@@ -616,5 +633,10 @@ Rails.application.routes.draw do
 
   get 'modal_convertir_a_taller/:id', to: "catalog_vendors#modal_convertir_a_taller", as: "modal_convertir_a_taller"
   post 'convertir_a_taller/:id', to: "catalog_vendors#convertir_a_taller", as: "convertir_a_taller"
+
+
+
+  match "/404", to: "errors#not_found", via: :all
+  match "/500", to: "errors#internal_server_error", via: :all
 
 end

@@ -32,53 +32,61 @@
                 <tbody>
                   <% @adaptations.each do |adp| %>
                     <tr>
-                      <td><%= adp.catalogo_adaptation.descripcion %></td>
-                      <td><%= adp.catalog_vendor_id ? adp.catalog_vendor.razonsocial : "No se asignó" %></td>
-                      <td><%= adp.fecha.strftime("%d/%m/%Y") if adp.fecha %></td>
-                      <td><%= number_to_currency(adp.monto)%></td>
-                      <td><%= number_to_currency(adp.importe_iva)%></td>
-                      <td><%= adp.n_factura%></td>
-                      <td><%= adp.estatus%></td>
-                      <% if can? :solicitar_adaptacion, VehicleAdaptation %>
+                        <td><%= adp.catalogo_adaptation.descripcion %></td>
+                        <td><%= adp.catalog_vendor_id ? adp.catalog_vendor.razonsocial : "No se asignó" %></td>
+                        <td><%= adp.fecha.strftime("%d/%m/%Y") if adp.fecha %></td>
+                        <td><%= number_to_currency(adp.monto)%></td>
+                        <td><%= number_to_currency(adp.importe_iva)%></td>
+                        <td><%= adp.n_factura%></td>
+                        <td><%= adp.estatus%></td>
+                        <% if can? :solicitar_adaptacion, VehicleAdaptation %>
                             <% if adp.estatus == "En captura" %>
                                 <td>
                                     <div class="dropdown dropdown-inline">
-                                    <%= link_to solicitar_adaptacion_path(adp.id), title:"Solicitar autorización" do%>
-                                        <span class='far fa-envelope' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Solicitar
-                                        </span>
-                                    <% end %>
+                                        <%= link_to solicitar_adaptacion_path(adp.id), title:"Solicitar autorización" do%>
+                                            <span class='far fa-envelope' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Solicitar
+                                            </span>
+                                        <% end %>
                                     </div>
                                 </td> 
                             <% end %>   
-                       <% end %>
-                       <% if can? :factura_adaptacion, VehicleAdaptation %>
+                        <% end %>
+                        <% if can? :factura_adaptacion, VehicleAdaptation %>
                             <% if adp.estatus == "Autorizado" %>
                                 <td>
                                     <div class="dropdown dropdown-inline">
-                                    <%= link_to factura_adaptacion_path(adp.id), remote: true, title:"Cargar factura/Descargar factura" do%>
-                                        <span class='fas fa-file-archive' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Factura
-                                        </span>
-                                    <% end %>
+                                        <%= link_to factura_adaptacion_path(adp.id), remote: true, title:"Cargar factura/Descargar factura" do%>
+                                            <span class='fas fa-file-archive' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Factura
+                                            </span>
+                                        <% end %>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="dropdown dropdown-inline">
-                                    <%= link_to pdf_adaptacion_path(adp.id), remote: true, title:"Cargar PDF/Descargar PDF" do%>
-                                        <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>&nbsp; PDF
-                                        </span>
-                                    <% end %>
+                                        <%= link_to pdf_adaptacion_path(adp.id), remote: true, title:"Cargar PDF/Descargar PDF" do%>
+                                            <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>&nbsp; PDF
+                                            </span>
+                                        <% end %>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="dropdown dropdown-inline">
-                                    <%= link_to modal_cambio_factura_adaptacion_path(adp.id), remote: true, title:"Editar folio factura" do%>
-                                        <span class='fas fa-receipt' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Editar folio
-                                        </span>
-                                    <% end %>
+                                        <%= link_to modal_cambio_factura_adaptacion_path(adp.id), remote: true, title:"Editar folio factura" do%>
+                                            <span class='fas fa-receipt' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Editar folio
+                                            </span>
+                                        <% end %>
                                     </div>
                                 </td>
                             <% end %>
                         <% end %>
+                        <td>
+                            <div class="dropdown dropdown-inline">
+                                <%= link_to imprimir_adaptacion_path(adp.id), target: '_blank', title:"Generar PDF" do%>
+                                    <span class='fas fa-file-alt' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Generar PDF
+                                    </span>
+                                <% end %>
+                            </div>
+                        </td>
                     </tr>
                         <% end %>
                     </tbody>

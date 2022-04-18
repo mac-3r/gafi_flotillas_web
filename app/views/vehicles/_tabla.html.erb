@@ -37,7 +37,8 @@
                     <% end %>
 
                     <% if can? :show, Vehicle %>
-                        <%= link_to vehicle_path(vehicle.id), class: "dropdown-item" do%>
+                        <%= link_to vehicle_files_path(vehicle.id), class: "dropdown-item" do%>
+                        <%#= link_to vehicle_path(vehicle.id), class: "dropdown-item" do%>
                             <span class='fas fa-folder' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Ver expediente del vehículo
                         <% end %>
                     <% end %>
@@ -68,7 +69,7 @@
                     <% end %>
                     <% if can? :listado_checklist, Vehicle %>
                         <%= link_to listado_checklist_path(vehicle.id), class: "dropdown-item" do %>
-                            <span class='fas fa-clipboard-list' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Checklist del vehículo
+                            <span class='fas fa-clipboard-list' style='font-size:16px;color:#A6ACAF'></span>&nbsp; Verificaciones del vehículo
                         <% end %>
                     <% end %>
                     <% if can? :destroy, Vehicle %>

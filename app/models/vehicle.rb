@@ -51,7 +51,7 @@ class Vehicle < ApplicationRecord
   belongs_to :warehouse, optional: true
 
   def self.listado_vehiculos
-    Vehicle.all.order(numero_economico: :asc)
+    Vehicle.where.not(vehicle_status_id: ["3", "8"]).order(numero_economico: :asc)
   end
 
   def self.to_csv(options = {})
@@ -676,6 +676,9 @@ class Vehicle < ApplicationRecord
         row["Fecha de vigencia de póliza"] != "" and !row["Fecha de vigencia de póliza"].nil? ? fecha_vigencia_poliza = row["Fecha de vigencia de póliza"] : fecha_vigencia_poliza = nil
         row["Fecha de vigencia fisicomecánica"] != "" and !row["Fecha de vigencia fisicomecánica"].nil? ? fecha_vigencia_fisico = row["Fecha de vigencia fisicomecánica"] : fecha_vigencia_fisico = nil
         row["Fecha de vigencia ambiental"] != "" and !row["Fecha de vigencia ambiental"].nil? ? fecha_vigencia_ambiental = row["Fecha de vigencia ambiental"] : fecha_vigencia_ambiental = nil
+
+        # Se pidió poner vacío el subtipo de remolque
+        #sub_rem = nil
         Vehicle.transaction do
           if vehiculo.update(
               numero_economico: row["Número económico"], 
@@ -969,9 +972,17 @@ class Vehicle < ApplicationRecord
       catalog_branch_nva = CatalogBranch.find_by(id: self.catalog_branch_id_change[1])
       if self.catalog_branch_id_change[0].nil? or self.catalog_branch_id_change[0] == ""
         VehicleLog.create(texto: "El usuario #{User.current_user.name} #{User.current_user.last_name} agregó el CEDIS '#{catalog_branch_nva.decripcion}'.", vehicle_id: self.id, user_id: User.current_user.id)
+        VehicleTransferLog.create(vehicle_id: self.id, catalog_branch_id: catalog_branch_nva.id, user_id: User.current_user.id, fecha: Time.zone.now)
       else
-        catalog_branch_ant = CatalogBranch.find_by(id: self.catalog_branch_id_change[0])
-        VehicleLog.create(texto: "El usuario #{User.current_user.name} #{User.current_user.last_name} modificó el CEDIS de '#{catalog_branch_ant.decripcion}' a '#{catalog_branch_nva.decripcion}'.", vehicle_id: self.id, user_id: User.current_user.id)
+        if self.catalog_branch_id_change[0] == nil
+          #catalog_branch_ant = CatalogBranch.find_by(id: self.catalog_branch_id_change[0])
+          #VehicleLog.create(texto: "El usuario #{User.current_user.name} #{User.current_user.last_name} modificó el CEDIS de '#{catalog_branch_ant.decripcion}' a '#{catalog_branch_nva.decripcion}'.", vehicle_id: self.id, user_id: User.current_user.id)
+          #VehicleTransferLog.create(vehicle_id: self.id, catalog_branch_id: catalog_branch_nva.id, cedis_ant_id: catalog_branch_ant.id, user_id: User.current_user.id, fecha: Time.zone.now)
+        else
+          catalog_branch_ant = CatalogBranch.find_by(id: self.catalog_branch_id_change[0])
+          VehicleLog.create(texto: "El usuario #{User.current_user.name} #{User.current_user.last_name} modificó el CEDIS de '#{catalog_branch_ant.decripcion}' a '#{catalog_branch_nva.decripcion}'.", vehicle_id: self.id, user_id: User.current_user.id)
+          VehicleTransferLog.create(vehicle_id: self.id, catalog_branch_id: catalog_branch_nva.id, cedis_ant_id: catalog_branch_ant.id, user_id: User.current_user.id, fecha: Time.zone.now)
+        end
       end
     end
 
@@ -1121,7 +1132,8 @@ class Vehicle < ApplicationRecord
     hash_vehiculo["licencia"]                   = vehicle.numero_licencia
     hash_vehiculo["permisoSCT"]               = vehicle.permission_type ? vehicle.permission_type.clave : "NA"
     hash_vehiculo["configVehicular"]            = vehicle.vehicle_configuration ? vehicle.vehicle_configuration.clave : "NA"
-    hash_vehiculo["subtipoRemolque"]           = vehicle.trailer_subtype ? vehicle.trailer_subtype.clave : "NA"
+    #hash_vehiculo["subtipoRemolque"]           = vehicle.trailer_subtype ? vehicle.trailer_subtype.clave : "NA"
+    hash_vehiculo["subtipoRemolque"]           = vehicle.trailer_subtype ? vehicle.trailer_subtype.clave : ""
     hash_vehiculo["numeroPermisoSCT"]        = vehicle.permiso_sat ? vehicle.permiso_sat : "NA"
     hash_vehiculo["nombreAseguradora"]        = vehicle.numero_aseguradora ? vehicle.numero_aseguradora : "NA"
     hash_vehiculo["cedis"]                      = vehicle.catalog_branch.clave_jd

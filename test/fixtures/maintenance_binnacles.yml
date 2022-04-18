@@ -1,0 +1,35 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  catalog_brand: one
+  concept: one
+  bujias: false
+  concept_description: one
+  nombre: MyString
+  descripcion: MyString
+  categoria: MyString
+  linea: MyString
+  tipo_afinacion: 1
+  tipo_frecuencia: 1
+  frecuencia_inspeccion: 1
+  frecuencia_reemplazo: 1
+  meses: 1
+  fecha: 2022-04-01
+  vehicle: one
+
+two:
+  catalog_brand: two
+  concept: two
+  bujias: false
+  concept_description: two
+  nombre: MyString
+  descripcion: MyString
+  categoria: MyString
+  linea: MyString
+  tipo_afinacion: 1
+  tipo_frecuencia: 1
+  frecuencia_inspeccion: 1
+  frecuencia_reemplazo: 1
+  meses: 1
+  fecha: 2022-04-01
+  vehicle: two

@@ -9,6 +9,6 @@ class CatalogVendor < ApplicationRecord
     has_many :valuations_branches
 
     def self.listado_proveedor
-        CatalogVendor.all.order(razonsocial: :asc)
+        CatalogVendor.where(estatus: true).order(razonsocial: :asc)
     end
 end

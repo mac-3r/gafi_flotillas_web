@@ -1,0 +1,350 @@
+<%= form_with(model: insurance_report_ticket, remote: true) do |form| %>
+	<% if insurance_report_ticket.errors.any? %>
+		<div id="error_explanation">
+			<h2><%= pluralize(insurance_report_ticket.errors.count, "error") %> prohibited this insurance_report_ticket from being saved:</h2>
+
+			<ul>
+				<% insurance_report_ticket.errors.full_messages.each do |message| %>
+					<li><%= message %></li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+	<div class="float-right">
+		<%= form.submit "Guardar", class: "btn btn-success", style:"background-color: #2dbe06 !important;" %>
+	</div>
+	<br>
+	<br>
+	<br>
+	<div class="form-row">
+		<div class="form-group col-sm-6">
+			<div class="row">
+				<%= form.label :numero_economico, "No. Económico::", class: "col-form-label col-sm-2" %>
+				<%= form.select(:numero_economico, options_from_collection_for_select(@vehiculos, "id", "nombre_p_vehiculo"),{prompt: "Selecciona un vehículo"}, {class: "form-control chosen-select col-sm-9"}) %>
+			</div>
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :numero_siniestro, "No. Siniestro:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :numero_siniestro, class: "form-control col-sm-9" %>
+			</div><br>
+			<div class="row">
+				<%= form.label :numero_poliza, "No. Póliza:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :numero_poliza, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :inciso, "Inciso:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :inciso, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :contacto, "Contacto:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :contacto, class: "form-control col-sm-9" %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :registro, "¿Quién registra?:", class: "col-form-label col-sm-2" %>
+				<%= form.select(:registro, [['Aseguradora', 'Aseguradora'], ['Administrador', 'Administrador']],{}, {class: "form-control col-sm-9"}) %>
+			</div>
+		</div>
+	</div>
+	<% if @insurance_report_ticket.estatus != "Cerrado" %>
+		<div class="form-row">
+			<div class="form-group col-lg-6">
+				<div class="row">
+					<%= form.label :fecha_ocurrio, "Fecha que ocurrió", class: "col-sm-2 col-form-label" %>
+					<div class="input-group date col-sm-9"  id="datetimepicker_ocurrio" data-target-input="nearest" data-date-format="DD/MM/YYYY LT" style="width: 100%">
+						<%if @insurance_report_ticket.fecha_ocurrio.nil? %>
+						<%= form.text_field(:fecha_ocurrio, class: "form-control datetimepicker-input",style: "width: 80%; height: 70%;", required: true, autocomplete: "off",autoclose: true)%>
+						<%else%>
+						<%fecha = @insurance_report_ticket.fecha_ocurrio.strftime("%d/%m/%Y %H:%M:%S")%>
+						<%= form.text_field(:fecha_ocurrio, value:fecha, class: "form-control datetimepicker-input",style: "width: 80%; height: 70%;", required: true, autocomplete: "off")%>
+						<%end%>
+						<div class="input-group-append" data-target="#datetimepicker_ocurrio" data-toggle="datetimepicker">
+							<div class="input-group-text" style="height: 70%;"><i class="fa fa-calendar"></i></div>
+						</div>
+					</div>
+					
+					
+				</div>
+			</div>
+			<div class="form-group col-lg-6">
+				<div class="row">
+					<%= form.label :fecha_reporte, "Fecha que reportó", class: "col-sm-2 col-form-label" %>
+					<div class="input-group date col-sm-9"  id="datetimepicker_reporte" data-target-input="nearest" data-date-format="DD/MM/YYYY LT" style="width: 100%">
+						<%if @insurance_report_ticket.fecha_reporte.nil? %>
+						<%= form.text_field(:fecha_reporte, class: "form-control datetimepicker-input",style: "width: 80%; height: 70%;", required: true, autocomplete: "off")%>
+						<%else%>
+						<%fecha_r = @insurance_report_ticket.fecha_reporte.strftime("%d/%m/%Y %H:%M:%S")%>
+						<%= form.text_field(:fecha_reporte, value:fecha_r, class: "form-control datetimepicker-input",style: "width: width: 80%; height: 70%;", required: true, autocomplete: "off")%>
+						<%end%>
+						<div class="input-group-append" data-target="#datetimepicker_reporte" data-toggle="datetimepicker">
+							<div class="input-group-text" style="height: 70%;"><i class="fa fa-calendar"></i></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<% end %>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%#= form.label :numero_economico, "No. Económico:", class: "col-form-label col-sm-2" %>
+				<%#= form.search_field :numero_economico, class: "form-control col-sm-7", required: true%>
+				<!--<input type="button" class="btn col-sm-3", id="btn_num_serie" value="Buscar">-->
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :cedis, "CEDIS", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :cedis, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :numero_serie, "No. Serie:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :numero_serie, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :vehiculo, "Vehículo:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :vehiculo, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :modelo, "Modelo:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :modelo, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :estatus_vehiculo, "Estatus vehículo:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :estatus_vehiculo, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :type_sinisters_id, "Tipo de siniestro:", class: "col-form-label col-sm-2" %>
+				<%= form.select(:type_sinisters_id, options_from_collection_for_select(@tipos_siniestro, "id", "nombreSiniestro"),{}, {class: "form-control  col-sm-9"}) %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :ubicacion_siniestro, "Ubicación siniestro:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :ubicacion_siniestro, class: "form-control col-sm-9" %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :responsable, "Responsable:", class: "col-form-label col-sm-2" %>
+				<%= form.text_field :responsable, class: "form-control col-sm-9", disabled: true %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :monto_siniestro, "Monto siniestro:", class: "col-form-label col-sm-2" %>
+				<%= form.number_field :monto_siniestro, class: "form-control col-sm-9", step: 0.01, min: 0,required:true %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :cargo_deducible_empresa, "Pago por empresa:", class: "col-form-label col-sm-2" %>
+				<%= form.number_field :cargo_deducible_empresa, class: "form-control col-sm-9", step: 0.01, min: 0 %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :cargo_deducible_empleado, "Pago por empleado:", class: "col-form-label col-sm-2" %>
+				<%= form.number_field :cargo_deducible_empleado, class: "form-control col-sm-9", step: 0.01, min: 0 %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-12">
+			<div class="row">
+				<%= form.label :declaracion, "Declaración:", class: "col-form-label col-sm-2" %>
+				<%#= form.rich_text_area :declaracion %>
+				<%= form.text_area :declaracion, class: "form-control" %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-4">
+			<%= form.label :estatus_responsabilidad_gafi, "Estatus responsabilidad gafi:", class: "col-form-label" %>
+			<%= form.select(:estatus_responsabilidad_gafi, [['Responsable', '0'], ['Afectado', '1']],{}, {class: "form-control"}) %>
+		</div>
+		<div class="form-group col-lg-4">
+			<%= form.label :estatus_responsabilidad_aseguradora, "Estatus responsabilidad aseguradora:", class: "col-form-label" %>
+			<%= form.select(:estatus_responsabilidad_aseguradora, [['Responsable', '0'], ['Afectado', '1']],{}, {class: "form-control"}) %>
+		</div>
+		<div class="form-group col-lg-4">
+			<%= form.label :coincide, "Coincide:", class: "col-form-label" %>
+			<%= form.text_field :coincide, class: "form-control", disabled: true %>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-12">
+			<div class="row">
+				<%= form.label :comentarios_adicionales, "Comentarios adicionales:", class: "col-form-label col-sm-2" %>
+				<%#= form.rich_text_area :comentarios_adicionales %>
+				<%= form.text_area :comentarios_adicionales, class: "form-control" %>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :imagen_antes, "Imagen antes:", class: "col-form-label col-sm-2" %>
+				<%= form.file_field :imagen_antes, class: "form-control col-sm-9" %>
+				<br>
+				<% if @insurance_report_ticket.imagen_antes.attached?%>
+					<%= image_tag @insurance_report_ticket.imagen_antes, style: "max-height:100px; max-width:100%;", id:"imagen_antes" %>
+				<% else %>
+					<img id="imagen_antes" style="max-height:200px; max-width:100%;">
+				<% end %>
+			</div>
+		</div>
+		<div class="form-group col-lg-6">
+			<div class="row">
+				<%= form.label :imagen_despues, "Imagen después:", class: "col-form-label col-sm-2" %>
+				<%= form.file_field :imagen_despues, class: "form-control col-sm-9" %>
+				<br>
+				<% if @insurance_report_ticket.imagen_despues.attached?%>
+					<%= image_tag @insurance_report_ticket.imagen_despues, style: "max-height:100px; max-width:100%;", id:"imagen_despues" %>
+				<% else %>
+					<img id="imagen_despues" style="max-height:200px; max-width:100%;">
+				<% end %>
+			</div>
+		</div>
+	</div>
+
+<% end %>
+
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker_ocurrio').datetimepicker({
+			format: 'DD/MM/YYYY LT',
+			locale: 'es'
+        });
+
+		$('#datetimepicker_reporte').datetimepicker({
+			format: 'DD/MM/YYYY LT',
+			locale: 'es'
+        });
+
+		$(document).ready(function(){
+			consulta_coincide();
+			$("#insurance_report_ticket_estatus_responsabilidad_gafi").change(function(){
+				consulta_coincide();
+			})
+
+			$("#insurance_report_ticket_estatus_responsabilidad_aseguradora").change(function(){
+				consulta_coincide();
+			})
+
+			/*$("#btn_num_serie").click(function(){
+				var valor = $("#insurance_report_ticket_numero_economico").val();
+				if (valor == "") {
+					alert("Ingresa un número de serie.");
+				} else {
+					$.ajax({
+						type: "POST",
+						url: "<%#= consulta_numero_serie_siniestrabilidad_path %>",
+						data: {num_economico: valor,authenticity_token: $('meta[name=csrf-token]').attr('content')}
+					})
+				}
+			})*/
+			
+		})
+        
+		function consulta_coincide(){
+			var valor_gafi = $("#insurance_report_ticket_estatus_responsabilidad_gafi").val();
+			var valor_aseguradora = $("#insurance_report_ticket_estatus_responsabilidad_aseguradora").val();
+			if (valor_gafi == valor_aseguradora) {
+				$("#insurance_report_ticket_coincide").val("Verdadero");
+			} else {
+				$("#insurance_report_ticket_coincide").val("Falso");
+			}
+		}
+        
+    });
+
+    $(document).ready(function(){
+
+        function readURL1(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                $('#imagen_antes').attr('src', e.target.result);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#insurance_report_ticket_imagen_antes").change(function() {
+            readURL1(this);
+        });
+
+		function readURL2(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                $('#imagen_despues').attr('src', e.target.result);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#insurance_report_ticket_imagen_despues").change(function() {
+            readURL2(this);
+        });
+
+		$("#insurance_report_ticket_numero_economico").change(function(){
+			var valor = $(this).val();
+			if (valor == "") {
+				alert("Ingresa un número de serie.");
+			} else {
+				$.ajax({
+					type: "POST",
+					url: "<%= consulta_numero_serie_siniestrabilidad_path %>",
+					data: {num_economico: valor,authenticity_token: $('meta[name=csrf-token]').attr('content')}
+				})
+			}
+		})
+    })
+</script>

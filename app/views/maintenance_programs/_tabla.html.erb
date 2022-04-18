@@ -29,6 +29,7 @@
           <th>Línea</th>
           <th>Modelo</th>
           <th>Usuario</th>
+          <th>Cedis</th>
           <th style="text-align: center;">Fecha última afinación</th>
           <th style="text-align: center;">Kms última afinación</th>
           <th style="text-align: center;">Kms próximo servicio</th>
@@ -48,6 +49,7 @@
             <td><%= maintenance_program.vehicle.catalog_brand_id ? maintenance_program.vehicle.catalog_brand.descripcion : "N/A"%></td>
             <td><%= maintenance_program.vehicle.catalog_model_id ? maintenance_program.vehicle.catalog_model.descripcion : "N/A" %></td>
             <td><%= maintenance_program.vehicle.catalog_personal_id ? maintenance_program.vehicle.catalog_personal.nombre : "N/A"%></td>
+            <td><%= maintenance_program.vehicle.catalog_branch.decripcion %></td>
             <td><%= maintenance_program.fecha_ultima_afinacion.strftime("%d/%m/%y") %></td>
             <td><%= number_with_precision(maintenance_program.kms_ultima_afinacion,precision: 0)%></td>
             <td><%= number_with_precision(maintenance_program.kms_proximo_servicio,precision: 0) %></td>

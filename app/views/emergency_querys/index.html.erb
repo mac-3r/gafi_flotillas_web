@@ -10,30 +10,116 @@
             </div>
         </div>
         <div class="card-body">
-        <ol>
-            <li><%= link_to "Generacion de programa de mtto", emergency_querys_programa_mtto_path %></li>
-            <br>
-            <li><%= link_to "Importa consumo historico de combustible", emergency_querys_consumo_combustible_path %></li>
-            <br>
-            <li><%= link_to "Importa historico de siniestros", emergency_querys_siniestros_path %></li>
-            <br>
-            <li><%= link_to "Importa concept brand", emergency_querys_bitacora_path %></li>
-            <br>
-            <li><%= link_to "Borrar historicos", eliminar_consumos_path %></li>
-            <br>
-            <li><%= link_to "Importar control de mantenimiento", emergency_querys_gastos_path %></li>
-            <br>
-            <li><%= link_to "Importar presupuesto de combustible", emergency_querys_presupuesto_path %></li>
-            <br>
-            <li><%= link_to "Importar tipos de permiso de remolque", importa_tipos_permiso_remolque_path %></li>
-            <br>
-            <li><%= link_to "Importar subtipos de remolque", importa_subtipo_remolque_path %></li>
-            <br>
-            <li><%= link_to "Importar configuraciones de autotransporte", importa_configuracion_vehiculo_path %></li>
-
-        </ol>
-      </div>
-             
+            <ol>
+                <li><%= link_to "Generacion de programa de mtto", emergency_querys_programa_mtto_path %></li>
+                <br>
+                <li><%= link_to "Importa consumo historico de combustible", emergency_querys_consumo_combustible_path %></li>
+                <br>
+                <li><%= link_to "Importa historico de siniestros", emergency_querys_siniestros_path %></li>
+                <br>
+                <li><%= link_to "Importa concept brand", emergency_querys_bitacora_path %></li>
+                <br>
+                <li><%= link_to "Borrar historicos", eliminar_consumos_path %></li>
+                <br>
+                <li><%= link_to "Importar control de mantenimiento", emergency_querys_gastos_path %></li>
+                <br>
+                <li><%= link_to "Importar presupuesto de combustible", emergency_querys_presupuesto_path %></li>
+                <br>
+                <li><%= link_to "Importar tipos de permiso de remolque", importa_tipos_permiso_remolque_path %></li>
+                <br>
+                <li><%= link_to "Importar subtipos de remolque", importa_subtipo_remolque_path %></li>
+                <br>
+                <li><%= link_to "Importar configuraciones de autotransporte", importa_configuracion_vehiculo_path %></li>
+                <br>
+                <li>Carga masiva de documentos</li>
+                <div class="dropzone my-dropzone" id="my-dropzone"><div class="dz-message" data-dz-message><span>Da click o arrastra un archivo para subirlo</span></div></div>
+                <br>
+                <li>Importación de programa de mantenimiento</li>
+                <br>
+                <%= form_tag actualiza_programa_mtto_path, multipart: true do %>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <%= file_field_tag :file, :class => "form-control-file", accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %>
+                        </div>
+                        <div class="col-sm-2">
+                            <%= submit_tag "Cargar", class: "form_submit btn btn-primary", :id => "file_button" %>
+                        </div>
+                    </div>
+                <% end %>
+                <br>
+                <li><%= link_to "Actualizar kilometraje actual en programa de mantenimiento", actualiza_km_programa_mtto_path %></li>
+                <br>
+                <li><%= link_to "Primera carga de bitácora de transferencias de vehículos", primera_carga_transfer_veh_path %></li>
+                <br>
+                <li><%= link_to "Agregar cedis a consumos", cedis_consumo_combustible_path %></li>
+                <br>
+                <li>Importación de usuarios</li>
+                <br>
+                <%= form_tag importar_usuarios_path, multipart: true do %>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <%= file_field_tag :file, :class => "form-control-file", accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %>
+                        </div>
+                        <div class="col-sm-2">
+                            <%= submit_tag "Cargar", class: "form_submit btn btn-primary", :id => "file_button" %>
+                        </div>
+                    </div>
+                <% end %>
+                <br>
+                <li><%= link_to "Corregir números económicos en siniestralidad", corregir_economicos_siniestralidad_path %></li>
+            </ol>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+        const dropzone = new Dropzone("div.my-dropzone", { 
+            url: "<%= upload_documents_emergency_path %>", 
+            method: "POST",
+            success: function (file, response) {
+                var imgName = response;
+                file.previewElement.classList.add("dz-success");
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                toastr.success("Archivo cargado con éxito", "Operación satisfactoria");
+                //}, 6000);
+            },
+            error: function (file, response) {
+                file.previewElement.classList.add("dz-error");
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                toastr.error("<%= @mensaje %>", "Ocurrió un error");
+            }
+        })
+    })
+</script>

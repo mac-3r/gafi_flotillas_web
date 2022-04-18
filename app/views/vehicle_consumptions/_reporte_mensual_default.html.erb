@@ -1,0 +1,591 @@
+
+<div Align="left">
+<!--<h2 style="color: black;">Clientes</h2>-->
+</div>
+<br>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#ene" role="tab" aria-controls="profile" aria-selected="false">Enero</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#feb" role="tab" aria-controls="profile" aria-selected="false">Febrero</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#mar" role="tab" aria-controls="profile" aria-selected="false">Marzo</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#abr" role="tab" aria-controls="profile" aria-selected="false">Abril</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#may" role="tab" aria-controls="profile" aria-selected="false">Mayo</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#jun" role="tab" aria-controls="profile" aria-selected="false">Junio</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#jul" role="tab" aria-controls="profile" aria-selected="false">Julio</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="home-tab" data-toggle="tab" href="#ago" role="tab" aria-controls="home" aria-selected="true">Agosto</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#sep" role="tab" aria-controls="profile" aria-selected="false">Septiembre</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#oct" role="tab" aria-controls="profile" aria-selected="false">Octubre</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#nov" role="tab" aria-controls="profile" aria-selected="false">Noviembre</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" style="color: black;" id="profile-tab" data-toggle="tab" href="#dic" role="tab" aria-controls="profile" aria-selected="false">Diciembre</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show " id="ene" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre enero</th>
+                                    <th>Recorrido enero</th>
+                                    <th>Lts enero</th>
+                                    <th>Rendimiento enero</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @enero.each do |ene| %>
+                                            <tr>
+                                                <td><%= ene.vehicle.numero_economico %></td>
+                                                <td><%= ene.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= ene.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= ene.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(ene.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(ene.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(ene.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision( ene.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(ene.vehicle.vehicle_type.rendimiento_ideal,precision: 2)  ? ene.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="tab-pane fade show " id="feb" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre febrero</th>
+                                    <th>Recorrido febrero</th>
+                                    <th>Lts febrero</th>
+                                    <th>Rendimiento febrero</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @febrero.each do |feb| %>
+                                            <tr>
+                                                <td><%= feb.vehicle.numero_economico %></td>
+                                                <td><%= feb.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= feb.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= feb.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(feb.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(feb.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(feb.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision( feb.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(feb.vehicle.vehicle_type.rendimiento_ideal,precision: 2)  ? feb.vehicle.vehicle_type.rendimiento_ideal : "N/A" %></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="tab-pane fade show" id="mar" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre marzo</th>
+                                    <th>Recorrido marzo</th>
+                                    <th>Lts marzo</th>
+                                    <th>Rendimiento marzo</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @marzo.each do |mar| %>
+                                            <tr>
+                                                <td><%= mar.vehicle.numero_economico %></td>
+                                                <td><%= mar.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= mar.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= mar.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(mar.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(mar.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(mar.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision( mar.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(mar.vehicle.vehicle_type.rendimiento_ideal,precision: 2)  ? mar.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="tab-pane fade show " id="abr" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre abril</th>
+                                    <th>Recorrido abril</th>
+                                    <th>Lts abril</th>
+                                    <th>Rendimiento abril</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @abril.each do |abr| %>
+                                            <tr>
+                                                <td><%= abr.vehicle.numero_economico %></td>
+                                                <td><%= abr.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= abr.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= abr.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(abr.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(abr.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(abr.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision( abr.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(abr.vehicle.vehicle_type.rendimiento_ideal,precision: 2)  ? abr.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="tab-pane fade show " id="may" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre mayo</th>
+                                    <th>Recorrido mayo</th>
+                                    <th>Lts mayo</th>
+                                    <th>Rendimiento mayo</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @mayo.each do |may| %>
+                                            <tr>
+                                                <td><%= may.vehicle.numero_economico %></td>
+                                                <td><%= may.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= may.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= may.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(may.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(may.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(may.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision(may.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(may.vehicle.vehicle_type.rendimiento_ideal,precision: 2) ? may.vehicle.vehicle_type.rendimiento_ideal : "N/A" %></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="tab-pane fade show " id="jul" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre julio</th>
+                                    <th>Recorrido julio</th>
+                                    <th>Lts julio</th>
+                                    <th>Rendimiento julio</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @julio.each do |jul| %>
+                                            <tr>
+                                                <td><%= jul.vehicle.numero_economico %></td>
+                                                <td><%= jul.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= jul.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= jul.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(jul.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(jul.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(jul.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision(jul.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(jul.vehicle.vehicle_type.rendimiento_ideal,precision: 2) ? jul.vehicle.vehicle_type.rendimiento_ideal : "N/A" %></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="tab-pane fade show " id="jun" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre junio</th>
+                                    <th>Recorrido junio</th>
+                                    <th>Lts junio</th>
+                                    <th>Rendimiento junio</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @junio.each do |jun| %>
+                                            <tr>
+                                                <td><%= jun.vehicle.numero_economico %></td>
+                                                <td><%= jun.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= jun.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= jun.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(jun.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(jun.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(jun.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision(jun.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(jun.vehicle.vehicle_type.rendimiento_ideal,precision: 2) ? jun.vehicle.vehicle_type.rendimiento_ideal : "N/A" %></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="tab-pane fade show" id="ago" role="tabpanel" aria-labelledby="home-tab">
+        <div class="card">
+            <div class="card-body">
+                <div style="max-width: 100%;">
+                    <div style="max-width: 100%; overflow:auto;">
+                        <table class="table  table-bordered">
+                            <tr>
+                            <th>Unidad</th>
+                            <th>Cedis</th>
+                            <th>Tipo de vehículo</th>
+                            <th>Modelo</th>
+                            <th>Cierre agosto</th>
+                            <th>Recorrido agosto</th>
+                            <th>Lts agosto</th>
+                            <th>Rendimiento agosto</th>
+                            <th>Rendimiento ideal</th>
+                            </tr>
+                            <tbody>
+                                <% @agosto.each do |ago| %>
+                                    <tr>
+                                        <td><%= ago.vehicle.numero_economico %></td>
+                                        <td><%= ago.vehicle.catalog_branch.decripcion %></td>
+                                        <td><%= ago.vehicle.vehicle_type.descripcion %></td>
+                                        <td><%= ago.vehicle.catalog_model.descripcion %></td>
+                                        <td><%= number_with_precision(ago.cierre, precision: 2)%></td>
+                                        <td><%= number_with_precision(ago.recorrido, precision: 2)%></td>
+                                        <td><%= number_with_precision(ago.lts, precision: 2)%></td>
+                                        <td><%= number_with_precision(ago.rendimiento, precision: 2)%></td>
+                                        <td><%= number_with_precision(ago.vehicle.vehicle_type.rendimiento_ideal,precision: 2)  ? ago.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></td>
+                                    </tr>
+                                <% end %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade show " id="sep" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre septiembre</th>
+                                    <th>Recorrido septiembre</th>
+                                    <th>Lts septiembre</th>
+                                    <th>Rendimiento septiembre</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @septiembre.each do |sep| %>
+                                            <tr>
+                                                <td><%= sep.vehicle.numero_economico %></td>
+                                                <td><%= sep.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= sep.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= sep.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(sep.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(sep.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(sep.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision(sep.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(sep.vehicle.vehicle_type.rendimiento_ideal,precision: 2)  ? sep.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade show " id="oct" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre octubre</th>
+                                    <th>Recorrido octubre</th>
+                                    <th>Lts octubre</th>
+                                    <th>Rendimiento octubre</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @octubre.each do |oct| %>
+                                            <tr>
+                                                <td><%= oct.vehicle.numero_economico %></td>
+                                                <td><%= oct.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= oct.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= oct.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(oct.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(oct.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(oct.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision(oct.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(oct.vehicle.vehicle_type.rendimiento_ideal,precision: 2)  ? oct.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade show " id="nov" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre noviembre</th>
+                                    <th>Recorrido noviembre</th>
+                                    <th>Lts noviembre</th>
+                                    <th>Rendimiento noviembre</th>
+                                    <th>Rendimiento ideal</th>
+                                    </tr>
+                                    <tbody>
+                                        <% @noviembre.each do |nov| %>
+                                            <tr>
+                                                <td><%= nov.vehicle.numero_economico %></td>
+                                                <td><%= nov.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= nov.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= nov.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(nov.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(nov.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(nov.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision( nov.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(nov.vehicle.vehicle_type.rendimiento_ideal,precision: 2)  ? nov.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade show" id="dic" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div style="max-width: 150%;">
+                            <div style="max-width: 150%; overflow:auto;">
+                                <table class="table  table-bordered">
+                                    <tr>
+                                    <th>Unidad</th>
+                                    <th>Cedis</th>
+                                    <th>Tipo de vehículo</th>
+                                    <th>Modelo</th>
+                                    <th>Cierre diciembre</th>
+                                    <th>Recorrido diciembre</th>
+                                    <th>Lts diciembre</th>
+                                    <th>Rendimiento diciembre</th>
+                                    <th>Rendimiento ideal <th>
+                                    </tr>
+                                    <tbody>
+                                        <% @diciembre.each do |dic| %>
+                                            <tr>
+                                                <td><%= dic.vehicle.numero_economico %></td>
+                                                <td><%= dic.vehicle.catalog_branch.decripcion %></td>
+                                                <td><%= dic.vehicle.vehicle_type.descripcion %></td>
+                                                <td><%= dic.vehicle.catalog_model.descripcion %></td>
+                                                <td><%= number_with_precision(dic.cierre, precision: 2)%></td>
+                                                <td><%= number_with_precision(dic.recorrido, precision: 2)%></td>
+                                                <td><%= number_with_precision(dic.lts, precision: 2)%></td>
+                                                <td><%= number_with_precision( dic.rendimiento, precision: 2)%></td>
+                                                <td><%= number_with_precision(dic.vehicle.vehicle_type.rendimiento_ideal,precision: 2) ? dic.vehicle.vehicle_type.rendimiento_ideal : "N/A"%></td>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // muestra las pantalla segun el mes
+ $(function(){
+    var today =  new Date()
+    var month = today.getMonth();
+    //console.log(month);
+    if (month == 0) {
+        $('.nav-tabs a[href="#ene"]').tab('show')
+    }
+    else if (month == 1) {
+        $('.nav-tabs a[href="#feb"]').tab('show')
+    }
+    else if (month == 2) {
+        $('.nav-tabs a[href="#mar"]').tab('show')
+    }
+    else if (month == 3) {
+        $('.nav-tabs a[href="#abr"]').tab('show')
+    }
+    else if (month == 4) {
+        $('.nav-tabs a[href="#may"]').tab('show')
+    }
+    else if (month == 5) {
+        $('.nav-tabs a[href="#jun"]').tab('show')
+    }
+    else if (month == 6) {
+        $('.nav-tabs a[href="#jul"]').tab('show')
+    }
+    else if (month == 7) {
+        $('.nav-tabs a[href="#ago"]').tab('show')
+    }
+    else if (month == 8) {
+        $('.nav-tabs a[href="#sep"]').tab('show')
+    }
+    else if (month == 9) {
+        $('.nav-tabs a[href="#oct"]').tab('show')
+    }
+    else if (month == 10) {
+        $('.nav-tabs a[href="#nov"]').tab('show')
+    }
+    else {
+        $('.nav-tabs a[href="#dic"]').tab('show')
+    }
+});
+</script>

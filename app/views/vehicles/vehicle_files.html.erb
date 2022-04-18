@@ -3,11 +3,11 @@
     <div class="card card-custom gutter-b">
         <div class="card-header">
             <div class="card-title">
-                <h3 class="card-label">Archivos del vehículo </h3>
+                <h3 class="card-label">Archivos del vehículo <%= "#{@vehicle.catalog_brand.descripcion} #{@vehicle.numero_economico}" %></h3>
             </div>
             <div class="float-right">  
-                <br>
-                <h3 for=""><%= "#{@vehicle.catalog_brand.descripcion} #{@vehicle.numero_economico}" %></h3>
+                <br>        
+                <%= link_to 'Regresar', vehicles_path, class:"btn btn-default float-right" %>  
             </div>
         </div>
         <div class="card-body">
@@ -17,6 +17,71 @@
             </div>
             <hr>
             <div class="dropzone my-dropzone" id="my-dropzone"><div class="dz-message" data-dz-message><span>Da click o arrastra un archivo para subirlo</span></div></div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>Instrucciones:</h4>
+                    <p>Para subir un archivo, el nombre debe tener un formato que es el número económico, la clave del tipo de documento y la fecha de vencimiento dividida por guiones bajos, los tres datos divididos con espacio.</p>
+                    <p>Ejemplo: Para subir un permiso federal, el archivo debe tener el nombre "<%= @vehicle.numero_economico %> 007 15_12_2022.png".</p>
+                    <p>En caso de no tener el formato correcto, el archivo será subido pero mostrará la información como "desconocida".</p>
+                </div>
+                <div class="col-lg-6">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Clave</th>
+                                <th>Tipo de documento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>001</td>
+                                <td>Licencia de conducir</td>
+                            </tr>
+                            <tr>
+                                <td>002</td>
+                                <td>Fotografía del vehículo</td>
+                            </tr>
+                            <tr>
+                                <td>003</td>
+                                <td>Fotografía del vehículo siniestrado</td>
+                            </tr>
+                            <tr>
+                                <td>004</td>
+                                <td>Factura del vehículo</td>
+                            </tr>
+                            <tr>
+                                <td>005</td>
+                                <td>Factura aseguradora</td>
+                            </tr>
+                            <tr>
+                                <td>006</td>
+                                <td>Factura de adaptación</td>
+                            </tr>
+                            <tr>
+                                <td>007</td>
+                                <td>Permiso federal</td>
+                            </tr>
+                            <tr>
+                                <td>008</td>
+                                <td>Permiso físico mecánico</td>
+                            </tr>
+                            <tr>
+                                <td>009</td>
+                                <td>Permiso ambiental</td>
+                            </tr>
+                            <tr>
+                                <td>010</td>
+                                <td>Tarjeta de circulación</td>
+                            </tr>
+                            <tr>
+                                <td>011</td>
+                                <td>Póliza de seguro</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -47,7 +112,9 @@
                 };
                 toastr.success("Archivo cargado con éxito", "Operación satisfactoria");
                 $("#container_files").empty();
-                //$("#container_files").html("<%= escape_javascript(render partial: 'contenedor_archivos.html.erb') %>");
+                //setTimeout(() => {
+                $("#container_files").html("<%= escape_javascript(render partial: 'contenedor_archivos.html.erb') %>");
+                //}, 6000);
             },
             error: function (file, response) {
                 file.previewElement.classList.add("dz-error");

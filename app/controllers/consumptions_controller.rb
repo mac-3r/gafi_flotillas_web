@@ -26,7 +26,7 @@ class ConsumptionsController < ApplicationController
 
   def ver_solicitud
     @encabezado = Consumption.find_by(id: params[:consumption_id])
-    @ventas =  Consumption.litros_consumo(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+    @ventas =  Consumption.litros_consumo(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
     @admin = Consumption.litros_admin(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
     @almacen = Consumption.litros_almacen(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
     @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
@@ -41,11 +41,21 @@ class ConsumptionsController < ApplicationController
 
   def imprimir_solicitud
     @encabezado = Consumption.find_by(id: params[:consumption_id])
-    @ventas =  Consumption.litros_consumo(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
-    @admin = Consumption.litros_admin(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
-    @almacen = Consumption.litros_almacen(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
-    @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
-    @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+    if params[:iva] == "8"
+      valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
+      @ventas =  Consumption.litros_consumo8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
+      @admin = Consumption.litros_admin8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+      @almacen = Consumption.litros_almacen8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+      @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+      @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+    else
+      valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
+      @ventas =  Consumption.litros_consumo16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
+      @admin = Consumption.litros_admin16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+      @almacen = Consumption.litros_almacen16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+      @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+      @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+    end
     @monto_competencia = @competencia.first
 		respond_to do |format|
 			format.html
@@ -115,14 +125,29 @@ class ConsumptionsController < ApplicationController
     @registros = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id,estatus:0},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin,impuestos:nil)
     
     #reporte
-    @ventas =  Consumption.litros_consumo(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
-    @admin = Consumption.litros_admin(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
-    @almacen = Consumption.litros_almacen(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+    # @ventas =  Consumption.litros_consumo(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
+    # @admin = Consumption.litros_admin(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+    # @almacen = Consumption.litros_almacen(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+
+    @ventas =  Consumption.litros_consumo8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
+    @admin = Consumption.litros_admin8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+    @almacen = Consumption.litros_almacen8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+
+    @ventas2 =  Consumption.litros_consumo16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
+    @admin2 = Consumption.litros_admin16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+    @almacen2 = Consumption.litros_almacen16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
     #byebug
     #suma todos los montos
-    @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+    valuation1 = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
+    valuation2 = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
+     @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation1.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+     @monto2 = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation2.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+    #@monto = VehicleConsumption.joins(:consumption).where(catalog_branch_id: @encabezado.catalog_branch_id, consumptions: {catalog_branch_id: @encabezado.catalog_branch_id, catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation1.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+    #@monto2 = VehicleConsumption.joins(:consumption).where(catalog_branch_id: @encabezado.catalog_branch_id, consumptions: {catalog_branch_id: @encabezado.catalog_branch_id, catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation2.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
     @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+    @competencia2 = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto2} and tipo = 'Combustible'").order(monto: :asc)
     @monto_competencia = @competencia.first
+    @monto_competencia2 = @competencia2.first
   end
 
   def borrar_carga
@@ -233,37 +258,282 @@ class ConsumptionsController < ApplicationController
 
   def solicitar_autorizacion
     #busca el id del comsumo
-    @consumption = Consumption.find_by(folio: params[:folio])
-    busqueda = Consumption.where(fecha_inicio:@consumption.fecha_inicio,fecha_fin: @consumption.fecha_fin,catalog_branch_id:@consumption.catalog_branch_id,catalog_vendor_id:@consumption.catalog_vendor_id)
-    sumatoria = VehicleConsumption.where(consumption_id:@consumption.id).sum(:impuestos)
-    @competencia = CompetitionTable.where("catalog_branch_id = #{@consumption.catalog_branch_id} and monto >= #{@consumption.monto} and tipo = 'Combustible'").order(monto: :asc)
-    @monto_competencia = @competencia.first
-    fecha = params[:fecha_aplicacion]
-    if fecha == ""
-      fecha = Time.now.strftime("%d/%m/%Y")
-    end
-    if @monto_competencia
-      user = User.joins(:catalog_roles).joins(:catalog_branches_users).find_by("catalog_roles.id = '#{@monto_competencia.catalog_role_id}' and catalog_branches_users.catalog_branch_id = #{@consumption.catalog_branch_id}")   
-    end
+    # @consumption = Consumption.find_by(folio: params[:folio])
+    # busqueda = Consumption.where(fecha_inicio:@consumption.fecha_inicio,fecha_fin: @consumption.fecha_fin,catalog_branch_id:@consumption.catalog_branch_id,catalog_vendor_id:@consumption.catalog_vendor_id)
+    # sumatoria = VehicleConsumption.where(consumption_id:@consumption.id).sum(:impuestos)
+    # @competencia = CompetitionTable.where("catalog_branch_id = #{@consumption.catalog_branch_id} and monto >= #{@consumption.monto} and tipo = 'Combustible'").order(monto: :asc)
+    # @monto_competencia = @competencia.first
+    # fecha = params[:fecha_aplicacion]
+    # if fecha == ""
+    #   fecha = Time.now.strftime("%d/%m/%Y")
+    # end
+    # if @monto_competencia
+    #   user = User.joins(:catalog_roles).joins(:catalog_branches_users).find_by("catalog_roles.id = '#{@monto_competencia.catalog_role_id}' and catalog_branches_users.catalog_branch_id = #{@consumption.catalog_branch_id}")   
+    # end
 
-    if  @consumption.impuestos.to_f == sumatoria.to_f or !@consumption.es_detallado
-      if @monto_competencia.nil?
-        flash[:alert] = "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{@consumption.catalog_branch.decripcion}, favor de revisar información."
-        redirect_to vehicle_consumptions_path
-      elsif !user
-        flash[:alert] = "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{@consumption.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario."
-        redirect_to vehicle_consumptions_path
-      else
-        busqueda.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
-        VehicleConsumptionsMailer.solicitud_pago(user,@consumption.id).deliver_later
-        flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
-        redirect_to vehicle_consumptions_path
+    # if  @consumption.impuestos.to_f == sumatoria.to_f or !@consumption.es_detallado
+    #   if @monto_competencia.nil?
+    #     flash[:alert] = "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{@consumption.catalog_branch.decripcion}, favor de revisar información."
+    #     redirect_to vehicle_consumptions_path
+    #   elsif !user
+    #     flash[:alert] = "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{@consumption.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario."
+    #     redirect_to vehicle_consumptions_path
+    #   else
+    #     busqueda.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
+    #     VehicleConsumptionsMailer.solicitud_pago(user,@consumption.id).deliver_later
+    #     flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
+    #     redirect_to vehicle_consumptions_path
+    #   end
+    # else
+    #   diferencia = (@consumption.impuestos.to_f - sumatoria.to_f).round(2)
+    #   flash[:alert] = "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}"
+    #   redirect_to vehicle_consumptions_path 
+    # end
+    arreglo_errores = Array.new
+    #valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
+    @consumption = Consumption.find_by(folio: params[:folio])
+    busqueda = Consumption.where(fecha_inicio:@consumption.fecha_inicio,fecha_fin: @consumption.fecha_fin,catalog_branch_id:@consumption.catalog_branch_id,catalog_vendor_id:@consumption.catalog_vendor_id, estatus: 0)
+    busqueda.each do |busq|
+      sumatoria = VehicleConsumption.where(consumption_id:busq.id).sum(:impuestos)
+      @competencia = CompetitionTable.where("catalog_branch_id = #{busq.catalog_branch_id} and monto >= #{busq.monto} and tipo = 'Combustible'").order(monto: :asc)
+      @monto_competencia = @competencia.first
+      fecha = params[:fecha_aplicacion]
+      if fecha == ""
+        fecha = Time.now.strftime("%d/%m/%Y")
       end
-    else
-      diferencia = (@consumption.impuestos.to_f - sumatoria.to_f).round(2)
-      flash[:alert] = "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}"
-      redirect_to vehicle_consumptions_path 
+      if @monto_competencia
+        user = User.joins(:catalog_roles).joins(:catalog_branches_users).find_by("catalog_roles.id = '#{@monto_competencia.catalog_role_id}' and catalog_branches_users.catalog_branch_id = #{busq.catalog_branch_id}")   
+      end
+  
+      if  busq.impuestos.to_f == sumatoria.to_f or !busq.es_detallado
+        if @monto_competencia.nil?
+          arreglo_errores.push(folio: busq.folio, error: "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{busq.catalog_branch.decripcion}, favor de revisar información.")
+          #flash[:alert] = "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{busq.catalog_branch.decripcion}, favor de revisar información."
+          #redirect_to vehicle_consumptions_path
+        elsif !user
+          arreglo_errores.push(folio: busq.folio, error: "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{busq.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario.")
+          #flash[:alert] = "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{busq.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario."
+          #redirect_to vehicle_consumptions_path
+        else
+          busq.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
+          #VehicleConsumptionsMailer.solicitud_pago(user,busq.id).deliver_later
+          # flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
+          # redirect_to vehicle_consumptions_path
+        end
+      else
+        diferencia = (busq.impuestos.to_f - sumatoria.to_f).round(2)
+        arreglo_errores.push(folio: busq.folio, error: "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}")
+        flash[:alert] = "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}"
+        #redirect_to vehicle_consumptions_path 
+      end
     end
+    
+    if arreglo_errores.length > 0
+      require 'axlsx'
+      package = Axlsx::Package.new
+      workbook = package.workbook
+      workbook.styles do |s|
+        celda_cabecera= s.add_style :bg_color => "919191", :fg_color => "ff", :height => 20 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :center}
+        celda_tabla_td = s.add_style :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
+        workbook.add_worksheet(name: "Errores") do |sheet|
+          sheet.add_row ["", "Folio consumo", "Error"], :style => [nil,celda_cabecera,celda_cabecera]
+          arreglo_errores.each do |vc|
+            sheet.add_row ["", vc[:folio], vc[:error]], :style => [nil,celda_tabla_td,celda_tabla_td]
+          end
+        end
+      end
+      send_data package.to_stream.read, type: "application/xlsx", filename: "Errores autorización consumo.xlsx"
+    else
+      flash[:notice] = "Solicitudes enviadas con éxito, se envió un correo al autorizante."
+      redirect_to vehicle_consumptions_path
+    end
+  end
+
+  def solicitar_autorizacion8
+    #busca el id del comsumo
+    # valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
+    # @consumption = Consumption.find_by(folio: params[:folio])
+    # busqueda = Consumption.where(fecha_inicio:@consumption.fecha_inicio,fecha_fin: @consumption.fecha_fin,catalog_branch_id:@consumption.catalog_branch_id,catalog_vendor_id:@consumption.catalog_vendor_id)
+    # sumatoria = VehicleConsumption.where(consumption_id:@consumption.id).sum(:impuestos)
+    # @competencia = CompetitionTable.where("catalog_branch_id = #{@consumption.catalog_branch_id} and monto >= #{@consumption.monto} and tipo = 'Combustible'").order(monto: :asc)
+    # @monto_competencia = @competencia.first
+    # fecha = params[:fecha_aplicacion]
+    # if fecha == ""
+    #   fecha = Time.now.strftime("%d/%m/%Y")
+    # end
+    # if @monto_competencia
+    #   user = User.joins(:catalog_roles).joins(:catalog_branches_users).find_by("catalog_roles.id = '#{@monto_competencia.catalog_role_id}' and catalog_branches_users.catalog_branch_id = #{@consumption.catalog_branch_id}")   
+    # end
+
+    # if  @consumption.impuestos.to_f == sumatoria.to_f or !@consumption.es_detallado
+    #   if @monto_competencia.nil?
+    #     flash[:alert] = "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{@consumption.catalog_branch.decripcion}, favor de revisar información."
+    #     redirect_to vehicle_consumptions_path
+    #   elsif !user
+    #     flash[:alert] = "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{@consumption.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario."
+    #     redirect_to vehicle_consumptions_path
+    #   else
+    #     busqueda.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
+    #     VehicleConsumptionsMailer.solicitud_pago(user,@consumption.id).deliver_later
+    #     flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
+    #     redirect_to vehicle_consumptions_path
+    #   end
+    # else
+    #   diferencia = (@consumption.impuestos.to_f - sumatoria.to_f).round(2)
+    #   flash[:alert] = "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}"
+    #   redirect_to vehicle_consumptions_path 
+    # end
+    arreglo_errores = Array.new
+    valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
+    @consumption = Consumption.find_by(folio: params[:folio])
+    busqueda = Consumption.where(fecha_inicio:@consumption.fecha_inicio,fecha_fin: @consumption.fecha_fin,catalog_branch_id:@consumption.catalog_branch_id,catalog_vendor_id:@consumption.catalog_vendor_id, valuation_id: valuation.id, estatus: 0)
+    busqueda.each do |busq|
+      sumatoria = VehicleConsumption.where(consumption_id:busq.id).sum(:impuestos)
+      @competencia = CompetitionTable.where("catalog_branch_id = #{busq.catalog_branch_id} and monto >= #{busq.monto} and tipo = 'Combustible'").order(monto: :asc)
+      @monto_competencia = @competencia.first
+      fecha = params[:fecha_aplicacion]
+      if fecha == ""
+        fecha = Time.now.strftime("%d/%m/%Y")
+      end
+      if @monto_competencia
+        user = User.joins(:catalog_roles).joins(:catalog_branches_users).find_by("catalog_roles.id = '#{@monto_competencia.catalog_role_id}' and catalog_branches_users.catalog_branch_id = #{busq.catalog_branch_id}")   
+      end
+  
+      if  busq.impuestos.to_f == sumatoria.to_f or !busq.es_detallado
+        if @monto_competencia.nil?
+          arreglo_errores.push(folio: busq.folio, error: "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{busq.catalog_branch.decripcion}, favor de revisar información.")
+          #flash[:alert] = "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{busq.catalog_branch.decripcion}, favor de revisar información."
+          #redirect_to vehicle_consumptions_path
+        elsif !user
+          arreglo_errores.push(folio: busq.folio, error: "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{busq.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario.")
+          #flash[:alert] = "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{busq.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario."
+          #redirect_to vehicle_consumptions_path
+        else
+          busq.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
+          #VehicleConsumptionsMailer.solicitud_pago(user,busq.id).deliver_later
+          # flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
+          # redirect_to vehicle_consumptions_path
+        end
+      else
+        diferencia = (busq.impuestos.to_f - sumatoria.to_f).round(2)
+        arreglo_errores.push(folio: busq.folio, error: "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}")
+        #diferencia = (busq.impuestos.to_f - sumatoria.to_f).round(2)
+        flash[:alert] = "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}"
+        #redirect_to vehicle_consumptions_path 
+      end
+    end
+    
+    if arreglo_errores.length > 0
+      require 'axlsx'
+      package = Axlsx::Package.new
+      workbook = package.workbook
+      workbook.styles do |s|
+        celda_cabecera= s.add_style :bg_color => "919191", :fg_color => "ff", :height => 20 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :center}
+        celda_tabla_td = s.add_style :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
+        workbook.add_worksheet(name: "Errores") do |sheet|
+          sheet.add_row ["", "Folio consumo", "Error"], :style => [nil,celda_cabecera,celda_cabecera]
+          arreglo_errores.each do |vc|
+            sheet.add_row ["", vc[:folio], vc[:error]], :style => [nil,celda_tabla_td,celda_tabla_td]
+          end
+        end
+      end
+      send_data package.to_stream.read, type: "application/xlsx", filename: "Errores autorización consumo.xlsx"
+    else
+      flash[:notice] = "Solicitudes enviadas con éxito, se envió un correo al autorizante."
+      redirect_to vehicle_consumptions_path
+    end
+  end
+
+  def solicitar_autorizacion16
+    #busca el id del comsumo
+    arreglo_errores = Array.new
+    valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
+    @consumption = Consumption.find_by(folio: params[:folio])
+    busqueda = Consumption.where(fecha_inicio:@consumption.fecha_inicio,fecha_fin: @consumption.fecha_fin,catalog_branch_id:@consumption.catalog_branch_id,catalog_vendor_id:@consumption.catalog_vendor_id, valuation_id: valuation.id, estatus: 0)
+    busqueda.each do |busq|
+      sumatoria = VehicleConsumption.where(consumption_id:busq.id).sum(:impuestos)
+      @competencia = CompetitionTable.where("catalog_branch_id = #{busq.catalog_branch_id} and monto >= #{busq.monto} and tipo = 'Combustible'").order(monto: :asc)
+      @monto_competencia = @competencia.first
+      fecha = params[:fecha_aplicacion]
+      if fecha == ""
+        fecha = Time.now.strftime("%d/%m/%Y")
+      end
+      if @monto_competencia
+        user = User.joins(:catalog_roles).joins(:catalog_branches_users).find_by("catalog_roles.id = '#{@monto_competencia.catalog_role_id}' and catalog_branches_users.catalog_branch_id = #{busq.catalog_branch_id}")   
+      end
+  
+      if  busq.impuestos.to_f == sumatoria.to_f or !busq.es_detallado
+        if @monto_competencia.nil?
+          arreglo_errores.push(folio: busq.folio, error: "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{busq.catalog_branch.decripcion}, favor de revisar información.")
+          #flash[:alert] = "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{busq.catalog_branch.decripcion}, favor de revisar información."
+          #redirect_to vehicle_consumptions_path
+        elsif !user
+          arreglo_errores.push(folio: busq.folio, error: "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{busq.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario.")
+          #flash[:alert] = "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{busq.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario."
+          #redirect_to vehicle_consumptions_path
+        else
+          busq.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
+          #VehicleConsumptionsMailer.solicitud_pago(user,busq.id).deliver_later
+          # flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
+          # redirect_to vehicle_consumptions_path
+        end
+      else
+        diferencia = (busq.impuestos.to_f - sumatoria.to_f).round(2)
+        arreglo_errores.push(folio: busq.folio, error: "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}")
+        flash[:alert] = "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}"
+        #redirect_to vehicle_consumptions_path 
+      end
+    end
+    
+    if arreglo_errores.length > 0
+      require 'axlsx'
+      package = Axlsx::Package.new
+      workbook = package.workbook
+      workbook.styles do |s|
+        celda_cabecera= s.add_style :bg_color => "919191", :fg_color => "ff", :height => 20 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :center}
+        celda_tabla_td = s.add_style :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
+        workbook.add_worksheet(name: "Errores") do |sheet|
+          sheet.add_row ["", "Folio consumo", "Error"], :style => [nil,celda_cabecera,celda_cabecera]
+          arreglo_errores.each do |vc|
+            sheet.add_row ["", vc[:folio], vc[:error]], :style => [nil,celda_tabla_td,celda_tabla_td]
+          end
+        end
+      end
+      send_data package.to_stream.read, type: "application/xlsx", filename: "Errores autorización consumo.xlsx"
+    else
+      flash[:notice] = "Solicitudes enviadas con éxito, se envió un correo al autorizante."
+      redirect_to vehicle_consumptions_path
+    end
+    
+    # sumatoria = VehicleConsumption.where(consumption_id:@consumption.id).sum(:impuestos)
+    # @competencia = CompetitionTable.where("catalog_branch_id = #{@consumption.catalog_branch_id} and monto >= #{@consumption.monto} and tipo = 'Combustible'").order(monto: :asc)
+    # @monto_competencia = @competencia.first
+    # fecha = params[:fecha_aplicacion]
+    # if fecha == ""
+    #   fecha = Time.now.strftime("%d/%m/%Y")
+    # end
+    # if @monto_competencia
+    #   user = User.joins(:catalog_roles).joins(:catalog_branches_users).find_by("catalog_roles.id = '#{@monto_competencia.catalog_role_id}' and catalog_branches_users.catalog_branch_id = #{@consumption.catalog_branch_id}")   
+    # end
+
+    # if  @consumption.impuestos.to_f == sumatoria.to_f or !@consumption.es_detallado
+    #   if @monto_competencia.nil?
+    #     flash[:alert] = "No se encontraron datos en la tabla de competencias para el concepto: Combustible y cedis: #{@consumption.catalog_branch.decripcion}, favor de revisar información."
+    #     redirect_to vehicle_consumptions_path
+    #   elsif !user
+    #     flash[:alert] = "No se encontró el autorizante con el rol: #{@monto_competencia.catalog_role.nombre} y cedis: #{@consumption.catalog_branch.decripcion},favor de revisar los roles y cedis de usuario."
+    #     redirect_to vehicle_consumptions_path
+    #   else
+    #     busqueda.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
+    #     VehicleConsumptionsMailer.solicitud_pago(user,@consumption.id).deliver_later
+    #     flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
+    #     redirect_to vehicle_consumptions_path
+    #   end
+    # else
+    #   diferencia = (@consumption.impuestos.to_f - sumatoria.to_f).round(2)
+    #   flash[:alert] = "Los impuestos no coinciden con el impuesto de la factura, favor de revisar información. Diferencia: #{diferencia}"
+    #   redirect_to vehicle_consumptions_path 
+    # end
   end
   
   def modal_cambio_usuario

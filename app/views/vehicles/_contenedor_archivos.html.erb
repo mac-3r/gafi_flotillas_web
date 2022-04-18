@@ -1,11 +1,46 @@
 <div class="row row-cols-1 row-cols-md-6">
     <%# @documents = VehicleFile.where(vehicle_id: session["vehicle_id_arch"]) %>
-    <% VehicleFile.where(vehicle_id: session["vehicle_id_arch"]).each do |documento| %>
+    <% (VehicleFile.where(vehicle_id: session["vehicle_id_arch"]) + GeneralVehicleFile.all).each do |documento| %>
         <% if documento.documento.attached? %>
             <div class="col mb-2">
                 <div class="card">
                     <% if documento%>
-                        <%= image_tag documento.documento.preview(resize_to_limit: [10, 10]), class: "card-img-top" %>
+                        <% if documento.documento.content_type == "image/png" or documento.documento.content_type == "image/jpg" or documento.documento.content_type == "image/jpeg" %>
+                            <%= image_tag documento.documento, class: "card-img-top" %>
+                        <% elsif documento.documento.content_type == "application/xml" %>
+                            <% if documento.documento.representable? %>
+                                <%= image_tag documento.documento.representation(resize: '200x200') %>
+                            <% end %>
+                            <!--<iframe src="<%#= rails_blob_path(documento.documento, disposition: :inline) %>" type="text/html"></iframe>-->
+                            <!--<iframe src="<%#= polymorphic_url(documento.documento) %>" class="card-img-top" type="text/plain"></iframe>-->
+                        <% elsif documento.documento.content_type == "application/pdf" %>
+                            <% if documento.documento.representable? %>
+                                <%= image_tag documento.documento.preview(resize: '200x200') %>
+                            <% end %>
+                            <!--<iframe src="<%#= url_for(documento.documento) %>" class="card-img-top"></iframe>-->
+                        <% else %>
+                            <% if documento.documento.representable? %>
+                                <%= image_tag documento.documento.representation(resize: '200x200') %>
+                            <% end %>
+                            <h1><%= documento.documento.content_type %></h1>
+                        <% end %>
+                        <span><%= documento.tipo_archivo ? "#{documento.tipo_archivo}" : "Tipo de archivo desconocido" %><span>
+                        <br>
+                        <span><%= documento.fecha_vencimiento ? "Vencimiento: #{documento.fecha_vencimiento.strftime("%d/%m/%Y")}" : "Fecha de vencimiento desconocida" %><span>
+                        <div class="row">
+                            <div class="col">
+                                <%= link_to rails_blob_path(documento.documento, disposition: "attachment"), target: "_blank", class: "btn btn-success", style: "width: 100%;" do %>
+                                    <i class="la la-cloud-download-alt"></i>
+                                <% end %>
+                            </div>
+                            <div class="col">
+                                <% if documento.class.name == "VehicleFile"%>
+                                    <%= link_to destroy_vehicle_file_path(documento.id), class: "btn btn-danger", style: "width: 100%;", remote: true, data: {confirm: "¿Deseas eliminar este archivo? El archivo no se podrá recuperar."} do %>
+                                        <i class="la la-trash"></i>
+                                    <% end %>
+                                <% end %>
+                            </div>
+                        </div>
                         <!--<embed src="http://example.com/the.pdf" width="500" height="375" type="application/pdf">-->
                         <!--<img src="..." class="card-img-top" alt="...">-->
                     <% end %>
@@ -13,9 +48,9 @@
                         <h5 class="card-title"></h5>
                         <p class="card-text"></p>
                     </div>-->
-                    <div class="card-footer">
-                        <small class="text-muted"><%= time_ago_in_words(Time.zone.now - documento.created_at) %></small>
-                    </div>
+                    <!--<div class="card-footer">
+                        <small class="text-muted"><%#= time_ago_in_words(documento.created_at) %></small>
+                    </div>-->
                 </div>
             </div>
         <% end %>

@@ -18,23 +18,28 @@ env :PATH, ENV['PATH']
 # every 4.days do
 #   runner "AnotherModel.prune_old_records"
 # end
-every 1.day, :at => '8:00 am' do
+every 2.minutes do
+#every 1.day, :at => '8:00 am' do
     rake "notificaciones:correo_siniestros_x_mes"
 end
 
-every 1.day, :at => '8:00 am' do
+every 2.minutes do
+#every 1.day, :at => '8:00 am' do
     rake "notificaciones:cantidad_siniestros_x_cedis"
 end
 
-every 1.day, :at => '8:00 am' do
+every 2.minutes do
+#every 1.day, :at => '8:00 am' do
     rake "notificaciones:cantidad_siniestros_x_responsable"
 end
 
-every 1.day, :at => '8:00 am' do
+every 2.minutes do
+#every 1.day, :at => '8:00 am' do
     rake "notificaciones:correo_monto_siniestros_x_mes"
 end
 
-every 1.day, :at => '8:00 am' do
+every 2.minutes do
+#every 1.day, :at => '8:00 am' do
     rake "notificaciones:licencias_x_expirar"
 end
 # Learn more: http://github.com/javan/whenever

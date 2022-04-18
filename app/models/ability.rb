@@ -45,11 +45,11 @@ class Ability
     alias_action :documentos_pdf, :descargar_pdf, :cargar_pdf, to: :cargar_pdf_consumos
     alias_action :generar_reporte,to: :generar_consumo
     alias_action :edit,:update, to: :editar_impuestos
-    alias_action :imprimir_solicitud, :consumo_excel, :solicitar_autorizacion, to: :solicitud_consumo
+    alias_action :imprimir_solicitud, :consumo_excel, :solicitar_autorizacion, :solicitar_autorizacion8, :solicitar_autorizacion16, to: :solicitud_consumo
     alias_action :borrar_carga,to: :borrrar_cargas_combustible
     alias_action :modal_cambio_usuario,:editar_usuario_aut, to: :cambio_usuario_combustible
     # Solicitudes autorizadas
-    alias_action :indice_solicitud, :busqueda_solicitud, :ver_solicitud,:documentos_pdf, :descargar_pdf, :cargar_pdf,:generar_reporte, :imprimir_solicitud, :consumo_excel, :solicitar_autorizacion, to: :ver_index_solicitudes_aut
+    alias_action :indice_solicitud, :busqueda_solicitud, :ver_solicitud,:documentos_pdf, :descargar_pdf, :cargar_pdf,:generar_reporte, :imprimir_solicitud, :consumo_excel, :solicitar_autorizacion, :solicitar_autorizacion8, :solicitar_autorizacion16, to: :ver_index_solicitudes_aut
 
     # Reporte de control de combustible acumulado
     alias_action :reporte_acumulado,:filtrado_acumulado_combustible, :detalle, :generar_excel_acumulado, to: :reportes_combustible_acumulado
@@ -72,7 +72,7 @@ class Ability
     alias_action :edit,:update, to: :editar_vehiculos
     alias_action :import_vehicles, :plantilla_maestro_vehiculo_completa, :importar_maestro_vehiculos, :plantilla_carta_porte, to: :importar_vehiculos
     alias_action :destroy, to: :eliminar_vehiculos
-    alias_action :show, :ver_documentos,:document_detail,:uploads, to: :expediente_vehiculo
+    alias_action :show, :ver_documentos,:document_detail,:uploads, :vehicle_files, :upload_document, :destroy_vehicle_file, to: :expediente_vehiculo
     alias_action :venta,:registrar_encabezado,:guardar_encabezado,:registrar_costos,:guardar_costos,:registrar_mantenimiento,:guardar_mantenimiento,:solicitar_venta,:imprimir_formato_venta,:cancelar_venta, to: :venta_vehiculos
     alias_action :listado_checklist,:detalle_checklist, to: :checklist_vehiculos
     #orden de compra

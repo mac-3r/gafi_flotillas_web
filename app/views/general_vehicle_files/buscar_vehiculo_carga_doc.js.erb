@@ -1,0 +1,5 @@
+<%# if @vehicle %>
+    $("#contenedor_vehicle").html("<%= escape_javascript(render partial: 'contenedor_vehiculo') %>");
+<%# else %>
+    //$("#contenedor_vehicle").empty();
+<%# end %>

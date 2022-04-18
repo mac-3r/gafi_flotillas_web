@@ -81,7 +81,7 @@
                           </div>
                         </td>
                 <% end %> 
-                <% if can? :autorizar_orden, ServiceOrder %>
+                <% if current_user.catalog_workshops.length > 0 %>
                   <% if service_order.estatus == "Pendiente" or service_order.estatus == "Nueva fecha sugerida" %>
                   <%# if ((service_order.estatus == "Pendiente" or service_order.estatus == "Nueva fecha sugerida") and service_order.tipo_servicio == "Preventivo") or ((service_order.estatus == "Pendiente" or service_order == "Nueva fecha sugerida") and service_order.maintenance_ticket.bandera_ticket_taller == false if service_order.maintenance_ticket_id )%>
                     <td>
@@ -94,22 +94,24 @@
                     </td>
                     <td>
                       <div class="dropdown dropdown-inline">
+                          <%= link_to reagendar_orden_path(service_order.id), title: "Cambiar fecha propuesta" do %>
+                          <span class="fas fa-calendar-day" style='font-size:16px;color:#A6ACAF'></span>
+                          </span>
+                          <% end %>
+                      </div>
+                    </td>
+                  <% end %>
+                <% end %>
+                <% if can? :autorizar_orden, ServiceOrder %>
+                  <% if service_order.estatus == "Pendiente" or service_order.estatus == "Nueva fecha sugerida" %>
+                    <td>
+                      <div class="dropdown dropdown-inline">
                           <%= link_to cancelar_orden_path(service_order.id), title: "Cancelar orden de servicio",data: { confirm: '¿Desea cancelar esta orden de servicio?' } do %>
                           <span class="fas fa-times" style='font-size:16px;color:#A6ACAF'></span>
                           </span>
                           <% end %>
                       </div>
                     </td>
-                    <% if can? :reagendar_orden, ServiceOrder%>
-                      <td>
-                        <div class="dropdown dropdown-inline">
-                            <%= link_to reagendar_orden_path(service_order.id), title: "Cambiar fecha propuesta" do %>
-                            <span class="fas fa-calendar-day" style='font-size:16px;color:#A6ACAF'></span>
-                            </span>
-                            <% end %>
-                        </div>
-                      </td>
-                    <% end %>
                   <% end %>
                 <% end %>
             <% if can? :registrar_salida, ServiceOrder %>
@@ -125,7 +127,7 @@
               <% end %>
             <% end %>
             <% if can? :factura_servicio_orden, ServiceOrder %>
-              <% if service_order.estatus == "Salió de taller" or service_order.estatus== "Autorizada" or service_order.estatus == "Compra autorizada" and (service_order.order_service_type_id != @parametro_garantia.valor_extendido.to_i if @parametro_garantia)  %>
+              <% if (service_order.estatus == "Salió de taller" or service_order.estatus== "Autorizada" or service_order.estatus == "Compra autorizada" or service_order.estatus == "Servicio Finalizado")  %>
                 <td>
                   <div class="dropdown dropdown-inline">
                     <%= link_to factura_servicio_orden_path(service_order.id), remote: true, title:"Cargar factura/Descargar factura" do%>

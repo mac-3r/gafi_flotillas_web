@@ -9,7 +9,7 @@ development:
   host: 127.0.0.1
   adapter: postgresql
   encoding: utf8
-  database: flotillas_21_dic
+  database: flotillas_17_abr_test
   #database: flotillas_24_nov
   #database: flotillas_prb_26_nov
   #database: flotillas_preprod

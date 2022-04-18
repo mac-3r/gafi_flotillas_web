@@ -4,7 +4,7 @@ class JdeLogsController < ApplicationController
   # GET /jde_logs
   # GET /jde_logs.json
   def index
-    @jde_logs = JdeLog.all.order(created_at: :desc)
+    @jde_logs = JdeLog.all.order(created_at: :desc).limit(100)
   end
 
   # GET /jde_logs/1

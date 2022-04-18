@@ -12,6 +12,59 @@ class InsuranceReportTicket < ApplicationRecord
 	after_create :vehicle_log_create
 	#after_update :vehicle_log_update
 	before_update :log_actualizar
+
+
+    def self.insertar_imagen(params)
+        @bandera = true
+		begin
+			params[:imagenes].each_with_index do |img, index|
+				insurance_report_ticket_id = params[:insurance_report_ticket_id]
+				ticket = InsuranceReportTicket.find_by(id: insurance_report_ticket_id)
+				bas64 = img[:imagen].gsub(' ', '+')
+				decoded_data = Base64.decode64(bas64.split(',')[1])
+				imagen = { 
+					io: StringIO.new(decoded_data),
+					filename: "evidencia_#{ticket.id}_#{img[:valor]}.png",
+					content_type: 'image/png'
+				}
+				if img[:valor] == "antes"
+					if ticket.update(imagen_antes: imagen)
+						next
+					else
+						mensaje = ""
+						ticket.errors.full_messages.each do |error|
+							mensaje += "#{error}. "
+						end
+						puts "------------------- Inicia error imagenes siniestralidad ----------------------"
+						puts mensaje
+						puts "------------------- Termina error imagenes siniestralidad ----------------------"
+						@bandera = false
+						break
+					end
+				elsif img[:valor] == "despues"
+					if ticket.update(imagen_despues: imagen)
+						next
+					else
+						mensaje = ""
+						ticket.errors.full_messages.each do |error|
+							mensaje += "#{error}. "
+						end
+						puts "------------------- Inicia error imagenes siniestralidad ----------------------"
+						puts mensaje
+						puts "------------------- Termina error imagenes siniestralidad ----------------------"
+						@bandera = false
+						break
+					end
+				end
+			end
+		rescue Exception => e
+			puts "------------------- Inicia error imagenes siniestralidad ----------------------"
+			puts e
+			puts "------------------- Termina error imagenes siniestralidad ----------------------"
+			@bandera = false
+		end
+        return @bandera
+    end
 	
 	def self.crear_ticket(params)
 		#byebug
@@ -1473,6 +1526,7 @@ class InsuranceReportTicket < ApplicationRecord
 					hash_responsable["costo_siniestro"] = 0
 				end
 				hash_responsable["total_siniestro"] = 1
+				hash_responsable["vehiculos"].nil? ? hash_responsable["vehiculos"] = cons.numero_economico : hash_responsable["vehiculos"] += ", #{cons.numero_economico}"
 				hash_responsable["costo_total"] = cons.monto_siniestro
 				arreglo_responsable.push(hash_responsable)
 			else
@@ -1482,6 +1536,7 @@ class InsuranceReportTicket < ApplicationRecord
 					cualquiera["costo_total"] += cons.monto_siniestro
 				end
 				cualquiera["total_siniestro"] += 1
+				cualquiera["vehiculos"] == "" ? cualquiera["vehiculos"] = cons.numero_economico : cualquiera["vehiculos"] += ", #{cons.numero_economico}"
 			end
 
 			hash_matriz = Hash.new

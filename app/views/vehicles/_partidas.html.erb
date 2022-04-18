@@ -1,0 +1,48 @@
+<table id="table" class="table table-bordered">
+  <br>
+    <thead>
+      <tr>
+        <th>Cantidad</th>
+        <th>Tipo vehículo</th>
+        <th>Línea</th>
+        <th>Modelo</th>
+        <th>No. económico</th>
+        <th>CEDIS</th>
+        <th>Precio</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%   subtotal = 0 %>
+      <%# @purchase_details.each do |purchase_detail| %>
+        <tr>
+            <td><%#= purchase_detail.cantidad %>1</td>
+            <td><%= @adaptacion.vehicle.vehicle_type.descripcion %></td>
+            <td><%= @adaptacion.vehicle.catalog_brand.descripcion %></td>
+            <td><%= @adaptacion.vehicle.catalog_model.descripcion %></td> 
+            <td><%= @adaptacion.vehicle.numero_economico %></td>
+            <td><%= @adaptacion.vehicle.catalog_branch.decripcion %></td>          
+            <td><%= number_to_currency(@adaptacion.monto)%></td>
+            <% subtotal += @adaptacion.monto %>
+            <td><%= number_to_currency(@adaptacion.monto) %></td>
+        </tr>
+      <%# end %>
+      <% iva = subtotal * 0.16 
+      total = subtotal + iva %> 
+      <tr> 
+        <td colspan="6" style="border: none;"></td>
+        <th style="text-align: right;">Subtotal:</th>
+        <td><%=number_to_currency(subtotal) %></td>
+      </tr>
+      <tr> 
+        <td colspan="6" style="border: none;"></td>
+        <th style="text-align: right;">IVA:</th>
+        <td><%=number_to_currency(iva) %></td>
+      </tr>
+      <tr> 
+        <td colspan="6" style="border: none;"></td>
+        <th style="text-align: right;">Total:</th>
+        <td><%=number_to_currency(total) %></td>
+      </tr>             
+    </tbody>
+</table>

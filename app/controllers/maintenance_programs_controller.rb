@@ -35,6 +35,9 @@ class MaintenanceProgramsController < ApplicationController
     session["tipo_pro"] = params[:vehicle_type_id]
     session["linea_pro"] = params[:catalog_brand_id]
     session["area_pro"] = params[:catalog_area_id]
+    session["fecha_ini_pro"] = params[:fecha_inicio]
+    session["fecha_fin_pro"] = params[:fecha_fin]
+    if (session["fecha_ini_pro"] == "" and session["fecha_fin_pro"] == "") or (session["fecha_ini_pro"] != "" and session["fecha_fin_pro"] != "")
     @maintenance_programs = MaintenanceProgram.consulta_programas(session["vehiculo_pro"],session["empresa_pro"],session["cedis_pro"], session["user_pro"], session["tipo_pro"], session["linea_pro"], session["area_pro"])
     if session["cedis_pro"] == ""
       @branch = nil
@@ -44,7 +47,7 @@ class MaintenanceProgramsController < ApplicationController
       @arreglo_pendientes = Array.new
       @branch = CatalogBranch.find_by(id: params[:catalog_branch_id])
       @sin_kilometraje = false
-      vehiculos = Vehicle.where(catalog_branch_id: @branch.id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [3, 8, 10])
+      vehiculos = Vehicle.where(catalog_branch_id: @branch.id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [3, 8, 10], vehicle_type_id: [6, 11])
       @contador = 0
       vehiculos.each do |vh|
         kilometraje = MileageIndicator.where(vehicle_id:vh.id).where("fecha between ? and ?", Time.zone.now.beginning_of_week.to_s ,Time.zone.now.end_of_week.to_s)
@@ -64,7 +67,7 @@ class MaintenanceProgramsController < ApplicationController
 
   def modal_pendientes_captura_km
     @branch = CatalogBranch.find_by(id: params[:branch_id])
-    vehiculos = Vehicle.where(catalog_branch_id: @branch.id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [3, 8, 10])
+    vehiculos = Vehicle.where(catalog_branch_id: @branch.id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [3, 8, 10], vehicle_type_id: [6, 11])
     @arreglo_pendientes = Array.new
     vehiculos.each do |vh|
       kilometraje = MileageIndicator.where(vehicle_id:vh.id).where("fecha between ? and ?", Time.zone.now.beginning_of_week.to_s ,Time.zone.now.end_of_week.to_s)
@@ -83,26 +86,50 @@ class MaintenanceProgramsController < ApplicationController
     resultados = MaintenanceProgram.consulta_programas(session["vehiculo_pro"],session["empresa_pro"],session["cedis_pro"], session["user_pro"], session["tipo_pro"], session["linea_pro"], session["area_pro"])
     workbook.styles do |s|
       img = File.expand_path("#{Rails.root}/app/assets/images/excel_logo.png", __FILE__)
-      miles_decimal = s.add_style(:format_code => "$###,###.00")
-      centered = { alignment: { horizontal: :center } }
-      celda_cabecera= s.add_style :height => 25 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :right}
+			col_widths= [3,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30] 
+			celda_tabla = s.add_style :bg_color => "BFBFBF", :fg_color => "00", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
+			celda_cabecera= s.add_style :bg_color => "919191", :fg_color => "ff", :height => 20 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :center}
+      celda_cabecera2= s.add_style :height => 25 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :right, :vertical => :center}
+			celda_categoria = s.add_style :bg_color => "D9D9D9", :fg_color => "00", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
+			celda_tabla_td = s.add_style :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
+			celda_notas = s.add_style :fg_color => "FF0000" ,:sz => 12
+			celda_afi_mayor = s.add_style :bg_color => "808080", :fg_color => "ff", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
+			celda_afi_menor = s.add_style :bg_color => "F2F2F2", :fg_color => "ff", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
+
       workbook.add_worksheet(name: "Programa de mantenimiento") do |sheet|
-        # sheet.add_image(:image_src => img, :noSelect => true, :noMove => true,) do |image|
-				# 	image.width = 105
-				# 	image.height = 137
-				# 	image.start_at 1, 0
-				# end
-				sheet.merge_cells("B1:D1")
-				sheet.add_row ["","Programa de mantenimiento"], :style => [nil, celda_cabecera]
+        sheet.add_image(:image_src => img, :noSelect => true, :noMove => true,) do |image|
+					image.width = 105
+					image.height = 137
+					image.start_at 1, 0
+				end
+				sheet.merge_cells("B1:C7")
+        sheet.add_row ["","Programa de mantenimiento","","","","", "", ""], :style => [nil, celda_cabecera2, nil, nil, nil, nil,nil,nil]
+        sheet.add_row ["","","","","","","",""], :style => [nil, nil, nil, nil, nil, nil]
+        sheet.add_row ["","","","","","","",""]
+        sheet.add_row ["","","","","","","",""]
         sheet.add_row [""]
-        #sheet.add_row [""]
-        #sheet.add_row ["","Programa de mantenimiento"],:height => 20, :b => true, :sz => 20, :font_name => 'Arial'
         sheet.add_row [""]
         sheet.add_row [""]
-        sheet.add_row ["Km inicio año en curso","Km recorrido año en curso","Promedio mensual recorrido (kms)","Frecuencia mantenimiento", "No. Económico","Línea","Modelo","Usuario", "Fecha última afinación","Kms última afinación","Kms próximo servicio","Fecha próximo servicio","Km actual","Observaciones"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
+
+        sheet.add_row ["","Km inicio año en curso","Km recorrido año en curso","Promedio mensual recorrido (kms)","Frecuencia mantenimiento", "No. Económico","Línea","Modelo","Usuario", "Cedis","Fecha última afinación","Kms última afinación","Kms próximo servicio","Fecha próximo servicio","Km actual","Observaciones"], :style => [nil,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera,celda_cabecera]
         sheet.column_widths *col_widths
         resultados.all.each do |resultado|
-          sheet.add_row [resultado.km_inicio_ano,resultado.km_recorrido_curso,resultado.promedio_mensual,resultado.frecuencia_mantenimiento,resultado.vehicle.numero_economico,resultado.vehicle.catalog_brand_id ? resultado.vehicle.catalog_brand.descripcion : "No se asignó",resultado.vehicle.catalog_model_id ? resultado.vehicle.catalog_model.descripcion : "No se asignó",resultado.vehicle.catalog_personal_id ? resultado.vehicle.catalog_personal.nombre : "No se asignó",resultado.fecha_ultima_afinacion,resultado.kms_ultima_afinacion,resultado.kms_proximo_servicio,resultado.fecha_proximo,resultado.km_actual,resultado.observaciones]
+          sheet.add_row ["",resultado.km_inicio_ano,resultado.km_recorrido_curso,resultado.promedio_mensual,resultado.frecuencia_mantenimiento,resultado.vehicle.numero_economico,resultado.vehicle.catalog_brand_id ? resultado.vehicle.catalog_brand.descripcion : "No se asignó",resultado.vehicle.catalog_model_id ? resultado.vehicle.catalog_model.descripcion : "No se asignó",resultado.vehicle.catalog_personal_id ? resultado.vehicle.catalog_personal.nombre : "No se asignó", resultado.vehicle.catalog_branch.decripcion,resultado.fecha_ultima_afinacion,resultado.kms_ultima_afinacion,resultado.kms_proximo_servicio,resultado.fecha_proximo,resultado.km_actual,resultado.observaciones], :style => [nil,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td,
+          celda_tabla_td]
         end
       end
     end

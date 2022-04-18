@@ -4,8 +4,10 @@
     $("#insurance_report_ticket_vehiculo").val("<%= "#{@vehiculo.catalog_brand.descripcion}" %>");
     $("#insurance_report_ticket_modelo").val("<%= @vehiculo.catalog_model.descripcion %>");
     $("#insurance_report_ticket_estatus_vehiculo").val("<%= @vehiculo.vehicle_status.descripcion %>");
-    $("#insurance_report_ticket_ubicacion_siniestro").val("<%#= @vehiculo.type_sinister.descripcion %>");
+    //$("#insurance_report_ticket_ubicacion_siniestro").val("<%#= @vehiculo.type_sinister.descripcion %>");
     $("#insurance_report_ticket_responsable").val("<%= @vehiculo.catalog_personal.nombre %>");
+    $("#insurance_report_ticket_inciso").val("<%= @vehiculo.inciso %>");
+    $("#insurance_report_ticket_numero_poliza").val("<%= @vehiculo.numero_poliza %>");
 <% else %>
     $("#insurance_report_ticket_cedis").val("");
     $("#insurance_report_ticket_numero_serie").val("");

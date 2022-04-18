@@ -62,7 +62,7 @@
               <% if @firma %>
               <th style="text-align: center;">
                 <div style=" width:350px;">
-                  <%= image_tag(url_for(@firma.firma)) %>
+                  <%= image_tag(url_for(@firma.firma)) if @firma.firma.attached? and @purchase_order.status == "Autorizado" %>
                   <hr size="8" width="90%" color="black"> 
                   <div  style="justify-content:center; align-items:center;display: flex;">
                     <p><strong style="text-align: center;"><%= @firma.user.name %> <%= @firma.user.last_name %></strong></p>

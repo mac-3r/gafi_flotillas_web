@@ -44,6 +44,18 @@ class MovilApiController < ApplicationController
         end
         render json: bandera_respuesta  
     end   
+
+    def cargar_imagen_siniestro
+        bandera_respuesta = true
+        params[:_json].each do |js|
+            response = InsuranceReportTicket.insertar_imagen(js)
+            if !response 
+                bandera_respuesta = false
+            end              
+        end
+        render json: bandera_respuesta  
+    end
+
     def ver_licencias
         @evidencias = []
         licences_evidences = LicencesPicture.where(user_id: params[:user_id]) 
@@ -51,7 +63,8 @@ class MovilApiController < ApplicationController
             hash_evidencias = Hash.new
             hash_evidencias["id"] = le.id
             if le.imagen.attachment
-                hash_evidencias["imagen"] = Rails.application.routes.url_helpers.rails_blob_path(le.imagen, only_path: true)
+                #hash_evidencias["imagen"] = Rails.application.routes.url_helpers.rails_blob_path(le.imagen, only_path: true)
+                hash_evidencias["imagen"] = url_for(le.imagen)
             else
                 hash_evidencias["imagen"] =nil
             end

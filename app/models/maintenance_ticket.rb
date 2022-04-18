@@ -24,7 +24,7 @@ class MaintenanceTicket < ApplicationRecord
         cadena_consulta += " vehicles.catalog_area_id = '#{area}' and"
       end
       cadena_consulta += " maintenance_tickets.created_at <= '#{(Time.now + 1.day).strftime("%Y-%m-%d %H:%M:%M")}'"
-        consulta = MaintenanceTicket.joins(:vehicle).where(cadena_consulta)
+        consulta = MaintenanceTicket.joins(:vehicle).where(cadena_consulta).order(vehicle_id: :asc)
       return consulta  
   end
 

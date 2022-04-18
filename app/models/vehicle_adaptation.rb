@@ -4,6 +4,8 @@ class VehicleAdaptation < ApplicationRecord
   belongs_to :catalog_vendor
   has_one_attached :pdf
   has_one_attached :factura
+  belongs_to :catalog_branch, optional: true
+  belongs_to :catalog_area, optional: true
   enum estatus: ["En captura","Pendiente autorización", "Autorizado", "Rechazado","Póliza generada"]
     after_create :adaptation_create
 

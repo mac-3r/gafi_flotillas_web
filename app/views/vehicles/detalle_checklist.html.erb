@@ -5,7 +5,7 @@
             <div class="col-lg-12">
                 <div class="card-header">
                     <div class="card-title">
-                        <h3 class="card-label float-left">Checklist de vehículo</h3>
+                        <h3 class="card-label float-left">Verificación del vehículo</h3>
                         <div class="example-screen float-right">
                             &nbsp;<%= link_to 'Regresar', listado_checklist_path(@vehicle.id), class: "btn btn-default float-right" %>
                             <button onclick="window.print()" class="btn btn-primary font-weight-bolder" style="border-radius: 0.42rem;">Generar PDF</button>&nbsp;&nbsp;
@@ -157,6 +157,7 @@
                 </tbody>
             </table>
             <br><br><br><br><br><br>
+            <!--
             <div class="container">
                 <div style="width: 50%; height: 50%;">
                     <div style="width:350px;" class="center">
@@ -196,7 +197,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <br><br><br><br>
             <span>Fecha de elaboración: <%= @checklist.fecha_captura.strftime('%d/%m/%y') %></span>
         </div>

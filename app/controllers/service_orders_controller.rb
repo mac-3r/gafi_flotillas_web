@@ -143,10 +143,11 @@ class ServiceOrdersController < ApplicationController
   def autorizar_orden
     begin
       @busqueda = ServiceOrder.find_by(id: params[:id])
-      if @busqueda.tipo_servicio == "Preventivo" or @busqueda.tipo_servicio == "Preventivo Agencia"
-          arreglo_competencias = Array.new
+      if @busqueda.tipo_servicio == "Correctivo" or @busqueda.tipo_servicio == "Correctivo Agencia"
+     # if @busqueda.tipo_servicio == "Preventivo" or @busqueda.tipo_servicio == "Preventivo Agencia"
+        arreglo_competencias = Array.new
           #se actualiza el precio segun la bitacora
-          precio = ServiceOrder.ver_precio(@busqueda)
+        precio = ServiceOrder.ver_precio(@busqueda)
            #verifica que el user actual este en el mismo cedis que el vehículo
         if current_user.catalog_branches_user.map{|x| x.catalog_branch_id}.include? @busqueda.vehicle.catalog_branch_id
           tabla_competencias = CompetitionTable.where("catalog_branch_id = #{@busqueda.vehicle.catalog_branch_id} and tipo = 'Mantenimiento y equipo de transporte' and monto >= #{precio}")
@@ -179,7 +180,8 @@ class ServiceOrdersController < ApplicationController
           flash[:alert] = "El cedis en el que te encuentras no cumple con la tabla de competencias."
           redirect_to service_orders_path
         end
-      elsif @busqueda.tipo_servicio == "Correctivo" or @busqueda.tipo_servicio == "Correctivo Agencia"
+      #elsif @busqueda.tipo_servicio == "Correctivo" or @busqueda.tipo_servicio == "Correctivo Agencia"
+    elsif @busqueda.tipo_servicio == "Preventivo" or @busqueda.tipo_servicio == "Preventivo Agencia"
         if @busqueda.update(estatus:"Cita programada")
           flash[:notice] = "Orden autorizada con exito."
           redirect_to service_orders_path
@@ -785,35 +787,62 @@ class ServiceOrdersController < ApplicationController
   end
 
   def finalizar_servicio
-    @service_order = ServiceOrder.find_by(id: params[:id]) 
+    @service_order = ServiceOrder.find_by(id: params[:id])
   end
 
   def registrar_control
     begin
       @service_order = ServiceOrder.find_by(id: params[:id])
+      #byebug
+      km = MileageIndicator.where(vehicle_id: @service_order.vehicle_id).order(fecha: :desc)
+      if km.length > 0
+        kilometraje = km.first.km_actual
+      else
+        kilometraje = 0
+      end
+      factura_datos = ServiceOrder.revision_precios(@service_order)
       if @service_order.catalog_workshop_id
         dias_taller = ((@service_order.fecha_salida - @service_order.fecha_entrada).to_f / 1.day).floor
-        control_mmto = MaintenanceControl.new(vehicle_id:@service_order.vehicle_id,mes_pago:I18n.l(Date.today,format: '%B'),catalog_workshop_id:@service_order.catalog_workshop_id,catalog_repair_id:params[:catalog_repair_id],observaciones:params[:observaciones],fecha_factura:Date.today.strftime('%Y-%m-%d'),año:Date.today.year,importe:0,importe_iva:0,ciudad:params[:ciudad],km_actual:params[:km_actual],dias_taller:dias_taller,service_order_id:@service_order.id,estatus:"Completado")
-        @service_order.update(estatus:"Servicio Finalizado")
+        control_mmto = MaintenanceControl.new(vehicle_id:@service_order.vehicle_id,mes_pago:I18n.l(Date.today,format: '%B'),catalog_workshop_id:@service_order.catalog_workshop_id,catalog_vendor_id:@service_order.catalog_workshop.catalog_vendor_id, catalog_repair_id: params[:catalog_repair_id],observaciones:params[:observaciones],fecha_factura:Date.today.strftime('%Y-%m-%d'),año:Date.today.year, importe: params[:importe], importe_iva: params[:importe_iva],ciudad:params[:ciudad],km_actual: kilometraje,dias_taller:dias_taller,service_order_id:@service_order.id,estatus:"Completado", impuestos: (params[:importe_iva].to_f - params[:importe].to_f), folio_factura: factura_datos[2], uuid: factura_datos[3])
       else
-        control_mmto = MaintenanceControl.new(vehicle_id:@service_order.vehicle_id,mes_pago:I18n.l(Date.today,format: '%B'),catalog_vendor_id:@service_order.catalog_vendor_id,catalog_repair_id:params[:catalog_repair_id],observaciones:params[:observaciones],fecha_factura:Date.today.strftime('%Y-%m-%d'),año:Date.today.year,importe:0,importe_iva:0,ciudad:params[:ciudad],km_actual:params[:km_actual],dias_taller:dias_taller,service_order_id:@service_order.id,estatus:"Completado")
+        control_mmto = MaintenanceControl.new(vehicle_id:@service_order.vehicle_id,mes_pago:I18n.l(Date.today,format: '%B'),catalog_vendor_id:@service_order.catalog_vendor_id, catalog_repair_id: params[:catalog_repair_id],observaciones:params[:observaciones],fecha_factura:Date.today.strftime('%Y-%m-%d'),año:Date.today.year, importe: params[:importe], importe_iva: params[:importe_iva],ciudad:params[:ciudad],km_actual: kilometraje,dias_taller:dias_taller,service_order_id:@service_order.id,estatus:"Completado", impuestos: (params[:importe_iva].to_f - params[:importe].to_f), folio_factura: factura_datos[2], uuid: factura_datos[3])
         busqueda_tk = TicketTireBattery.find_by(id:@service_order.ticket_tire_battery_id)
-        busqueda_tk.update(estatus:"Pendiente de entrega")
-        @service_order.update(estatus:"Compra Realizada")
       end
-  
       if control_mmto.save 
-        flash[:notice] = "Control de mantenimiento creado con exito."
-        redirect_to service_orders_path
+        mtto = MaintenanceControl.update_request(control_mmto.id, current_user)
+        if mtto[1] == 1
+          flash[:alert] = mtto[0]
+          #control_mmto.destroy
+          # respond_to do |format|
+          #   format.html{redirect_to service_orders_path, alert: mtto[0]}
+          # end
+          
+        else
+          if @service_order.catalog_workshop_id
+            @service_order.update(estatus:"Servicio Finalizado", km_actual: kilometraje)
+          else
+            busqueda_tk.update(estatus:"Pendiente de entrega")
+            @service_order.update(estatus:"Compra Realizada", km_actual: kilometraje)
+          end
+          flash[:notice] = "Control de mantenimiento creado con exito."
+          #redirect_to service_orders_path
+        end
       else
+        cadena = ""
+        control_mtto.errors.full_messages.each do |error|
+          cadena += "#{error}. "
+        end
+        puts "--------------------------------- #{cadena} --------------------------------"
         flash[:alert] = "Ocurrio un error"
-        redirect_to service_orders_path
+        #redirect_to service_orders_path
       end
       
     rescue => exception
+      puts "--------------------------------- #{exception} --------------------------------"
       flash[:alert] = "Ocurrio un error favor de contactar soporte. Error: #{exception}"
-      redirect_to service_orders_path
+      #redirect_to service_orders_path
     end
+    redirect_to service_orders_path
   end
 
   private

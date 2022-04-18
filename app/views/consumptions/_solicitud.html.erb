@@ -1,21 +1,21 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-lg-9">
+            <div class="col-sm-9">
                 <h3>Solicitud de pago de combustible</h3><br>
                 <div class="row">
                     <div class="col-lg-6">
                         <h6 class="solid">Periodo: <%="DEL: #{@encabezado.fecha_inicio.strftime("%d/%m/%Y")} AL: #{@encabezado.fecha_fin.strftime("%d/%m/%Y")}"%></h6>
                         <p style="color: red; font-size: 15px;"><strong>Nota:</strong> Incluir todas las facturas de una semana.</p>
-
+                        <br>
+                        <h6>Proveedor: <%= @encabezado.catalog_vendor.razonsocial %></h6>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
-                <p>Última modificación:</p>
-                <p><%=@encabezado.created_at.strftime("%d/%m/%Y %H:%M:%S")%></p><br>
-                <h6>Cedis:<p><%=@encabezado.catalog_branch.decripcion %></p></h6>
-                <h6>Competencia (con iva): <p><%=@monto_competencia ? number_to_currency(@monto_competencia.monto) : "No se encontro la competencia" %></p></h6>
+            <div class="col-sm-3">
+                <p style="text-align: center;"><span>FOPG009<span><br><span>Última modificación:<span><br><span><%=@encabezado.created_at.strftime("%d/%m/%Y %H:%M:%S")%><span><br></p>
+                <h6>Cedis: &nbsp;<span style="text-decoration: underline;"><%=@encabezado.catalog_branch.decripcion %></span></h6>
+                <h6>Competencia (con iva): &nbsp;<span style="text-decoration: underline;"><%=@monto_competencia ? number_to_currency(@monto_competencia.monto) : "No se encontro la competencia" %></span></h6>
             </div>
         </div>
         <div class="row">
@@ -25,14 +25,18 @@
                         <table class="table table-responsive-md table-hover solid" style=" text-align: center; " >
                             <thead>
                                 <tr style="text-align: center;">
-                                    <th>No factura</th>
+                                    <th>No. Factura</th>
+                                    <% if @encabezado.catalog_branch.unidad_negocio == "019907" %>
+                                        <th>Empresa</th>
+                                    <% end %>
                                     <th>Área</th>
-                                    <th>No. económico</th>
-                                    <th>Responsable</th>                                                
+                                    <th>No. Económico</th>
+                                    <th>Tipo</th>
+                                    <th>Usuario</th>                                                
                                     <th>Litros</th>
-                                    <th>Base $</th>
+                                    <!--<th>Base $</th>-->
                                     <th>Total con IVA</th>
-                                    <th>Rendimiento</th>
+                                    <!--<th>Rendimiento</th>-->
                                 </tr>
                             </thead>
                             <tbody> 
@@ -50,25 +54,29 @@
                                 %>            
                                     <tr style= "text-align: center;">
                                         <td><%=venta["factura"] %></td>
+                                        <% if @encabezado.catalog_branch.unidad_negocio == "019907" %>
+                                            <td><%=venta["empresa"]%></td>
+                                        <% end %>
                                         <td><%=venta["area"]%></td>
                                         <td><%=venta["vehiculo"]%></td>
-                                        <td><%=venta["responsable"]%></td>
+                                        <td><%=venta["tipo_vehiculo"]%></td>
+                                        <td><%=venta["personal"]%></td>
                                         <td><%=number_with_precision(venta["cantidad"],precision:2)%></td>
-                                        <td><%=number_to_currency(venta["base"])%></td>
+                                        <!--<td><%#=number_to_currency(venta["base"])%></td>-->
                                         <td><%=number_to_currency(venta["monto"])%></td>
-                                        <td><%=number_with_precision(venta["promedio"],precision:2)%></td>                                                                       
+                                        <!--<td><%#=number_with_precision(venta["promedio"],precision:2)%></td>-->                                                      
                                     </tr>
                                 <% end %>        
                             </tbody>
                             <tr>
-                                <td colspan="1"></td>
+                                <td colspan="2"></td>
                                 <td style="text-align: right;"><strong>Total Ventas:</strong></td>
                                 <td></td>
                                 <td></td>
                                 <td style="text-align: center;" ><strong><%=number_with_precision(suma_cantidad,precision:2)%></strong></td>
-                                <td style="text-align: center;" ><strong><%=number_to_currency(suma_base)%></strong></td>
+                                <!--<td style="text-align: center;" ><strong><%#=number_to_currency(suma_base)%></strong></td>-->
                                 <td style="text-align: center;" ><strong><%=number_to_currency(suma_total)%></strong></td>
-                                <td style="text-align: center;" ><strong><%=number_with_precision(suma_prom,precision:2)%></strong></td>
+                                <!--<td style="text-align: center;" ><strong><%#=number_with_precision(suma_prom,precision:2)%></strong></td>-->
                             </tr>       
                             <tbody>
                                 <%
@@ -85,25 +93,29 @@
                                 %>            
                                     <tr style= "text-align: center;">
                                         <td><%=admin["factura"] %></td>
+                                        <% if @encabezado.catalog_branch.unidad_negocio == "019907" %>
+                                            <td><%=admin["empresa"]%></td>
+                                        <% end %>
                                         <td><%=admin["area"]%></td>
                                         <td><%=admin["vehiculo"]%></td>
-                                        <td><%=admin["responsable"]%></td> 
+                                        <td><%=admin["tipo_vehiculo"]%></td>
+                                        <td><%=admin["personal"]%></td>
                                         <td><%=number_with_precision(admin["cantidad"],precision:2)%></td>
-                                        <td><%=number_to_currency(admin["base"])%></td>
+                                        <!--<td><%#=number_to_currency(admin["base"])%></td>-->
                                         <td><%=number_to_currency(admin["monto"])%></td>
-                                        <td><%=number_with_precision(admin["promedio"],precision:2 )%></td>                                                         
+                                        <!--<td><%#=number_with_precision(admin["promedio"],precision:2 )%></td>-->                                                     
                                     </tr>
                                 <% end %>        
                             </tbody>
                             <tr style="">
-                                <td colspan="1"></td>
+                                <td colspan="2"></td>
                                 <td style="text-align: right;"><strong>Total Administración:</strong></td>
                                 <td></td>
                                 <td></td>
                                 <td style="text-align: center;" ><strong><%=number_with_precision(suma_cantidad,precision:2)%></strong></td>
-                                <td style="text-align: center;" ><strong><%=number_to_currency(suma_base)%></strong></td>
+                                <!--<td style="text-align: center;" ><strong><%#=number_to_currency(suma_base)%></strong></td>-->
                                 <td style="text-align: center;" ><strong><%=number_to_currency(suma_total)%></strong></td>
-                                <td style="text-align: center;" ><strong><%=number_with_precision(suma_prom, precision: 2)%></strong></td>
+                                <!--<td style="text-align: center;" ><strong><%#=number_with_precision(suma_prom, precision: 2)%></strong></td>-->
                             </tr>       
                             
                             <tbody>
@@ -121,30 +133,32 @@
                                 %>            
                                     <tr style= "text-align: center;">
                                         <td><%=almacen["factura"] %></td>
+                                        <% if @encabezado.catalog_branch.unidad_negocio == "019907" %>
+                                            <td><%=almacen["empresa"]%></td>
+                                        <% end %>
                                         <td><%=almacen["area"]%></td>
                                         <td><%=almacen["vehiculo"]%></td>
-                                        <td><%=almacen["responsable"]%></td> 
+                                        <td><%=almacen["tipo_vehiculo"]%></td>
+                                        <td><%=almacen["personal"]%></td>
                                         <td><%=number_with_precision(almacen["cantidad"],precision:2)%></td>
-                                        <td><%=number_to_currency(almacen["base"])%></td>
+                                        <!--<td><%#=number_to_currency(almacen["base"])%></td>-->
                                         <td><%=number_to_currency(almacen["monto"])%></td>
-                                        <td><%=number_with_precision(almacen["promedio"],precision:2)%></td>                                                           
+                                        <!--<td><%#=number_with_precision(almacen["promedio"],precision:2)%></td>-->                                                     
                                     </tr>
                                 <% end %>        
                             </tbody>
                             <tr style="">
-                                <td colspan="1"></td>
+                                <td colspan="2"></td>
                                 <td style="text-align: right;"><strong>Total Almacén:</strong></td>
                                 <td></td>
                                 <td></td>
                                 <td style="text-align: center;" ><strong><%=number_with_precision(suma_cantidad,precision:2)%></strong></td>
-                                <td style="text-align: center;" ><strong><%=number_to_currency(suma_base)%></strong></td>
+                                <!--<td style="text-align: center;" ><strong><%#=number_to_currency(suma_base)%></strong></td>-->
                                 <td style="text-align: center;" ><strong><%=number_to_currency(suma_total)%></strong></td>
-                                <td style="text-align: center;" ><strong><%=number_with_precision(suma_prom,precision:2)%></strong></td>
+                                <!--<td style="text-align: center;" ><strong><%#=number_with_precision(suma_prom,precision:2)%></strong></td>-->
                             </tr>       
-                            
                         </table>
-                        <h6><p>Total: <%=number_to_currency(@monto)%></p></h6> 
-
+                        <h6 style="text-align: right;"><p>Total: <%=number_to_currency(@monto)%></p></h6> 
                     </div>
                 </div>
             </div>

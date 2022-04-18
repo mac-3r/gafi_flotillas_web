@@ -35,7 +35,7 @@
             </div>
             <div class="col">
               <br><br>
-              <%= submit_tag "Buscar", class:"btn btn-primary" %>
+              <%= submit_tag "Buscar", class:"btn btn-primary", id: "btn_submit" %>
             </div>
           </div>
           <div class="row">
@@ -67,3 +67,28 @@
   </div>
 </div>
 </div>
+
+<script>
+  $(document).ready(function(){
+    $("#btn_submit").click(function(){
+      toastr.options = {
+          "closeButton": false,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": false,
+          "positionClass": "toast-bottom-center",
+          "preventDuplicates": false,
+          "onclick": null,
+          "showDuration": "300",
+          "hideDuration": "1000",
+          "timeOut": "50000000000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+      };
+      toastr.info("Espere por favor...", "Cargando");
+    })
+  })
+</script>

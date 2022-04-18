@@ -2,6 +2,7 @@ class Consumption < ApplicationRecord
     has_many :vehicle_consumptions
     belongs_to :catalog_branch, optional: true
     belongs_to :catalog_vendor
+    belongs_to :valuation, optional: true
     enum estatus: ["Pendiente", "Por autorizar", "Autorizado", "Rechazado"]
     has_one_attached :factura
     has_one_attached :pdf
@@ -23,7 +24,8 @@ class Consumption < ApplicationRecord
     
     def self.consulta_cargas(fecha_ini,fecha_fin,proveedor,cedis,estatus)
         cadena_consulta = ""
-        fecha_hora = (Time.now + 7.hours).strftime("%Y-%m-%d %H:%M:%M")
+        fecha_hora = (Time.now - 1.year).strftime("%Y-%m-%d %H:%M:%M")
+        #fecha_hora = (Time.now + 7.hours).strftime("%Y-%m-%d %H:%M:%M")
 		if estatus != "" or estatus.nil?
 			cadena_consulta += " estatus = #{estatus} and"
 		end
@@ -58,6 +60,7 @@ class Consumption < ApplicationRecord
             #byebug
             if cualquiera.nil?
                 hash_litros["no_economico"] = i.vehicle.numero_economico
+                hash_litros["tipo_vehiculo"] = "#{i.vehicle.catalog_brand.descripcion} #{i.vehicle.catalog_model.descripcion}"
                 hash_litros["cantidad"] = i.cantidad
                 hash_litros["rendimiento"] = i.rendimiento
                 hash_litros["cantidad_cargas"] = 1
@@ -103,6 +106,7 @@ class Consumption < ApplicationRecord
             #byebug
             if cualquiera.nil?
                 hash_litros["no_economico"] = i.vehicle.numero_economico
+                hash_litros["tipo_vehiculo"] = "#{i.vehicle.catalog_brand.descripcion} #{i.vehicle.catalog_model.descripcion}"
                 hash_litros["cantidad"] = i.cantidad
                 hash_litros["rendimiento"] = i.rendimiento
                 hash_litros["cantidad_cargas"] = 1
@@ -149,6 +153,155 @@ class Consumption < ApplicationRecord
             #byebug
             if cualquiera.nil?
                 hash_litros["no_economico"] = i.vehicle.numero_economico
+                hash_litros["tipo_vehiculo"] = "#{i.vehicle.catalog_brand.descripcion} #{i.vehicle.catalog_model.descripcion}"
+                hash_litros["cantidad"] = i.cantidad
+                hash_litros["rendimiento"] = i.rendimiento
+                hash_litros["cantidad_cargas"] = 1
+                hash_litros["promedio"] = 100
+                hash_litros["monto"] = i.monto
+                hash_litros["base"] = 100
+                i.consumption.n_factura ? hash_litros["factura"] = i.consumption.n_factura : hash_litros["factura"] = "No se asignó una factura." 
+                i.vehicle.catalog_area ? hash_litros["area"] = i.vehicle.catalog_area.descripcion : hash_litros["area"] = "No se asignó"
+                i.vehicle ? hash_litros["vehiculo"] = i.vehicle.numero_economico : hash_litros["vehiculo"] = "No se asignó"
+                i.vehicle.catalog_personal ? hash_litros["personal"] = i.vehicle.catalog_personal.nombre : hash_litros["personal"] = "No se asignó"  
+                arreglo_litros.push(hash_litros)
+                #byebug
+            else
+                valor_anterior = cualquiera["cantidad"]
+                valor_nuevo = valor_anterior + i.cantidad
+                cualquiera["cantidad"] = valor_nuevo
+                cantidad_cargas = cualquiera["cantidad_cargas"]
+                cantidad_nueva = cantidad_cargas + 1
+                cualquiera["cantidad_cargas"] = cantidad_nueva
+                rendimiento_anterior = cualquiera["rendimiento"]
+                rendimiento_nuevo = rendimiento_anterior + i.rendimiento
+                cualquiera["rendimiento"] = rendimiento_nuevo
+                cualquiera["promedio"] =  rendimiento_nuevo / cantidad_nueva 
+                monto_anterior = cualquiera["monto"]
+                monto_nuevo = monto_anterior + i.monto
+                cualquiera["monto"] = monto_nuevo
+                base = cualquiera["base"]
+                cualquiera["base"] = (cualquiera["monto"] * 0.8654)
+            end
+        end
+        #byebug
+        return arreglo_litros
+    end
+
+# ---------------------------- consumos con iva --------------------------------
+
+    def self.litros_consumo8(fecha_inicio,fecha_fin,cedis,vendor, encabezado)
+        arreglo_litros = Array.new()
+        #byebug
+        #ventas = encabezado.vehicle_consumptions.where(vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas").id).ids)
+        valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
+        ventas = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas")),fecha: fecha_inicio..fecha_fin)
+        #byebug
+        ventas.each do |i|
+            hash_litros = Hash.new
+            cualquiera = arreglo_litros.find {|item| item["no_economico"] == "#{i.vehicle.numero_economico}"}
+            #byebug
+            if cualquiera.nil?
+                hash_litros["no_economico"] = i.vehicle.numero_economico
+                hash_litros["tipo_vehiculo"] = "#{i.vehicle.catalog_brand.descripcion} #{i.vehicle.catalog_model.descripcion}"
+                hash_litros["empresa"] = i.vehicle.catalog_company.nombre
+                hash_litros["cantidad"] = i.cantidad
+                hash_litros["rendimiento"] = i.rendimiento
+                hash_litros["cantidad_cargas"] = 1
+                hash_litros["promedio"] = 100
+                hash_litros["monto"] = i.monto
+                hash_litros["base"] = 100
+                i.consumption.n_factura ? hash_litros["factura"] = i.consumption.n_factura : hash_litros["factura"] = "No se asignó una factura." 
+                i.vehicle.catalog_area ? hash_litros["area"] = i.vehicle.catalog_area.descripcion : hash_litros["area"] = "No se asignó"
+                i.vehicle ? hash_litros["vehiculo"] = i.vehicle.numero_economico : hash_litros["vehiculo"] = "No se asignó"
+                i.vehicle.catalog_personal ? hash_litros["personal"] = i.vehicle.catalog_personal.nombre : hash_litros["personal"] = "No se asignó"                
+                arreglo_litros.push(hash_litros)
+                #byebug
+            else
+                valor_anterior = cualquiera["cantidad"]
+                valor_nuevo = valor_anterior + i.cantidad
+                cualquiera["cantidad"] = valor_nuevo
+                cantidad_cargas = cualquiera["cantidad_cargas"]
+                cantidad_nueva = cantidad_cargas + 1
+                cualquiera["cantidad_cargas"] = cantidad_nueva
+                rendimiento_anterior = cualquiera["rendimiento"]
+                rendimiento_nuevo = rendimiento_anterior + i.rendimiento
+                cualquiera["rendimiento"] = rendimiento_nuevo
+                cualquiera["promedio"] =  rendimiento_nuevo / cantidad_nueva 
+                monto_anterior = cualquiera["monto"]
+                monto_nuevo = monto_anterior + i.monto
+                cualquiera["monto"] = monto_nuevo
+                base = cualquiera["base"]
+                cualquiera["base"] = (cualquiera["monto"] * 0.8654)
+            end
+        end
+        #byebug
+        return arreglo_litros
+    end
+
+    def self.litros_admin8(fecha_inicio,fecha_fin,cedis,vendor)
+        arreglo_litros = Array.new()
+        #byebug
+        valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
+        admin = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Administrativo")),fecha: fecha_inicio..fecha_fin)
+        #byebug
+        admin.each do |i|
+            hash_litros = Hash.new
+            cualquiera = arreglo_litros.find {|item| item["no_economico"] == "#{i.vehicle.numero_economico}"}
+            #byebug
+            if cualquiera.nil?
+                hash_litros["no_economico"] = i.vehicle.numero_economico
+                hash_litros["tipo_vehiculo"] = "#{i.vehicle.catalog_brand.descripcion} #{i.vehicle.catalog_model.descripcion}"
+                hash_litros["empresa"] = i.vehicle.catalog_company.nombre
+                hash_litros["cantidad"] = i.cantidad
+                hash_litros["rendimiento"] = i.rendimiento
+                hash_litros["cantidad_cargas"] = 1
+                hash_litros["promedio"] = 100
+                hash_litros["monto"] = i.monto
+                hash_litros["base"] = 100
+                i.consumption.n_factura ? hash_litros["factura"] = i.consumption.n_factura : hash_litros["factura"] = "No se asignó una factura." 
+                i.vehicle.catalog_area ? hash_litros["area"] = i.vehicle.catalog_area.descripcion : hash_litros["area"] = "No se asignó"
+                i.vehicle ? hash_litros["vehiculo"] = i.vehicle.numero_economico : hash_litros["vehiculo"] = "No se asignó"
+                i.vehicle.catalog_personal ? hash_litros["personal"] = i.vehicle.catalog_personal.nombre : hash_litros["personal"] = "No se asignó"  
+                arreglo_litros.push(hash_litros)
+                #byebug
+            else
+                valor_anterior = cualquiera["cantidad"]
+                valor_nuevo = valor_anterior + i.cantidad
+                cualquiera["cantidad"] = valor_nuevo
+                cantidad_cargas = cualquiera["cantidad_cargas"]
+                cantidad_nueva = cantidad_cargas + 1
+                cualquiera["cantidad_cargas"] = cantidad_nueva
+                rendimiento_anterior = cualquiera["rendimiento"]
+                rendimiento_nuevo = rendimiento_anterior + i.rendimiento
+                cualquiera["rendimiento"] = rendimiento_nuevo
+                cualquiera["promedio"] =  rendimiento_nuevo / cantidad_nueva 
+                monto_anterior = cualquiera["monto"]
+                monto_nuevo = monto_anterior + i.monto
+                cualquiera["monto"] = monto_nuevo
+                base = cualquiera["base"]
+                cualquiera["base"] = (cualquiera["monto"] * 0.8654)
+            end
+        end
+        #byebug
+        return arreglo_litros
+    end
+
+    def self.litros_almacen8(fecha_inicio,fecha_fin,cedis,vendor)
+        arreglo_litros = Array.new()
+        #byebug
+        
+        valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
+        almacen = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Almacén")),fecha: fecha_inicio..fecha_fin)
+        #byebug
+        almacen.each do |i|
+            hash_litros = Hash.new
+            cualquiera = arreglo_litros.find {|item| item["no_economico"] == "#{i.vehicle.numero_economico}"}
+            #byebug
+            if cualquiera.nil?
+                hash_litros["no_economico"] = i.vehicle.numero_economico
+                hash_litros["tipo_vehiculo"] = "#{i.vehicle.catalog_brand.descripcion} #{i.vehicle.catalog_model.descripcion}"
+                hash_litros["empresa"] = i.vehicle.catalog_company.nombre
                 hash_litros["cantidad"] = i.cantidad
                 hash_litros["rendimiento"] = i.rendimiento
                 hash_litros["cantidad_cargas"] = 1
@@ -184,6 +337,154 @@ class Consumption < ApplicationRecord
     end
 
 
+    def self.litros_consumo16(fecha_inicio,fecha_fin,cedis,vendor, encabezado)
+        arreglo_litros = Array.new()
+        #byebug
+        #ventas = encabezado.vehicle_consumptions.where(vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas").id).ids)
+        valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
+        ventas = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas")),fecha: fecha_inicio..fecha_fin)
+        #byebug
+        ventas.each do |i|
+            hash_litros = Hash.new
+            cualquiera = arreglo_litros.find {|item| item["no_economico"] == "#{i.vehicle.numero_economico}"}
+            #byebug
+            if cualquiera.nil?
+                hash_litros["no_economico"] = i.vehicle.numero_economico
+                hash_litros["tipo_vehiculo"] = "#{i.vehicle.catalog_brand.descripcion} #{i.vehicle.catalog_model.descripcion}"
+                hash_litros["empresa"] = i.vehicle.catalog_company.nombre
+                hash_litros["cantidad"] = i.cantidad
+                hash_litros["rendimiento"] = i.rendimiento
+                hash_litros["cantidad_cargas"] = 1
+                hash_litros["promedio"] = 100
+                hash_litros["monto"] = i.monto
+                hash_litros["base"] = 100
+                i.consumption.n_factura ? hash_litros["factura"] = i.consumption.n_factura : hash_litros["factura"] = "No se asignó una factura." 
+                i.vehicle.catalog_area ? hash_litros["area"] = i.vehicle.catalog_area.descripcion : hash_litros["area"] = "No se asignó"
+                i.vehicle ? hash_litros["vehiculo"] = i.vehicle.numero_economico : hash_litros["vehiculo"] = "No se asignó"
+                i.vehicle.catalog_personal ? hash_litros["personal"] = i.vehicle.catalog_personal.nombre : hash_litros["personal"] = "No se asignó"                
+                arreglo_litros.push(hash_litros)
+                #byebug
+            else
+                valor_anterior = cualquiera["cantidad"]
+                valor_nuevo = valor_anterior + i.cantidad
+                cualquiera["cantidad"] = valor_nuevo
+                cantidad_cargas = cualquiera["cantidad_cargas"]
+                cantidad_nueva = cantidad_cargas + 1
+                cualquiera["cantidad_cargas"] = cantidad_nueva
+                rendimiento_anterior = cualquiera["rendimiento"]
+                rendimiento_nuevo = rendimiento_anterior + i.rendimiento
+                cualquiera["rendimiento"] = rendimiento_nuevo
+                cualquiera["promedio"] =  rendimiento_nuevo / cantidad_nueva 
+                monto_anterior = cualquiera["monto"]
+                monto_nuevo = monto_anterior + i.monto
+                cualquiera["monto"] = monto_nuevo
+                base = cualquiera["base"]
+                cualquiera["base"] = (cualquiera["monto"] * 0.8654)
+            end
+        end
+        #byebug
+        return arreglo_litros
+    end
+
+    def self.litros_admin16(fecha_inicio,fecha_fin,cedis,vendor)
+        arreglo_litros = Array.new()
+        #byebug
+        valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
+        admin = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Administrativo")),fecha: fecha_inicio..fecha_fin)
+        #byebug
+        admin.each do |i|
+            hash_litros = Hash.new
+            cualquiera = arreglo_litros.find {|item| item["no_economico"] == "#{i.vehicle.numero_economico}"}
+            #byebug
+            if cualquiera.nil?
+                hash_litros["no_economico"] = i.vehicle.numero_economico
+                hash_litros["tipo_vehiculo"] = "#{i.vehicle.catalog_brand.descripcion} #{i.vehicle.catalog_model.descripcion}"
+                hash_litros["empresa"] = i.vehicle.catalog_company.nombre
+                hash_litros["cantidad"] = i.cantidad
+                hash_litros["rendimiento"] = i.rendimiento
+                hash_litros["cantidad_cargas"] = 1
+                hash_litros["promedio"] = 100
+                hash_litros["monto"] = i.monto
+                hash_litros["base"] = 100
+                i.consumption.n_factura ? hash_litros["factura"] = i.consumption.n_factura : hash_litros["factura"] = "No se asignó una factura." 
+                i.vehicle.catalog_area ? hash_litros["area"] = i.vehicle.catalog_area.descripcion : hash_litros["area"] = "No se asignó"
+                i.vehicle ? hash_litros["vehiculo"] = i.vehicle.numero_economico : hash_litros["vehiculo"] = "No se asignó"
+                i.vehicle.catalog_personal ? hash_litros["personal"] = i.vehicle.catalog_personal.nombre : hash_litros["personal"] = "No se asignó"  
+                arreglo_litros.push(hash_litros)
+                #byebug
+            else
+                valor_anterior = cualquiera["cantidad"]
+                valor_nuevo = valor_anterior + i.cantidad
+                cualquiera["cantidad"] = valor_nuevo
+                cantidad_cargas = cualquiera["cantidad_cargas"]
+                cantidad_nueva = cantidad_cargas + 1
+                cualquiera["cantidad_cargas"] = cantidad_nueva
+                rendimiento_anterior = cualquiera["rendimiento"]
+                rendimiento_nuevo = rendimiento_anterior + i.rendimiento
+                cualquiera["rendimiento"] = rendimiento_nuevo
+                cualquiera["promedio"] =  rendimiento_nuevo / cantidad_nueva 
+                monto_anterior = cualquiera["monto"]
+                monto_nuevo = monto_anterior + i.monto
+                cualquiera["monto"] = monto_nuevo
+                base = cualquiera["base"]
+                cualquiera["base"] = (cualquiera["monto"] * 0.8654)
+            end
+        end
+        #byebug
+        return arreglo_litros
+    end
+
+    def self.litros_almacen16(fecha_inicio,fecha_fin,cedis,vendor)
+        arreglo_litros = Array.new()
+        #byebug
+        
+        valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
+        almacen = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Almacén")),fecha: fecha_inicio..fecha_fin)
+        #byebug
+        almacen.each do |i|
+            hash_litros = Hash.new
+            cualquiera = arreglo_litros.find {|item| item["no_economico"] == "#{i.vehicle.numero_economico}"}
+            #byebug
+            if cualquiera.nil?
+                hash_litros["no_economico"] = i.vehicle.numero_economico
+                hash_litros["tipo_vehiculo"] = "#{i.vehicle.catalog_brand.descripcion} #{i.vehicle.catalog_model.descripcion}"
+                hash_litros["empresa"] = i.vehicle.catalog_company.nombre
+                hash_litros["cantidad"] = i.cantidad
+                hash_litros["rendimiento"] = i.rendimiento
+                hash_litros["cantidad_cargas"] = 1
+                hash_litros["promedio"] = 100
+                hash_litros["monto"] = i.monto
+                hash_litros["base"] = 100
+                i.consumption.n_factura ? hash_litros["factura"] = i.consumption.n_factura : hash_litros["factura"] = "No se asignó una factura." 
+                i.vehicle.catalog_area ? hash_litros["area"] = i.vehicle.catalog_area.descripcion : hash_litros["area"] = "No se asignó"
+                i.vehicle ? hash_litros["vehiculo"] = i.vehicle.numero_economico : hash_litros["vehiculo"] = "No se asignó"
+                i.vehicle.catalog_personal ? hash_litros["personal"] = i.vehicle.catalog_personal.nombre : hash_litros["personal"] = "No se asignó"  
+                arreglo_litros.push(hash_litros)
+                #byebug
+            else
+                valor_anterior = cualquiera["cantidad"]
+                valor_nuevo = valor_anterior + i.cantidad
+                cualquiera["cantidad"] = valor_nuevo
+                cantidad_cargas = cualquiera["cantidad_cargas"]
+                cantidad_nueva = cantidad_cargas + 1
+                cualquiera["cantidad_cargas"] = cantidad_nueva
+                rendimiento_anterior = cualquiera["rendimiento"]
+                rendimiento_nuevo = rendimiento_anterior + i.rendimiento
+                cualquiera["rendimiento"] = rendimiento_nuevo
+                cualquiera["promedio"] =  rendimiento_nuevo / cantidad_nueva 
+                monto_anterior = cualquiera["monto"]
+                monto_nuevo = monto_anterior + i.monto
+                cualquiera["monto"] = monto_nuevo
+                base = cualquiera["base"]
+                cualquiera["base"] = (cualquiera["monto"] * 0.8654)
+            end
+        end
+        #byebug
+        return arreglo_litros
+    end
+
+
+# ---------------------------- consumos con iva --------------------------------
 
     def self.crear_documento(params, encabezado)
         bandera_error = 0
@@ -299,10 +600,25 @@ class Consumption < ApplicationRecord
                     # }
                     #byebug
                     if monto_encabezado[0].to_f == total_factura[0].to_f #total >= 0 and total <= 1
+
                         if busqueda_enc.update(factura: params[:consumption][:factura], n_factura: folio_factura_def, fecha_factura: fecha_factura,impuestos:total_impuestos,uuid:identificador_unico,usuario_modifico:"#{User.current_user.name} #{User.current_user.last_name}", es_detallado: bandera_detallado, company_id: empresa.id)
                             ver_registros= VehicleConsumption.where(consumption_id:encabezado,impuestos: nil)
                             #byebug
                             if ver_registros.count > 0
+
+                                ver_registros.each do |enc|
+                                    bque_veh = VehicleTransferLog.where(vehicle_id: enc.vehicle_id, fecha: busqueda_enc.fecha_inicio..busqueda_enc.fecha_fin) 
+                                    if bque_veh.length > 0
+                                        enc.update(catalog_branch_id: bque_veh.last.catalog_branch_id)
+                                    else
+                                        bque_veh2 = VehicleTransferLog.where("vehicle_id = ? and fecha <= ?", enc.vehicle_id, busqueda_enc.fecha_inicio)
+                                        if bque_veh2.length > 0
+                                            enc.update(catalog_branch_id: bque_veh2.last.catalog_branch_id)
+                                        else
+                                            enc.update(catalog_branch_id: enc.vehicle.catalog_branch_id)
+                                        end
+                                    end
+                                end
                                 bandera_error = 1
                                 if bandera_detallado == true
                                     mensaje = "La factura se adjuntó con éxito, pero algúnos impuestos no coincidieron. Favor de actualizar manualmente los impuestos."

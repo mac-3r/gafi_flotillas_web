@@ -7,6 +7,7 @@ class ServiceOrder < ApplicationRecord
   belongs_to :catalog_vendor, optional: true
   belongs_to :order_service_type, optional:true
   belongs_to :ticket_tire_battery, optional:true
+  has_one :maintenance_control
   has_one_attached :pdf
   has_one_attached :factura
   has_one_attached :adicional_archivo
@@ -15,7 +16,7 @@ class ServiceOrder < ApplicationRecord
   belongs_to :catalog_branch, optional: true
 
   
-  enum estatus: ["Cancelado","Pendiente","Cita programada", "Nueva fecha sugerida","Entrada a taller", "Esperando autorización","Autorizada","Rechazada", "Rechazado y cancelado","Salió de taller","Compra autorizada","Compra Realizada","Servicio Finalizado", "En captura"]
+  enum estatus: ["Cancelado","Pendiente","Cita programada", "Nueva fecha sugerida","Entrada a taller", "Esperando autorización","Autorizada","Rechazada", "Rechazado y cancelado","Salió de taller","Compra autorizada","Compra Realizada","Servicio Finalizado", "En captura", "Entrega de vehículo"]
   enum tipo_servicio: ["Preventivo", "Preventivo Agencia", "Correctivo", "Correctivo Agencia"]
 
   def self.consulta_ordenes(n_orden,empresa,cedis,user,tipo,linea,area)
@@ -43,7 +44,8 @@ class ServiceOrder < ApplicationRecord
       end
 
       cadena_consulta += " service_orders.vehicle_id IS NOT NULL"
-        consulta = ServiceOrder.joins(:vehicle).where(cadena_consulta).order(created_at: :desc).limit(30)
+        #consulta = ServiceOrder.joins(:vehicle).where(cadena_consulta).order(created_at: :desc).limit(30)
+        consulta = ServiceOrder.joins(:vehicle).where(cadena_consulta).order("vehicles.id asc")
       return consulta  
   end
 
@@ -72,7 +74,8 @@ class ServiceOrder < ApplicationRecord
       end
 
       cadena_consulta += " service_orders.vehicle_id IS NOT NULL and service_orders.catalog_workshop_id = #{taller}"
-        consulta = ServiceOrder.joins(:vehicle).where(cadena_consulta).order(created_at: :desc).limit(30)
+        #consulta = ServiceOrder.joins(:vehicle).where(cadena_consulta).order(created_at: :desc)
+        consulta = ServiceOrder.joins(:vehicle).where(cadena_consulta).order("vehicles.id asc")
       return consulta  
   end
 
@@ -494,4 +497,20 @@ class ServiceOrder < ApplicationRecord
       end
       return mensaje,bandera_error
   end
+
+    def self.revision_precios(orden)
+        if orden.factura.attached?
+            #doc = File.open(orden.factura.blob) { |f| Nokogiri::XML(f) }
+            doc = Nokogiri::XML(orden.factura.download)
+            archivo = Hash.from_xml(doc.to_s)
+            hash = archivo["Comprobante"]
+            total_factura = hash["Total"].to_f
+            impuestos = hash["Impuestos"]["TotalImpuestosTrasladados"].to_f
+            uuid = hash["Complemento"]["TimbreFiscalDigital"]["UUID"]
+            return (total_factura - impuestos), total_factura, "#{hash["Serie"]}#{hash["Folio"]}", uuid
+        else
+            return 0, 0, "Sin factura", nil
+        end
+    end
+    
 end

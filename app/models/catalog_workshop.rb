@@ -31,4 +31,40 @@ class CatalogWorkshop < ApplicationRecord
     CatalogWorkshop.find_by(id: id)
   end
 
+  def self.listado_talleres_mantenimiento(vehicle_id)
+    vehiculo = Vehicle.find_by(id: vehicle_id)
+    bitacora = Binnacle.where(catalog_brand_id: vehiculo.catalog_brand_id)
+    if bitacora.length > 0
+      precios = TuningPrice.where(anio: Time.zone.now.year, catalog_brand_id: vehiculo.catalog_brand_id)
+      if precios
+        talleres = CatalogWorkshop.where(vigente: true, id: precios.map{|x| x.catalog_workshop_id}).where.not(user_id: nil)
+        return talleres, ""
+      else
+        return CatalogWorkshop.where(id: nil), "No existe lista de precios para el vehículo con número económico #{vehiculo.numero_economico}."
+      end
+    else
+      return CatalogWorkshop.where(id: nil), "No existe bitácora para el vehículo con número económico #{vehiculo.numero_economico}."
+    end
+  end
+  
+  def self.listado_talleres_mantenimiento_validacion(vehicle_id, service_order)
+    if service_order.tipo_servicio == "Preventivo"
+      vehiculo = Vehicle.find_by(id: vehicle_id)
+      bitacora = Binnacle.where(catalog_brand_id: vehiculo.catalog_brand_id)
+      if bitacora.length > 0
+        precios = TuningPrice.where(anio: Time.zone.now.year, catalog_brand_id: vehiculo.catalog_brand_id)
+        if precios
+          talleres = CatalogWorkshop.where(vigente: true, id: precios.map{|x| x.catalog_workshop_id}).where.not(user_id: nil)
+          return talleres, ""
+        else
+          return CatalogWorkshop.where(id: nil), "No existe lista de precios para el vehículo con número económico #{vehiculo.numero_economico}."
+        end
+      else
+        return CatalogWorkshop.where(id: nil), "No existe bitácora para el vehículo con número económico #{vehiculo.numero_economico}."
+      end
+    else
+      return CatalogWorkshop.where(vigente: true).order(nombre_taller: :asc), ""
+    end
+  end
+
 end

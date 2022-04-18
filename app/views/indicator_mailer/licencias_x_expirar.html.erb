@@ -64,19 +64,19 @@
                     <tbody>
                     <% @licencias.each do |catalog_licence| %>
                         <tr>
-                        <td><%= catalog_licence.clave %></td>
-                        <td><%= catalog_licence.user.name %> <%= catalog_licence.user.last_name %></td>
-                        <td><%= catalog_licence.vehicle.numero_economico %></td>
-                        <td><%= catalog_licence.descripcion %></td>
-                        <td><%= catalog_licence.numero_licencia %></td>
-                        <td><%= l catalog_licence.fecha_vencimiento%></td>
-                        <td>
-                            <% if catalog_licence.fecha_vencimiento < Time.zone.now.to_date %>
-                                <a href="#" class="btn rojo">Expirada</a>
-                            <% else %>
-                                <a href="#" class="btn amarillo">Por expirar</a>
-                            <% end %>
-                        </td>
+                            <td><%= catalog_licence.clave %></td>
+                            <td><%= catalog_licence.user.name %> <%= catalog_licence.user.last_name %></td>
+                            <td><%= catalog_licence.vehicle.numero_economico %></td>
+                            <td><%= catalog_licence.descripcion %></td>
+                            <td><%= catalog_licence.numero_licencia %></td>
+                            <td><%= l catalog_licence.fecha_vencimiento%></td>
+                            <td>
+                                <% if catalog_licence.fecha_vencimiento < Time.zone.now.to_date %>
+                                    <a href="#" class="btn rojo">Expirada</a>
+                                <% else %>
+                                    <a href="#" class="btn amarillo">Por expirar</a>
+                                <% end %>
+                            </td>
                         </tr>
                     <% end %>
                     </tbody>

@@ -88,7 +88,7 @@ class VehicleConsumptionsController < ApplicationController
                 params[:consumption][:catalog_branch_id] = params[:consumption][:catalog_branch_id]  
                 params[:consumption][:catalog_vendor_id] = params[:consumption][:catalog_vendor_id]  
                               
-                @consumo = Consumption.create(folio: nuevo_folio, monto: @vehicle_consumption[1], cargas: @vehicle_consumption[2],fecha_inicio: params[:start_date], fecha_fin: params[:end_date], estatus: "Pendiente", catalog_branch_id: params[:consumption][:catalog_branch_id].to_i, catalog_vendor_id: params[:consumption][:catalog_vendor_id].to_i,semana: params[:semana],fecha_descripcion: params[:descripcion],usuario_creador: "#{current_user.name} #{current_user.last_name}",base:bandera_base)
+                @consumo = Consumption.create(folio: nuevo_folio, monto: @vehicle_consumption[1], cargas: @vehicle_consumption[2],fecha_inicio: params[:start_date], fecha_fin: params[:end_date], estatus: "Pendiente", catalog_branch_id: params[:consumption][:catalog_branch_id].to_i, valuation_id: params[:consumption][:valuation_id].to_i, catalog_vendor_id: params[:consumption][:catalog_vendor_id].to_i,semana: params[:semana],fecha_descripcion: params[:descripcion],usuario_creador: "#{current_user.name} #{current_user.last_name}",base:bandera_base)
                 detalle = VehicleConsumption.where(id: @vehicle_consumption[3]).update(consumption_id: @consumo.id)
                 format.html {redirect_to vehicle_consumptions_url, notice: "Importación cargada con éxito."}
               else
@@ -116,115 +116,20 @@ class VehicleConsumptionsController < ApplicationController
   #RENDIMIENTOS
   def reporte_mensual
     session["menu2"] = "Reporte de rendimiento mensual de reparto"
-      año =  Time.zone.now.year
-      año_anterior = Time.zone.now.year - 1
-      @enero = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end) as cierre,
-        max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end) -
-        max(case when fecha between '#{año_anterior}-12-01' and '#{año_anterior}-12-31' then odometro end) as recorrido,
-        sum(case when fecha between '#{año}-01-01' and '#{año}-01-31' then cantidad end) as lts,
-        ((max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end) -
-        max(case when fecha between '#{año_anterior}-12-01' and '#{año_anterior}-12-31' then odometro end))/(sum(case when fecha between '#{año}-01-01' and '#{año}-01-31' then cantidad end))) as rendimiento from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id 
-        INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-        where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @febrero = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end) as cierre,
-      max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end) -
-      max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-02-01' and '#{año}-02-28' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end) -
-        max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end))/(sum(case when fecha between '#{año}-02-01' and '#{año}-02-28' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @marzo = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end) as cierre,
-        max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end) -
-        max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end) as recorrido,
-        sum(case when fecha between '#{año}-03-01' and '#{año}-03-31' then cantidad end) as lts,
-        ((max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end) -
-          max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end))/(sum(case when fecha between '#{año}-03-01' and '#{año}-03-31' then cantidad end))) as rendimiento
-                from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-                INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @abril = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end) as cierre,
-      max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end) -
-      max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-04-01' and '#{año}-04-30' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end) -
-        max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end))/(sum(case when fecha between '#{año}-04-01' and '#{año}-04-30' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @mayo = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end) as cierre,
-        max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end) -
-        max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end) as recorrido,
-        sum(case when fecha between '#{año}-05-01' and '#{año}-05-31' then cantidad end) as lts,
-        ((max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end) -
-          max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end))/(sum(case when fecha between '#{año}-05-01' and '#{año}-05-31' then cantidad end))) as rendimiento
-                from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-                INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @junio = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end) as cierre,
-      max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end) -
-      max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-06-01' and '#{año}-06-30' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end) -
-        max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end))/(sum(case when fecha between '#{año}-06-01' and '#{año}-06-30' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @julio = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end) as cierre,
-      max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end)-
-      max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-07-01' and '#{año}-07-31' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end) -
-        max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end))/(sum(case when fecha between '#{año}-07-01' and '#{año}-07-31' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @agosto = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end) as cierre,
-      max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end) -
-      max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-08-01' and '#{año}-08-31' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end) -
-        max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end))/(sum(case when fecha between '#{año}-08-01' and '#{año}-08-31' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id 
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @septiembre = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end) as cierre,
-      max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end) -
-      max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-09-01' and '#{año}-09-30' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end) -
-        max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end))/(sum(case when fecha between '#{año}-09-01' and '#{año}-09-30' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @octubre = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end) as cierre,
-      max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end)
-          - max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-10-01' and '#{año}-10-31' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end) -
-        max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end))/(sum(case when fecha between '#{año}-10-01' and '#{año}-10-31' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @noviembre = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end) as cierre,
-      max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end) -
-      max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end) as recorrido,
-          sum(case when fecha between '#{año}-11-01' and '#{año}-11-30' then cantidad end) as lts,
-          ((max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end) -
-            max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end))/(sum(case when fecha between '#{año}-11-01' and '#{año}-11-30' then cantidad end))) as rendimiento
-                  from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-                  INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                  where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      @diciembre = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-12-01' and '#{año}-12-31' then odometro end) as cierre,
-      max(case when fecha between '#{año}-12-01' and '#{año}-12-31' then odometro end) -
-      max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end) as recorrido,
-          sum(case when fecha between '#{año}-12-01' and '#{año}-12-31' then cantidad end) as lts,
-          ((max(case when fecha between '#{año}-12-01' and '#{año}-12-31' then odometro end) -
-            max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end))/(sum(case when fecha between '#{año}-12-01' and '#{año}-12-31' then cantidad end))) as rendimiento
-                  from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-                  INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                  where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
+    @bandera_inicio = 1
+      # año =  Time.zone.now.year - 1
+      # año_anterior = Time.zone.now.year - 2
+    fecha_inicio = Time.zone.now.beginning_of_year
+    fecha_fin = Time.zone.now.end_of_year
+    session["fec_ini_rep_mens"] = fecha_inicio.strftime("%m/%Y")
+    session["fec_fin_rep_mens"] = fecha_fin.strftime("%m/%Y")
+    session["comp_id_rep_mens"] = ""
+    session["branch_id_rep_mens"] = ""
+    session["area_id_rep_mens"] = ""
+    session["veh_id_rep_mens"] = ""
+    consulta = VehicleConsumption.consulta_reporte_mensual(fecha_inicio.strftime("%m/%Y"), fecha_fin.strftime("%m/%Y"), "", "", "", "")
+    @arreglo_mes_fecha = consulta[0]
+    @arreglo_mes_datos = consulta[1]
     #byebug
     #exportar a excel
     respond_to do |format|
@@ -233,270 +138,77 @@ class VehicleConsumptionsController < ApplicationController
       format.xlsx
     end
   end
+
+  def filtrado_reporte_mensual
+    @bandera_inicio = 0
+    @bandera_renderiza = 0
+    if params[:fecha_inicio] == "" and params[:fecha_fin] != ""
+      @bandera_renderiza == 2
+    else
+      session["fec_ini_rep_mens"] = params[:fecha_inicio],
+      session["fec_fin_rep_mens"] = params[:fecha_fin]
+      session["comp_id_rep_mens"] = params[:catalog_company_id]
+      session["branch_id_rep_mens"] = params[:catalog_branch_id]
+      session["area_id_rep_mens"] = params[:area_id]
+      session["veh_id_rep_mens"] = params[:vehicle_id]
+      consulta = VehicleConsumption.consulta_reporte_mensual(params[:fecha_inicio], params[:fecha_fin], params[:catalog_company_id], params[:catalog_branch_id], params[:area_id], params[:vehicle_id])
+      @arreglo_mes_fecha = consulta[0]
+      @arreglo_mes_datos = consulta[1]
+    end
+    
+  end
+  
+
   def rendimiento_excel
-    año =  Time.zone.now.year
-    año_anterior = Time.zone.now.year - 1
-      enero = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end) as cierre,
-        max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end) -
-        max(case when fecha between '#{año_anterior}-12-01' and '#{año_anterior}-12-31' then odometro end) as recorrido,
-        sum(case when fecha between '#{año}-01-01' and '#{año}-01-31' then cantidad end) as lts,
-        ((max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end) -
-        max(case when fecha between '#{año_anterior}-12-01' and '#{año_anterior}-12-31' then odometro end))/(sum(case when fecha between '#{año}-01-01' and '#{año}-01-31' then cantidad end))) as rendimiento from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id 
-        INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-        where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      febrero = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end) as cierre,
-      max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end) -
-      max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-02-01' and '#{año}-02-28' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end) -
-        max(case when fecha between '#{año}-01-01' and '#{año}-01-31' then odometro end))/(sum(case when fecha between '#{año}-02-01' and '#{año}-02-28' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      marzo = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end) as cierre,
-        max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end) -
-        max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end) as recorrido,
-        sum(case when fecha between '#{año}-03-01' and '#{año}-03-31' then cantidad end) as lts,
-        ((max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end) -
-          max(case when fecha between '#{año}-02-01' and '#{año}-02-28' then odometro end))/(sum(case when fecha between '#{año}-03-01' and '#{año}-03-31' then cantidad end))) as rendimiento
-                from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-                INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      abril = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end) as cierre,
-      max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end) -
-      max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-04-01' and '#{año}-04-30' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end) -
-        max(case when fecha between '#{año}-03-01' and '#{año}-03-31' then odometro end))/(sum(case when fecha between '#{año}-04-01' and '#{año}-04-30' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      mayo = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end) as cierre,
-        max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end) -
-        max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end) as recorrido,
-        sum(case when fecha between '#{año}-05-01' and '#{año}-05-31' then cantidad end) as lts,
-        ((max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end) -
-          max(case when fecha between '#{año}-04-01' and '#{año}-04-30' then odometro end))/(sum(case when fecha between '#{año}-05-01' and '#{año}-05-31' then cantidad end))) as rendimiento
-                from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-                INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      junio = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end) as cierre,
-      max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end) -
-      max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-06-01' and '#{año}-06-30' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end) -
-        max(case when fecha between '#{año}-05-01' and '#{año}-05-31' then odometro end))/(sum(case when fecha between '#{año}-06-01' and '#{año}-06-30' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      julio = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end) as cierre,
-      max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end)-
-      max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-07-01' and '#{año}-07-31' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end) -
-        max(case when fecha between '#{año}-06-01' and '#{año}-06-30' then odometro end))/(sum(case when fecha between '#{año}-07-01' and '#{año}-07-31' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      agosto = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end) as cierre,
-      max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end) -
-      max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-08-01' and '#{año}-08-31' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end) -
-        max(case when fecha between '#{año}-07-01' and '#{año}-07-31' then odometro end))/(sum(case when fecha between '#{año}-08-01' and '#{año}-08-31' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id 
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      septiembre = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end) as cierre,
-      max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end) -
-      max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-09-01' and '#{año}-09-30' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end) -
-        max(case when fecha between '#{año}-08-01' and '#{año}-08-31' then odometro end))/(sum(case when fecha between '#{año}-09-01' and '#{año}-09-30' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      octubre = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end) as cierre,
-      max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end)
-          - max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end) as recorrido,
-      sum(case when fecha between '#{año}-10-01' and '#{año}-10-31' then cantidad end) as lts,
-      ((max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end) -
-        max(case when fecha between '#{año}-09-01' and '#{año}-09-30' then odometro end))/(sum(case when fecha between '#{año}-10-01' and '#{año}-10-31' then cantidad end))) as rendimiento
-              from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-              INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-              where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      noviembre = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end) as cierre,
-      max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end) -
-      max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end) as recorrido,
-          sum(case when fecha between '#{año}-11-01' and '#{año}-11-30' then cantidad end) as lts,
-          ((max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end) -
-            max(case when fecha between '#{año}-10-01' and '#{año}-10-31' then odometro end))/(sum(case when fecha between '#{año}-11-01' and '#{año}-11-30' then cantidad end))) as rendimiento
-                  from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-                  INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                  where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
-      diciembre = VehicleConsumption.find_by_sql("select vehicle_id, max(case when fecha between '#{año}-12-01' and '#{año}-12-31' then odometro end) as cierre,
-      max(case when fecha between '#{año}-12-01' and '#{año}-12-31' then odometro end) -
-      max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end) as recorrido,
-          sum(case when fecha between '#{año}-12-01' and '#{año}-12-31' then cantidad end) as lts,
-          ((max(case when fecha between '#{año}-12-01' and '#{año}-12-31' then odometro end) -
-            max(case when fecha between '#{año}-11-01' and '#{año}-11-30' then odometro end))/(sum(case when fecha between '#{año}-12-01' and '#{año}-12-31' then cantidad end))) as rendimiento
-                  from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
-                  INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                  where vehicles.reparto = true and consumptions.id IS NOT NULL group by vehicle_id,numero_economico order by vehicles.numero_economico")
+    consulta = VehicleConsumption.consulta_reporte_mensual(session["fec_ini_rep_mens"], session["fec_fin_rep_mens"], session["comp_id_rep_mens"], session["branch_id_rep_mens"], session["area_id_rep_mens"], session["veh_id_rep_mens"])
+    arreglo_mes_fecha = consulta[0]
+    arreglo_mes_datos = consulta[1]
+    # año =  Time.zone.now.year - 1
+
    require 'axlsx'
-      package = Axlsx::Package.new
-      workbook = package.workbook
-      workbook.styles do |s|
-      miles_decimal = s.add_style(:format_code => "###,###.00")
+    package = Axlsx::Package.new
+    workbook = package.workbook
+    workbook.styles do |s|
+      miles_decimal = s.add_style(:sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}, :format_code => "###,###.00")
 			celda_cabecera= s.add_style :height => 25 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :right}
       col_widths= [3,30,30,30,30,30,30] 
+      img = File.expand_path("#{Rails.root}/app/assets/images/excel_logo.png", __FILE__)
+			col_widths= [3,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30] 
+			celda_tabla = s.add_style :bg_color => "BFBFBF", :fg_color => "00", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
+			celda_cabecera= s.add_style :bg_color => "919191", :fg_color => "ff", :height => 20 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :center}
+      celda_cabecera2= s.add_style :height => 25 ,:b => true, :sz => 16, :font_name => 'Arial', :alignment => { :horizontal => :right, :vertical => :center}
+			celda_categoria = s.add_style :bg_color => "D9D9D9", :fg_color => "00", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
+			celda_tabla_td = s.add_style :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :left, :vertical => :center ,:wrap_text => true}
+			celda_notas = s.add_style :fg_color => "FF0000" ,:sz => 12
+			celda_afi_mayor = s.add_style :bg_color => "808080", :fg_color => "ff", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
+			celda_afi_menor = s.add_style :bg_color => "F2F2F2", :fg_color => "ff", :sz => 12, :border => { :style => :thin, :color => "00" }, :alignment => { :horizontal => :center, :vertical => :center ,:wrap_text => true}
 
-      workbook.add_worksheet(name: "Enero") do |sheet|
-        sheet.merge_cells("A1:D1")
-        sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-        sheet.add_row [""]
-        sheet.add_row [""]
-        sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre enero", "Recorrido enero","Lts enero","Rendimiento enero","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-        sheet.column_widths *col_widths
+      arreglo_mes_fecha.each_with_index do |fecha, index|
+        workbook.add_worksheet(name: fecha.strftime("%B %Y")) do |sheet|
 
-          enero.each do |ene|
-          sheet.add_row [ene.vehicle.numero_economico, ene.vehicle.catalog_branch.decripcion,  ene.vehicle.vehicle_type.descripcion,  ene.vehicle.catalog_model.descripcion , ene.cierre, ene.recorrido,ene.lts,ene.rendimiento,ene.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
+          sheet.add_image(:image_src => img, :noSelect => true, :noMove => true,) do |image|
+            image.width = 105
+            image.height = 137
+            image.start_at 1, 0
           end
-        end
-      workbook.add_worksheet(name: "Febrero") do |sheet|
-        sheet.merge_cells("A1:D1")
-        sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-        sheet.add_row [""]
-        sheet.add_row [""]
-        sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre febrero", "Recorrido febrero","Lts febrero","Rendimiento febrero","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-        sheet.column_widths *col_widths
-
-          febrero.each do |feb|
-          sheet.add_row [feb.vehicle.numero_economico, feb.vehicle.catalog_branch.decripcion,  feb.vehicle.vehicle_type.descripcion,  feb.vehicle.catalog_model.descripcion , feb.cierre, feb.recorrido,feb.lts,feb.rendimiento,feb.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-          end
-        end
-      workbook.add_worksheet(name: "Marzo") do |sheet|
-        sheet.merge_cells("A1:D1")
-        sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-        sheet.add_row [""]
-        sheet.add_row [""]
-        sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre marzo", "Recorrido marzo","Lts marzo","Rendimiento marzo","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-        sheet.column_widths *col_widths
-
-          marzo.each do |mar|
-          sheet.add_row [mar.vehicle.numero_economico, mar.vehicle.catalog_branch.decripcion,  mar.vehicle.vehicle_type.descripcion,  mar.vehicle.catalog_model.descripcion , mar.cierre, mar.recorrido,mar.lts,mar.rendimiento,mar.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-          end
-        end
-      workbook.add_worksheet(name: "Abril") do |sheet|
-        sheet.merge_cells("A1:D1")
-        sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-        sheet.add_row [""]
-        sheet.add_row [""]
-        sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre abril", "Recorrido abril","Lts abril","Rendimiento abril","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-        sheet.column_widths *col_widths
-
-          abril.each do |abr|
-          sheet.add_row [abr.vehicle.numero_economico, abr.vehicle.catalog_branch.decripcion,  abr.vehicle.vehicle_type.descripcion,  abr.vehicle.catalog_model.descripcion , abr.cierre, abr.recorrido,abr.lts,abr.rendimiento,abr.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-          end
-        end
-      workbook.add_worksheet(name: "Mayo") do |sheet|
-        sheet.merge_cells("A1:D1")
-        sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-        sheet.add_row [""]
-        sheet.add_row [""]
-        sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre mayo", "Recorrido mayo","Lts mayo","Rendimiento mayo","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-        sheet.column_widths *col_widths
-
-          mayo.each do |may|
-          sheet.add_row [may.vehicle.numero_economico, may.vehicle.catalog_branch.decripcion,  may.vehicle.vehicle_type.descripcion,  may.vehicle.catalog_model.descripcion , may.cierre, may.recorrido,may.lts,may.rendimiento,may.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-          end
-        end
-        workbook.add_worksheet(name: "Junio") do |sheet|
-          sheet.merge_cells("A1:D1")
-          sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
+          sheet.merge_cells("B1:D7")
+          sheet.add_row ["","Rendimiento mensual de reparto","","","","", "", ""], :style => [nil, celda_cabecera2, nil, nil, nil, nil,nil,nil]
+          sheet.add_row ["","","","","","","",""], :style => [nil, nil, nil, nil, nil, nil]
+          sheet.add_row ["","","","","","","",""]
+          sheet.add_row ["","","","","","","",""]
           sheet.add_row [""]
           sheet.add_row [""]
-          sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre junio", "Recorrido junio","Lts junio","Rendimiento junio","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
+          sheet.add_row [""]
+          sheet.add_row ["","Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre #{fecha.strftime("%B")}", "Recorrido #{fecha.strftime("%B")}","Lts #{fecha.strftime("%B")}","Rendimiento #{fecha.strftime("%B")}","Rendimiento ideal"], :style => [nil, celda_cabecera, celda_cabecera,celda_cabecera, celda_cabecera, celda_cabecera, celda_cabecera, celda_cabecera, celda_cabecera, celda_cabecera, celda_cabecera]
           sheet.column_widths *col_widths
-
-            junio.each do |jun|
-            sheet.add_row [jun.vehicle.numero_economico, jun.vehicle.catalog_branch.decripcion,  jun.vehicle.vehicle_type.descripcion,  jun.vehicle.catalog_model.descripcion , jun.cierre, jun.recorrido,jun.lts,jun.rendimiento,jun.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
+  
+          arreglo_mes_datos[index].each do |dat|
+            sheet.add_row ["",dat.vehicle.numero_economico, dat.vehicle.catalog_branch.decripcion,  dat.vehicle.vehicle_type.descripcion,  dat.vehicle.catalog_model.descripcion , dat.cierre, dat.recorrido,dat.lts,dat.rendimiento,dat.vehicle.vehicle_type.rendimiento_ideal], style: [nil, celda_tabla_td, celda_tabla_td, celda_tabla_td, celda_tabla_td, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
             end
-          end
-          workbook.add_worksheet(name: "Julio") do |sheet|
-            sheet.merge_cells("A1:D1")
-            sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-            sheet.add_row [""]
-            sheet.add_row [""]
-            sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre junio", "Recorrido julio","Lts julio","Rendimiento julio","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-            sheet.column_widths *col_widths
-
-              julio.each do |jul|
-              sheet.add_row [jul.vehicle.numero_economico, jul.vehicle.catalog_branch.decripcion,  jul.vehicle.vehicle_type.descripcion,  jul.vehicle.catalog_model.descripcion , jul.cierre, jul.recorrido,jul.lts,jul.rendimiento,jul.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-              end
-            end
-          workbook.add_worksheet(name: "Agosto") do |sheet|
-            sheet.merge_cells("A1:D1")
-            sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-            sheet.add_row [""]
-            sheet.add_row [""]
-            sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre agosto", "Recorrido agosto","Lts agosto","Rendimiento agosto","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-            sheet.column_widths *col_widths
-
-              agosto.each do |ago|
-              sheet.add_row [ago.vehicle.numero_economico, ago.vehicle.catalog_branch.decripcion,  ago.vehicle.vehicle_type.descripcion,  ago.vehicle.catalog_model.descripcion , ago.cierre, ago.recorrido,ago.lts,ago.rendimiento,ago.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-              end
-            end
-            workbook.add_worksheet(name: "Septiembre") do |sheet|
-              sheet.merge_cells("A1:D1")
-              sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-              sheet.add_row [""]
-              sheet.add_row [""]
-              sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre septiembre", "Recorrido septiembre","Lts septiembre","Rendimiento septiembre","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-              sheet.column_widths *col_widths
-
-                septiembre.each do |sep|
-                sheet.add_row [sep.vehicle.numero_economico, sep.vehicle.catalog_branch.decripcion,  sep.vehicle.vehicle_type.descripcion,  sep.vehicle.catalog_model.descripcion , sep.cierre, sep.recorrido,sep.lts,sep.rendimiento,sep.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-                end
-              end
-            workbook.add_worksheet(name: "Octubre") do |sheet|
-              sheet.merge_cells("A1:D1")
-              sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-              sheet.add_row [""]
-              sheet.add_row [""]
-              sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre octubre", "Recorrido octubre","Lts octubre","Rendimiento octubre","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-              sheet.column_widths *col_widths
-
-                octubre.each do |oct|
-                sheet.add_row [oct.vehicle.numero_economico, oct.vehicle.catalog_branch.decripcion,  oct.vehicle.vehicle_type.descripcion,  oct.vehicle.catalog_model.descripcion , oct.cierre, oct.recorrido,oct.lts,oct.rendimiento,oct.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-                end
-              end
-              workbook.add_worksheet(name: "Noviembre") do |sheet|
-                sheet.merge_cells("A1:D1")
-                sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-                sheet.add_row [""]
-                sheet.add_row [""]
-                sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre noviembre", "Recorrido noviembre","Lts noviembre","Rendimiento noviembre","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-                sheet.column_widths *col_widths
-
-                  noviembre.each do |nov|
-                  sheet.add_row [nov.vehicle.numero_economico, nov.vehicle.catalog_branch.decripcion,  nov.vehicle.vehicle_type.descripcion,  nov.vehicle.catalog_model.descripcion , nov.cierre, nov.recorrido,nov.lts,nov.rendimiento,nov.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-                  end
-                end
-             workbook.add_worksheet(name: "Diciembre") do |sheet|
-                sheet.merge_cells("A1:D1")
-                sheet.add_row ["REPORTE DE RENDIMIENTO MENSUAL EN UNIDADES DE ALMACEN",""], :style => [celda_cabecera,nil]
-                sheet.add_row [""]
-                sheet.add_row [""]
-                sheet.add_row ["Unidad","CEDIS","Tipo de vehículo","Modelo", "Cierre diciembre", "Recorrido diciembre","Lts diciembre","Rendimiento diciembre","Rendimiento ideal"], :b => true, :font_name => 'Arial', :border => { :style => :thin, :color => "00" }
-                sheet.column_widths *col_widths
-
-                  diciembre.each do |dic|
-                  sheet.add_row [dic.vehicle.numero_economico, dic.vehicle.catalog_branch.decripcion,  dic.vehicle.vehicle_type.descripcion,  dic.vehicle.catalog_model.descripcion , dic.cierre, dic.recorrido,dic.lts,dic.rendimiento,dic.vehicle.vehicle_type.rendimiento_ideal], style: [nil, nil, nil, nil, miles_decimal,miles_decimal,miles_decimal,miles_decimal,miles_decimal]
-                  end
-                end
+        end
       end
-      send_data package.to_stream.read, type: "application/xlsx", filename: "Reporte rendimiento mensual.xlsx"
+    end
+    send_data package.to_stream.read, type: "application/xlsx", filename: "Reporte rendimiento mensual.xlsx"
   end
   #indicador rendimiento
 

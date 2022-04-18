@@ -93,7 +93,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     
-                                    <%= link_to "Generar PDF", imprimir_solicitud_path(@encabezado.id), class: "btn btn-outline-success mr-2 float-right", target: "_blank" %>
+                                    <%= link_to "Generar PDF", imprimir_solicitud_path(@encabezado.id, @encabezado.valuation.valor.to_i), class: "btn btn-outline-success mr-2 float-right", target: "_blank" %>
                                     <br>
                                     <br>
                                     <br>
@@ -131,9 +131,9 @@
                                                                 <th>No. Económico</th>
                                                                 <th>Usuario</th>                                                
                                                                 <th>Litros</th>
-                                                                <th>Base $</th>
+                                                                <!--<th>Base $</th>-->
                                                                 <th>Total con IVA</th>
-                                                                <th>Rendimiento</th>
+                                                                <!--<th>Rendimiento</th>-->
                                                             </tr>
                                                         </thead>
                                                         <tbody> 
@@ -155,9 +155,9 @@
                                                                     <td><%=venta["vehiculo"]%></td>
                                                                     <td><%=venta["personal"]%></td>
                                                                     <td><%=number_with_precision(venta["cantidad"],precision:2)%></td>
-                                                                    <td><%=number_to_currency(venta["base"])%></td>
+                                                                    <!--<td><%#=number_to_currency(venta["base"])%></td>-->
                                                                     <td><%=number_to_currency(venta["monto"])%></td>
-                                                                    <td><%=number_with_precision(venta["promedio"],precision:2)%></td>                                                            
+                                                                    <!--<td><%#=number_with_precision(venta["promedio"],precision:2)%></td>-->                                                     
                                                                 </tr>
                                                             <% end %>        
                                                         </tbody>
@@ -167,9 +167,9 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td style="text-align: center;" ><strong><%=number_with_precision(suma_cantidad,precision:2)%></strong></td>
-                                                            <td style="text-align: center;" ><strong><%=number_to_currency(suma_base)%></strong></td>
+                                                            <!--<td style="text-align: center;" ><strong><%#=number_to_currency(suma_base)%></strong></td>-->
                                                             <td style="text-align: center;" ><strong><%=number_to_currency(suma_total)%></strong></td>
-                                                            <td style="text-align: center;" ><strong><%=number_with_precision(suma_prom,precision:2)%></strong></td>
+                                                            <!--<td style="text-align: center;" ><strong><%#=number_with_precision(suma_prom,precision:2)%></strong></td>-->
                                                         </tr>       
                                                         <tbody>
                                                             <%
@@ -190,9 +190,9 @@
                                                                     <td><%=admin["vehiculo"]%></td>
                                                                     <td><%=admin["personal"]%></td>
                                                                     <td><%=number_with_precision(admin["cantidad"],precision:2)%></td>
-                                                                    <td><%=number_to_currency(admin["base"])%></td>
+                                                                    <!--<td><%#=number_to_currency(admin["base"])%></td>-->
                                                                     <td><%=number_to_currency(admin["monto"])%></td>
-                                                                    <td><%=number_with_precision(admin["promedio"],precision:2 )%></td>                                                           
+                                                                    <!--<td><%#=number_with_precision(admin["promedio"],precision:2 )%></td>-->                                                     
                                                                 </tr>
                                                             <% end %>        
                                                         </tbody>
@@ -202,9 +202,9 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td style="text-align: center;" ><strong><%=number_with_precision(suma_cantidad,precision:2)%></strong></td>
-                                                            <td style="text-align: center;" ><strong><%=number_to_currency(suma_base)%></strong></td>
+                                                            <!--<td style="text-align: center;" ><strong><%#=number_to_currency(suma_base)%></strong></td>-->
                                                             <td style="text-align: center;" ><strong><%=number_to_currency(suma_total)%></strong></td>
-                                                            <td style="text-align: center;" ><strong><%=number_with_precision(suma_prom, precision: 2)%></strong></td>
+                                                            <!--<td style="text-align: center;" ><strong><%#=number_with_precision(suma_prom, precision: 2)%></strong></td>-->
                                                         </tr>       
                                                         
                                                         <tbody>
@@ -226,9 +226,9 @@
                                                                     <td><%=almacen["vehiculo"]%></td>
                                                                     <td><%=almacen["personal"]%></td>
                                                                     <td><%=number_with_precision(almacen["cantidad"],precision:2)%></td>
-                                                                    <td><%=number_to_currency(almacen["base"])%></td>
+                                                                    <!--<td><%#=number_to_currency(almacen["base"])%></td>-->
                                                                     <td><%=number_to_currency(almacen["monto"])%></td>
-                                                                    <td><%=number_with_precision(almacen["promedio"],precision:2)%></td>                                                           
+                                                                    <!--<td><%#=number_with_precision(almacen["promedio"],precision:2)%></td>-->                                                     
                                                                 </tr>
                                                             <% end %>        
                                                         </tbody>
@@ -238,9 +238,9 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td style="text-align: center;" ><strong><%=number_with_precision(suma_cantidad,precision:2)%></strong></td>
-                                                            <td style="text-align: center;" ><strong><%=number_to_currency(suma_base)%></strong></td>
+                                                            <!--<td style="text-align: center;" ><strong><%#=number_to_currency(suma_base)%></strong></td>-->
                                                             <td style="text-align: center;" ><strong><%=number_to_currency(suma_total)%></strong></td>
-                                                            <td style="text-align: center;" ><strong><%=number_with_precision(suma_prom,precision:2)%></strong></td>
+                                                            <!--<td style="text-align: center;" ><strong><%#=number_with_precision(suma_prom,precision:2)%></strong></td>-->
                                                         </tr>       
                                                     </table>
                                                    <h6><p>Total: <%=number_to_currency(@monto)%></p></h6> 

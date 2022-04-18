@@ -231,7 +231,7 @@ end
 
   def self.notificacion_captura_kilometraje_tarde(branch_id)
     sin_kilometraje = false
-    vehiculos = Vehicle.where(catalog_branch_id: branch_id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [3, 8, 10])
+    vehiculos = Vehicle.where(catalog_branch_id: branch_id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [3, 8, 10], vehicle_type_id: [6, 11])
     arreglo_no_personal = Array.new
     arreglo_no_usuario = Array.new
     players_ids = []
@@ -346,99 +346,114 @@ end
               #end
             end
           end
-          valor_bitacora = Parameter.find_by(valor: "Valor para bitacora")
-          bitacora = Binnacle.ver_servicios(vehicle.id,mp.km_actual)
-          usuario_vehiculo = vehicle.catalog_personal.user
-          if ((bitacora != []) or (Time.zone.today >= proximo_mtto))
-            txt = "#{usuario_vehiculo.name}, el vehículo con número económico #{vehicle.numero_economico}, requiere mantenimiento preventivo. ¿Desea programarlo?"
-            #txt = "El vehículo con número económico #{vehicle.numero_economico}, requiere mantenimiento preventivo. ¿Desea programarlo?"
-            notificacion =  self.new(
-              notificacion: "<p> #{txt} </p>", 
-              texto: txt,
-              tipo: 0,
-              user_id: usuario_vehiculo.id ,
-              vehicle_id: vehicle.id
-            )
-            if notificacion.save
-              if usuario_vehiculo
-                if usuario_vehiculo.one_signal_device.last != nil
-                  players_ids.push(usuario_vehiculo.one_signal_device.last.player_id)
-                  Notification.send_notification(players_ids, notificacion.texto,nil,nil)
-                end      
-              end
-            end
 
-            if vehicle.responsable.catalog_personal
-              if vehicle.responsable.catalog_personal.user
-                usuario_responsable = vehicle.responsable.catalog_personal.user
-                txt = "#{usuario_responsable.name}, el vehículo con número económico #{vehicle.numero_economico}, requiere mantenimiento preventivo. ¿Desea programarlo?"
-                notificacion2 =  self.new(
-                  notificacion: "<p> #{txt} </p>", 
-                  texto: txt,
-                  tipo: 0,
-                  user_id: usuario_responsable.id ,
-                  vehicle_id: vehicle.id
-                )
-                if notificacion2.save
-                  if usuario_responsable
-                    if usuario_responsable.one_signal_device.last != nil
-                      players_ids.push(usuario_responsable.one_signal_device.last.player_id)
-                      Notification.send_notification(players_ids, notificacion2.texto,nil,nil)
-                    end      
+          bitacora_guardado = Binnacle.ver_servicios_p_bit(vehicle.id,mp.km_actual)
+          if bitacora_guardado.length > 0
+              bitacora_guardado.each do |bit|
+                  kms = MileageIndicator.where(vehicle_id: vehicle.id).order(id: :desc)
+                  kms.length > 0 ? cnt_km = kms.first.km_actual : cnt_km = 0
+                  bitac = MaintenanceBinnacle.new(catalog_brand_id: bit.catalog_brand_id, concept_id: bit.concept_id, bujias: bit.bujias, concept_description_id: bit.concept_description_id, nombre: bit.nombre, descripcion: bit.descripcion, categoria: bit.categoria, linea: bit.linea, tipo_afinacion: bit.tipo_afinacion, tipo_frecuencia: bit.tipo_frecuencia, frecuencia_inspeccion: bit.frecuencia_inspeccion, frecuencia_reemplazo: bit.frecuencia_reemplazo, meses: bit.meses, fecha: bit.fecha, vehicle_id: vehicle.id, km: cnt_km)
+                  if bitac.save
+                      
+                  else
+                      bitac.errors.full_messages.each do |error|
+                          puts "---------------- Error guardado bitacora mantenimiento --------------- #{error} --------------------"
+                      end
                   end
-                end
-              else
-                arreglo_no_usuario.push(vehicle.responsable.catalog_personal)
               end
-            else
-              arreglo_no_personal.push(vehicle.responsable)
-            end
           end
+          # valor_bitacora = Parameter.find_by(valor: "Valor para bitacora")
+          # bitacora = Binnacle.ver_servicios(vehicle.id,mp.km_actual)
+          # usuario_vehiculo = vehicle.catalog_personal.user
+          # if ((bitacora != []) or (Time.zone.today >= proximo_mtto))
+          #   txt = "#{usuario_vehiculo.name}, el vehículo con número económico #{vehicle.numero_economico}, requiere mantenimiento preventivo. ¿Desea programarlo?"
+          #   #txt = "El vehículo con número económico #{vehicle.numero_economico}, requiere mantenimiento preventivo. ¿Desea programarlo?"
+          #   notificacion =  self.new(
+          #     notificacion: "<p> #{txt} </p>", 
+          #     texto: txt,
+          #     tipo: 0,
+          #     user_id: usuario_vehiculo.id ,
+          #     vehicle_id: vehicle.id
+          #   )
+          #   if notificacion.save
+          #     if usuario_vehiculo
+          #       if usuario_vehiculo.one_signal_device.last != nil
+          #         players_ids.push(usuario_vehiculo.one_signal_device.last.player_id)
+          #         Notification.send_notification(players_ids, notificacion.texto,nil,nil)
+          #       end      
+          #     end
+          #   end
+
+          #   if vehicle.responsable.catalog_personal
+          #     if vehicle.responsable.catalog_personal.user
+          #       usuario_responsable = vehicle.responsable.catalog_personal.user
+          #       txt = "#{usuario_responsable.name}, el vehículo con número económico #{vehicle.numero_economico}, requiere mantenimiento preventivo. ¿Desea programarlo?"
+          #       notificacion2 =  self.new(
+          #         notificacion: "<p> #{txt} </p>", 
+          #         texto: txt,
+          #         tipo: 0,
+          #         user_id: usuario_responsable.id ,
+          #         vehicle_id: vehicle.id
+          #       )
+          #       if notificacion2.save
+          #         if usuario_responsable
+          #           if usuario_responsable.one_signal_device.last != nil
+          #             players_ids.push(usuario_responsable.one_signal_device.last.player_id)
+          #             Notification.send_notification(players_ids, notificacion2.texto,nil,nil)
+          #           end      
+          #         end
+          #       end
+          #     else
+          #       arreglo_no_usuario.push(vehicle.responsable.catalog_personal)
+          #     end
+          #   else
+          #     arreglo_no_personal.push(vehicle.responsable)
+          #   end
+          # end
         end
       end
     end
     if arreglo_no_usuario.length > 0
-      VehicleConsumptionsMailer.mail_no_usuario(arreglo_no_usuario, branch_id).deliver_later
+      #VehicleConsumptionsMailer.mail_no_usuario(arreglo_no_usuario, branch_id).deliver_later
     end
     if arreglo_no_personal.length > 0
-      VehicleConsumptionsMailer.mail_no_personal(arreglo_no_personal, branch_id).deliver_later
+      #VehicleConsumptionsMailer.mail_no_personal(arreglo_no_personal, branch_id).deliver_later
     end
   end
 
   def self.send_notification(player_ids, mensaje, pantalla, id)
+    # api_key = ENV["OS_KEY_PRD"]
+    # user_auth_key = ENV["OS_AUTH_PRD"]
+    # app_id = ENV["OS_ID_PRD"]
+    
+    # OneSignal::OneSignal.api_key = api_key
+    # OneSignal::OneSignal.user_auth_key = user_auth_key
+    # params = {
+    #   app_id: app_id,
+    #   #included_segments: ["All"], #envia las notificaciones a todos los dispositivos
+    #   contents: {
+    #     en: mensaje
+    #   },
+    #   data: {
+    #       pantalla: pantalla,
+    #       id: id
 
-      api_key = 'OGI4YTQzMTQtZjYwMC00OTY1LTlhMjktODM3NGZhMDE1NGI4'
-      user_auth_key = 'N2JiYmUyNzctNzdlZC00ZjAyLTgxMDktOTY1ODBlN2ExYmNi'
-          
-      app_id = "87adb461-c6d3-4d79-95e9-af157844dd38"
-    OneSignal::OneSignal.api_key = api_key
-    OneSignal::OneSignal.user_auth_key = user_auth_key
-    params = {
-      app_id: app_id,
-      #included_segments: ["All"], #envia las notificaciones a todos los dispositivos
-      contents: {
-        en: mensaje
-      },
-      data: {
-          pantalla: pantalla,
-          id: id
-
-      },
-      include_player_ids: player_ids #envia notificaciones por dispositivo
-      #excluded_segments
-    }
-    begin
-      response = OneSignal::Notification.create(params: params)
-      #OneSignal::Notification.create(params: params)
-      puts JSON.parse response.body
-      notification_id = JSON.parse(response.body)["id"]
-    rescue OneSignal::OneSignalError => e
-      puts "--- OneSignalError  :"
-      puts "-- message : #{e.message}"
-      puts "-- status : #{e.http_status}"
-      puts "-- body : #{e.http_body}"
-    end
-    puts "--------------------------------------------------#{e}----------------------------" 
-    return e
+    #   },
+    #   include_player_ids: player_ids #envia notificaciones por dispositivo
+    #   #excluded_segments
+    # }
+    # begin
+    #   response = OneSignal::Notification.create(params: params)
+    #   #OneSignal::Notification.create(params: params)
+    #   puts JSON.parse response.body
+    #   notification_id = JSON.parse(response.body)["id"]
+    # rescue OneSignal::OneSignalError => e
+    #   puts "--- OneSignalError  :"
+    #   puts "-- message : #{e.message}"
+    #   puts "-- status : #{e.http_status}"
+    #   puts "-- body : #{e.http_body}"
+    # end
+    # puts "--------------------------------------------------#{e}----------------------------" 
+    # return e
   end
 end

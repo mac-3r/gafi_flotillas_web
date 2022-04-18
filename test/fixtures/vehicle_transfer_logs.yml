@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle: one
+  catalog_branch: one
+  cedis_ant_id: 1
+  user: one
+  fecha: 2022-03-03 11:39:47
+
+two:
+  vehicle: two
+  catalog_branch: two
+  cedis_ant_id: 1
+  user: two
+  fecha: 2022-03-03 11:39:47

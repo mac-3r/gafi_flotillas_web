@@ -127,7 +127,7 @@ class CatalogLicence < ApplicationRecord
     end
 
     def self.envio_correo_licencias_expirar
-        if Time.zone.now.to_date.end_of_month == Time.zone.now.to_date
+        if Time.zone.now.to_date.beginning_of_month == Time.zone.now.to_date
             valor = ""
             contador = 0
             parametro = Parameter.find_by(valor: "correos gerente cedis")
@@ -135,7 +135,7 @@ class CatalogLicence < ApplicationRecord
             usuarios_gerentes = rol.users.where.not(email: nil).where.not(email: "")
             usuarios_gerentes.each do |user|
                 contador += 1
-                IndicatorMailer.licencias_x_expirar.deliver_later(wait: (20 * contador).seconds) if contador == 1
+                IndicatorMailer.licencias_x_expirar().deliver_later(wait: (20 * contador).seconds) if contador == 1
             end
         end
     end

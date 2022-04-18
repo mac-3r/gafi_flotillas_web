@@ -84,24 +84,53 @@ class MaintenanceTicketsController < ApplicationController
   def autorizar_ticket
     @ticket= MaintenanceTicket.find_by(id: params[:id])
     if @ticket
-      @ticket.update(estatus:"Autorizado")
-      if @ticket.service_order_id
-        cantidad_tickets = MaintenanceTicket.where(service_order_id: @ticket.service_order_id).length
-        orden_compuesta = "#{@ticket.service_order_id}.#{cantidad_tickets}"
-        orden = ServiceOrder.new(n_orden:orden_compuesta,vehicle_id:@ticket.vehicle_id,maintenance_ticket_id:@ticket.id, catalog_area_id: @ticket.vehicle.catalog_area_id, catalog_branch_id: @ticket.vehicle.catalog_branch_id, estatus: "En captura")
+      talleres_mtto = CatalogWorkshop.listado_talleres_mantenimiento(@ticket.vehicle_id)
+      if talleres_mtto[1] == ""
+        ultimo_km = @ticket.km_actual
+        #@ticket.update(estatus:"Autorizado")
+        cedis = @ticket.vehicle.catalog_branch
+        cantidad_ordenes = ServiceOrder.where(catalog_branch_id: cedis.id).count
+        cadena_orden = "#{cedis.abreviacion}-"
+        if cantidad_ordenes >= 0 and cantidad_ordenes <= 9
+          cadena_orden += "00000#{cantidad_ordenes + 1}"
+        elsif cantidad_ordenes >= 10 and cantidad_ordenes <= 99
+          cadena_orden += "0000#{cantidad_ordenes + 1}"
+        elsif cantidad_ordenes >= 100 and cantidad_ordenes <= 999
+          cadena_orden += "000#{cantidad_ordenes + 1}"
+        elsif cantidad_ordenes >= 1000 and cantidad_ordenes <= 9099
+          cadena_orden += "00#{cantidad_ordenes + 1}"
+        elsif cantidad_ordenes >= 10000 and cantidad_ordenes <= 99999
+          cadena_orden += "0#{cantidad_ordenes + 1}"
+        elsif cantidad_ordenes >= 100000
+          cadena_orden += "#{cantidad_ordenes + 1}"
+        end
+        if @ticket.service_order_id
+          #cantidad_tickets = MaintenanceTicket.where(service_order_id: @ticket.service_order_id).length
+          #orden_compuesta = "#{@ticket.service_order_id}.#{cantidad_tickets}"
+          orden = ServiceOrder.new(n_orden:cadena_orden,vehicle_id:@ticket.vehicle_id,maintenance_ticket_id:@ticket.id, catalog_area_id: @ticket.vehicle.catalog_area_id, catalog_branch_id: @ticket.vehicle.catalog_branch_id, estatus: "En captura", km_actual: ultimo_km)
+          #byebug
+        else 
+          #numero_consecutivo = ServiceOrder.last
+          #numero_consecutivo ? nuevo_numero = numero_consecutivo.n_orden.to_i + 1 : nuevo_numero = 1
+          orden = ServiceOrder.new(n_orden:cadena_orden,vehicle_id:@ticket.vehicle_id,maintenance_ticket_id:@ticket.id, catalog_area_id: @ticket.vehicle.catalog_area_id, catalog_branch_id: @ticket.vehicle.catalog_branch_id, estatus: "En captura", km_actual: ultimo_km)
+        end
+        #ultimo_km = MileageIndicator.select('km_actual').where(vehicle_id:@ticket.vehicle_id).last
         #byebug
-      else 
-        numero_consecutivo = ServiceOrder.last
-        numero_consecutivo ? nuevo_numero = numero_consecutivo.n_orden.to_i + 1 : nuevo_numero = 1
-        orden = ServiceOrder.new(n_orden:nuevo_numero,vehicle_id:@ticket.vehicle_id,maintenance_ticket_id:@ticket.id, catalog_area_id: @ticket.vehicle.catalog_area_id, catalog_branch_id: @ticket.vehicle.catalog_branch_id, estatus: "En captura")
-      end
-      ultimo_km = MileageIndicator.select('km_actual').where(vehicle_id:@ticket.vehicle_id).last
-      #byebug
-      if orden.save
-        flash[:notice]= "Ticket autorizado con éxito, completa los datos para la orden del servicio."
-        redirect_to crear_orden_ticket_path(orden.id)
+        if orden.save
+          @ticket.update(estatus:"Autorizado")
+          flash[:notice]= "Ticket autorizado con éxito, completa los datos para la orden del servicio."
+          redirect_to crear_orden_ticket_path(orden.id)
+        else
+          flash[:alert]= "Ocurrió un error, inténtelo nuevamente."
+          mensaje_error = "------------------------"
+          orden.errors.full_messages.each do |error|
+            mensaje_error += "#{error}. "
+          end
+          mensaje_error = "------------------------"
+          redirect_to maintenance_tickets_path
+        end
       else
-        flash[:alert]= "Ocurrio un error."
+        flash[:alert]= talleres_mtto[1]
         redirect_to maintenance_tickets_path
       end
     else
