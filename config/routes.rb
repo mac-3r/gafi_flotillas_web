@@ -220,6 +220,10 @@ Rails.application.routes.draw do
   post '/filtrado_incidentes', to: "responsible_incident_report#filtrado_incidentes", as: "filtrado_incidentes"
   get '/responsible_incident_excel', to: "responsible_incident_report#excel_incidentes", as: "responsible_incident_excel"
   
+  
+  get 'show_vehicle_receive', to: "vehicles#show_vehicle_receive", as: "show_vehicle_receive"
+  
+
   # 2.29 Informe de siniestrabilidad
   get 'claim_report', to: "claim_report#index", as: "claim_report"
   post 'filtro_informe_sin', to: "claim_report#filtro_informe_sin", as: "filtro_informe_sin"

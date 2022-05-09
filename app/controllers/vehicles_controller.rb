@@ -814,6 +814,11 @@ class VehiclesController < ApplicationController
     end
   end
 
+  def show_vehicle_receive    
+        @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [1,5,6,7]).order(numero_economico: :asc).limit(10)
+        #@vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false ).order(numero_economico: :asc)
+  end 
+
   def checklist_asignacion
     @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
     if @vehiculo
@@ -1608,6 +1613,8 @@ class VehiclesController < ApplicationController
       format.json
     end
   end
+  
+
   
   
   private

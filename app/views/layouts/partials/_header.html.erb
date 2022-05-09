@@ -43,7 +43,11 @@
                         <li class="nav-item mr-2">
                             <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Seguridad" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_5">Seguridad</a>  
                         </li>
-                    <% else %>
+                        <li class="nav-item mr-2">
+                            <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Siniestralidad" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_6">Asignación</a>  
+                        </li>
+
+                        <% else %>
                         <li class="nav-item mr-3">
                             <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Mantenimiento" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_4">Mantenimiento</a>  
                         </li>
@@ -454,6 +458,14 @@
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
                             <ul class="menu-nav">
                                 <%= render  "layouts/partials/menu_seguridad" %>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between <% if session["menu1"] == "Seguridad" %> show active <% end %>" id="kt_header_tab_6">
+                        <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+                            <ul class="menu-nav">
+                                <%= render  "layouts/partials/menu_asignacion" %>
 
                             </ul>
                         </div>

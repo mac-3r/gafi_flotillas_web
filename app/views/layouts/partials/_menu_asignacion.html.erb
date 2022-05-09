@@ -1,0 +1,39 @@
+<% if can? :index, User %>    
+    <% if can? :index, VehicleChecklist %>    
+        <%= link_to vehicle_checklists_path, class: "dropdown-item" do %>
+            <span class="menu-text">Recibir</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+    <% if can? :index, VehicleChecklist %>    
+        <%= link_to accounting_impacts_path, class: "dropdown-item" do %>
+            <span class="menu-text">Asignar</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+
+
+    <% if can? :index, VehicleChecklist %>    
+        <%= link_to warehouses_path, class: "dropdown-item" do %>
+            <span class="menu-text">En tránsito</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+
+
+    <% if can? :index, VehicleChecklist %>    
+        <%= link_to vehicle_checklists_path, class: "dropdown-item" do %>
+            <span class="menu-text">Asignados</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+
+    <% if can? :index, VehicleChecklist %>    
+        <%= link_to vehicle_checklists_path, class: "dropdown-item" do %>
+            <span class="menu-text">Verificación</span>
+            <span class="menu-desc"></span>
+        <% end %>
+    <% end %>
+
+    </li>
+<% end %>
