@@ -13,6 +13,8 @@ class VehicleChecklistsController < ApplicationController
     end
   end
 
+
+  
   # GET /vehicle_checklists/1
   # GET /vehicle_checklists/1.json
   def show

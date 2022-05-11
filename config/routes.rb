@@ -220,9 +220,12 @@ Rails.application.routes.draw do
   post '/filtrado_incidentes', to: "responsible_incident_report#filtrado_incidentes", as: "filtrado_incidentes"
   get '/responsible_incident_excel', to: "responsible_incident_report#excel_incidentes", as: "responsible_incident_excel"
   
-  
+  #*******************************route agregadas **********  
   get 'show_vehicle_receive', to: "vehicles#show_vehicle_receive", as: "show_vehicle_receive"
+  get 'checklist_delivery/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#checklist_delivery", as: "checklist_delivery"
   
+  
+  #*******************************route agregadas **********  
 
   # 2.29 Informe de siniestrabilidad
   get 'claim_report', to: "claim_report#index", as: "claim_report"
@@ -546,6 +549,7 @@ Rails.application.routes.draw do
   get 'vehicles_assignation', to: "vehicles#reasignacion_vehiculos", as: "asignacion_vehiculos"
   get 'assignation_checklist/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#checklist_asignacion", as: "checklist_asignacion"
   post 'checklist_registration/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#registrar_checklist_vehiculo", as: "registrar_checklist_vehiculo"
+  
   #reporte de documentos
   get '/reporte_documentos', to: 'vehicles#reporte_documentos', as: "reporte_documentos"
   post '/filtrado_documentos', to: "vehicles#filtrado_documentos", as: "filtrado_documentos"

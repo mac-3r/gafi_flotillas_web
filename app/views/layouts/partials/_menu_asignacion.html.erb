@@ -1,6 +1,6 @@
-<% if can? :index, User %>    
+<% if can? :index, User %>   
     <% if can? :index, VehicleChecklist %>    
-        <%= link_to vehicle_checklists_path, class: "dropdown-item" do %>
+        <%= link_to show_vehicle_receive_path, class: "dropdown-item" do %>
             <span class="menu-text">Recibir</span>
             <span class="menu-desc"></span>
         <% end %>

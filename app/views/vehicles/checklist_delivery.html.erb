@@ -1,0 +1,146 @@
+<br>
+<br>
+<br>
+<div class="container">
+
+    <br>
+    <div class="card card-custom">
+        <div class="card-header flex-wrap border-0 pt-6 pb-0 bg-danger text-white">
+            <div class="card-title">
+                <h3 class="card-label text-white">DATOS DEL  VEHÍCULO</h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <span class="text-muted pt-2 font-size-sm d-block">No. de vehículo</span>
+                        <br>
+                        <span><strong><%= @vehiculo.numero_economico %></strong></span>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted pt-2 font-size-sm d-block">Tipo</span>
+                        <br>
+                        <span><strong><%= @vehiculo.vehicle_type.descripcion if @vehiculo.vehicle_type %></strong></span>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted pt-2 font-size-sm d-block">Modelo</span>
+                        <br>
+                        <span><strong><%= @vehiculo.catalog_model.descripcion if @vehiculo.catalog_model %></strong></span>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted pt-2 font-size-sm d-block">Color</span>
+                        <br>
+                        <span><strong><%= @vehiculo.vehicle_color %></strong></span>
+                    </div>
+                </div>
+                <br>
+                 <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-muted pt-2 font-size-sm d-block">Serie</span>
+                        <br>
+                        <span><strong><%= @vehiculo.numero_serie %></strong></span>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted pt-2 font-size-sm d-block">Motor</span>
+                        <br>
+                        <span><strong><%= @vehiculo.numero_motor %></strong></span>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted pt-2 font-size-sm d-block">Placas</span>
+                        <br>
+                        <span><strong><%= @vehiculo.numero_placa %></strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<%= form_for('', method: "POST", url: registrar_checklist_vehiculo_path(@id_vehiculo, @num_economico, @tipo_vehiculo), authenticity_token: true) do |f| %>
+    <div class="card">
+        <div class="card-header bg-danger text-white" id="headingOne"  >
+            <h3 class="mb-0">
+                CHECKLIST DE ENTREGA
+            </h3>
+        </div>
+
+        <div class="card-body">
+                <div id="collapseOne" class="" aria-labelledby="headingOne" data-parent="#accordion">
+
+                    <% @vehicle_checklists.each do |vc| %>
+                        <div class="card">
+                            <div class="card-header">
+                            <h4><%=vc["encabezado"] %> </h4>
+                            </div>
+                            <div class="card-body">
+
+                                <ul class="list-group">
+                                    <%  vc["descripcion"].each do |desc| %>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <%= desc["conceptovehiculo"] %>
+                                            <span class="">
+                                                <div class="">
+
+
+                                                    <select required class="form-control" name="status_checklist[<%= desc["id"] %>]">
+                                                        <option value="0">Buen estado</option>
+                                                        <option value="1">Mal estado</option>
+                                                        <option value="2">No se recibe</option>
+                                                    </select>
+                                                </div>
+                                            </span>
+                                        </li>
+                                    <%end%>
+                                    </ul>
+
+                            </div>
+                        </div>
+
+                    <%end%>
+                </div>
+                <!--span>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h6>Fotos del vehículo</h6>
+                            <div class="form-row">
+                                <div class="form-group col-lg-6">
+                                    <%= f.file_field :foto_vehiculo1, required: true %>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <img id="imagen_vehiculo1" style="max-height:100px; max-width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <h6>Foto de la herramienta</h6>
+                            <div class="form-row">
+                                <div class="form-group col-lg-6">
+                                    <%= f.file_field :foto_herramienta, required: true %>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <img id="imagen_herramienta" style="max-height:100px; max-width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <span-->
+
+                    <div class="form-group">
+                        <label>Observaciones</label>
+                        <%= f.text_area :observaciones, rows: 4, class: "form-control" %>
+                    </div>
+
+        </div>
+        <div class="card-footer bg-transparent border-success">
+            <div class="float-right">
+                    <%= f.submit "Asignar", class: "btn btn-success"%>
+            </div>
+        </div>
+
+    </div>
+<%end%>
+
+</div>
+
+
