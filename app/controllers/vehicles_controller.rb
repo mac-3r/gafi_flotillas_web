@@ -924,41 +924,93 @@ class VehiclesController < ApplicationController
     puts "***********************************************************************************"
     puts "vehicle_check_list: ",vehicle_check_list 
 
+    body_send = []
     bandera_list_error = false
     mensaje = ""
     vehicle = Vehicle.find_by(id:params[:id_vehiculo])
     puts "vehicle",vehicle.to_json
-    ChecklistResponse.transaction do
+    imagenes=[]
 
-      checklist_response =   ChecklistResponse.new 
-      checklist_response.vehicle_id=vehicle[:id]
-      checklist_response.catalog_personal_id = vehicle.catalog_personal_id
-      checklist_response.fecha_captura =  Date.today
-      checklist_response.motivo = params[:observaciones]
+    if true
+      ChecklistResponse.transaction do
+
+        checklist_response =   ChecklistResponse.new 
+        checklist_response.vehicle_id=vehicle[:id]
+        checklist_response.catalog_personal_id = vehicle.catalog_personal_id
+        checklist_response.fecha_captura =  Date.today
+        checklist_response.motivo = params[:observaciones]
 
 
+        imagenes.push(params[:foto_herramienta])
+        imagenes.push(params[:foto_vehiculo1])
+        imagenes.push(params[:foto_vehiculo2])
 
+
+        
+        #puts "checklist_response:",params[:id_vehiculo],vehicle[:id],vehicle.id,checklist_response.to_json                        
+        if  checklist_response.save 
+            body_send.push(imagenes: imagenes, checklist_response_id: checklist_response.id, vehicle_id: vehicle[:id])
+            vehicle.update(vehicle_status_id: 5)
+            vehicle_check_list.each do |index, vl|
+                checklis_response_detail = ChecklistResponseDetail.new(
+                            checklist_response_id: checklist_response.id,
+                            vehicle_checklist_id:index,
+                            estatus:vl
+                        )
+                #puts "checklis_response_detail:",checklis_response_detail.to_json                        
+                if !checklis_response_detail.save 
+                        mensaje = "#{checklis_response_detail.errors.full_messages}" 
+                        bandera_list_error = true
+                end
+            end
+
+            bandera_list_error = false
+            body_send.each do |p|
+                puts "********************************************************:"
+                puts "Imagen:",p
+                response = VehicleEvidence.insertar_imagen(p)
+                if !response 
+                    bandera_list_error = true
+                    mensaje="No se insertaron correctamente"
+                end
+            end
+
+
+        else 
+            mensaje = "Mensaje: #{checklist_response.errors.full_messages}"     
+        end 
       
-      #puts "checklist_response:",params[:id_vehiculo],vehicle[:id],vehicle.id,checklist_response.to_json                        
-      if  checklist_response.save 
-          vehicle.update(vehicle_status_id: 5)
-          vehicle_check_list.each do |index, vl|
-              checklis_response_detail = ChecklistResponseDetail.new(
-                          checklist_response_id: checklist_response.id,
-                          vehicle_checklist_id:index,
-                          estatus:vl
-                      )
-              #puts "checklis_response_detail:",checklis_response_detail.to_json                        
-              if !checklis_response_detail.save 
-                       mensaje = "#{checklis_response_detail.errors.full_messages}" 
-                       bandera_list_error = true
-              end
-          end
-      else 
-          mensaje = "Mensaje: #{checklist_response.errors.full_messages}"     
+
+			      #@url_web =  "http://localhost:3033/"
+
+            #url = URI("#{@url_web}movil_api")
+            #https = Net::HTTP.new(url.host, url.port);
+            #request = Net::HTTP::Post.new(url)
+            #request["Content-Type"] = "application/json"
+            #request["Accept"] = "application/json"
+            #request.body = body_send.to_json
+            #response = https.request(request)
+            #respuesta = JSON.parse response.body
+            if bandera_list_error
+                error!("Ocurrió un eror #{mensaje}",200)
+            else
+                if vehicle.update(recibido:1)
+                    @mensaje = "Datos agregados correctamente"
+                    #RolesMailer.correo_checklist_vehiculo(id_generado).deliver_later(wait: 20.seconds)
+                    #Vehicle.carta_porte(params)
+                else
+                    @mensaje = "Datos agregados correctamente,  no se ha podido actualizar correctamente el estatus del checklist #{vehicle.errrors.full_messages}"
+                end
+            end
+
+
+
       end 
+
+
+    end
     
-    end 
+
     puts "mensaje",mensaje
     puts "bandera_list_error:",bandera_list_error
     respond_to do |format|
