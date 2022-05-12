@@ -80,13 +80,8 @@
                                             <%= desc["conceptovehiculo"] %>
                                             <span class="">
                                                 <div class="">
-
-
-                                                    <select required class="form-control" name="status_checklist[<%= desc["id"] %>]">
-                                                        <option value="0">Buen estado</option>
-                                                        <option value="1">Mal estado</option>
-                                                        <option value="2">No se recibe</option>
-                                                    </select>
+                                                    <% campo="vehicle_check_list["+desc["id"].to_s+"]" %>
+                                                    <%= f.select(:status_checklist, options_for_select([ ["BUEN ESTADO"], ["MAL ESTADO"], ["NO SE RECIBE"] ], selected:  "BUEN ESTADO"), {:include_blank => "Seleccionar estatus"}, {name:"#{campo}",class: 'form-control',required: true}) %>
                                                 </div>
                                             </span>
                                         </li>
@@ -98,7 +93,7 @@
 
                     <%end%>
                 </div>
-                <!--span>
+                
                     <div class="row">
                         <div class="col-lg-6">
                             <h6>Fotos del vehículo</h6>
@@ -108,6 +103,14 @@
                                 </div>
                                 <div class="form-group col-lg-6">
                                     <img id="imagen_vehiculo1" style="max-height:100px; max-width: 100%;">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-lg-6">
+                                    <%= f.file_field :foto_vehiculo2, required: true %>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <img id="imagen_vehiculo2" style="max-height:100px; max-width: 100%;">
                                 </div>
                             </div>
                         </div>
@@ -124,8 +127,7 @@
                         </div>
                     </div>
 
-                <span-->
-
+                
                     <div class="form-group">
                         <label>Observaciones</label>
                         <%= f.text_area :observaciones, rows: 4, class: "form-control" %>
@@ -142,5 +144,59 @@
 <%end%>
 
 </div>
+
+
+ <script>
+    $(document).ready(function(){
+
+        function readURL1(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                $('#imagen_vehiculo1').attr('src', e.target.result);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#foto_vehiculo1").change(function() {
+            readURL1(this);
+        });
+
+        function readURL2(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                $('#imagen_vehiculo2').attr('src', e.target.result);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#foto_vehiculo2").change(function() {
+            readURL2(this);
+        });
+
+        function readURL3(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                $('#imagen_herramienta').attr('src', e.target.result);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#foto_herramienta").change(function() {
+            readURL3(this);
+        });
+    })
+</script>
 
 

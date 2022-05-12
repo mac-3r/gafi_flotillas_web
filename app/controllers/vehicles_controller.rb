@@ -917,19 +917,53 @@ class VehiclesController < ApplicationController
 
 
   def registrar_checklist_vehiculo
-    puts "***************************************************"
+    puts "*******************************************************************************"
     puts "params.",params 
 
     vehicle_check_list = params[:vehicle_check_list]
-    puts "***************************************************"
+    puts "***********************************************************************************"
     puts "vehicle_check_list: ",vehicle_check_list 
 
     bandera_list_error = false
     mensaje = ""
     vehicle = Vehicle.find_by(id:params[:id_vehiculo])
-    #vehicle_check_list.each do |vl|
+    puts "vehicle",vehicle.to_json
+    ChecklistResponse.transaction do
 
-    #end 
+      checklist_response =   ChecklistResponse.new 
+      checklist_response.vehicle_id=vehicle[:id]
+      checklist_response.catalog_personal_id = vehicle.catalog_personal_id
+      checklist_response.fecha_captura =  Date.today
+      checklist_response.motivo = params[:observaciones]
+
+
+
+      
+      #puts "checklist_response:",params[:id_vehiculo],vehicle[:id],vehicle.id,checklist_response.to_json                        
+      if  checklist_response.save 
+          vehicle.update(vehicle_status_id: 5)
+          vehicle_check_list.each do |index, vl|
+              checklis_response_detail = ChecklistResponseDetail.new(
+                          checklist_response_id: checklist_response.id,
+                          vehicle_checklist_id:index,
+                          estatus:vl
+                      )
+              #puts "checklis_response_detail:",checklis_response_detail.to_json                        
+              if !checklis_response_detail.save 
+                       mensaje = "#{checklis_response_detail.errors.full_messages}" 
+                       bandera_list_error = true
+              end
+          end
+      else 
+          mensaje = "Mensaje: #{checklist_response.errors.full_messages}"     
+      end 
+    
+    end 
+    puts "mensaje",mensaje
+    puts "bandera_list_error:",bandera_list_error
+    respond_to do |format|
+            format.html { redirect_to show_vehicle_receive_url, notice: 'Se creó correctamente' }
+    end
 
     #**********************************************/
     #bandera_list_error = false
@@ -969,10 +1003,6 @@ class VehiclesController < ApplicationController
 
     # end
 
-        @vehicle = Vehicle.find_by(id:params[:id_vehiculo])
-        respond_to do |format|
-            format.html { redirect_to show_vehicle_receive_url, notice: 'Se creó correctamente' }
-        end
 
 
 
