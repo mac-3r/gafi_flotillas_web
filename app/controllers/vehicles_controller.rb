@@ -821,6 +821,8 @@ class VehiclesController < ApplicationController
 
 
   def show_vehicle_receive    
+    session["menu1"] = "Asignacion"
+
     if current_user.catalog_personal
       @personal = current_user.catalog_personal
         puts "personal:"
@@ -843,6 +845,7 @@ class VehiclesController < ApplicationController
   end 
 
   def checklist_delivery  
+    session["menu1"] = "Asignacion"
      @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
     if @vehiculo
       @id_vehiculo = params[:id_vehiculo]
@@ -917,13 +920,8 @@ class VehiclesController < ApplicationController
 
 
   def registrar_checklist_vehiculo
-    puts "*******************************************************************************"
-    puts "params.",params 
-
+    
     vehicle_check_list = params[:vehicle_check_list]
-    puts "***********************************************************************************"
-    puts "vehicle_check_list: ",vehicle_check_list 
-
     body_send = []
     bandera_list_error = false
     mensaje = ""
@@ -931,23 +929,17 @@ class VehiclesController < ApplicationController
     puts "vehicle",vehicle.to_json
     imagenes=[]
 
+    imagenes.push(params[:foto_herramienta])
+    imagenes.push(params[:foto_vehiculo1])
+    imagenes.push(params[:foto_vehiculo2])
+
     if true
       ChecklistResponse.transaction do
-
         checklist_response =   ChecklistResponse.new 
         checklist_response.vehicle_id=vehicle[:id]
         checklist_response.catalog_personal_id = vehicle.catalog_personal_id
         checklist_response.fecha_captura =  Date.today
         checklist_response.motivo = params[:observaciones]
-
-
-        imagenes.push(params[:foto_herramienta])
-        imagenes.push(params[:foto_vehiculo1])
-        imagenes.push(params[:foto_vehiculo2])
-
-
-        
-        #puts "checklist_response:",params[:id_vehiculo],vehicle[:id],vehicle.id,checklist_response.to_json                        
         if  checklist_response.save 
             body_send.push(imagenes: imagenes, checklist_response_id: checklist_response.id, vehicle_id: vehicle[:id])
             vehicle.update(vehicle_status_id: 5)
@@ -965,15 +957,13 @@ class VehiclesController < ApplicationController
             end
 
             bandera_list_error = false
-            body_send.each do |p|
-                puts "********************************************************:"
-                puts "Imagen:",p
-                response = VehicleEvidence.insertar_imagen(p)
-                if !response 
-                    bandera_list_error = true
-                    mensaje="No se insertaron correctamente"
-                end
-            end
+
+            response = VehicleEvidence.insertar_imagenWeb(body_send[0])
+                #if !response 
+                #    bandera_list_error = true
+                #    mensaje="No se insertaron correctamente"
+                #end
+            #end
 
 
         else 
@@ -1011,11 +1001,17 @@ class VehiclesController < ApplicationController
     end
     
 
-    puts "mensaje",mensaje
-    puts "bandera_list_error:",bandera_list_error
     respond_to do |format|
+      if bandera_list_error
             format.html { redirect_to show_vehicle_receive_url, notice: 'Se creó correctamente' }
+            format.json { render :show, status: :created, location: @vehicle }
+          else 
+            format.html { redirect_to show_vehicle_receive_url, notice: 'Error' }
+           # format.html { render :checklist_delivery }
+           # format.json { render json: @mensaje, status: :unprocessable_entity }    
+      end 
     end
+
 
     #**********************************************/
     #bandera_list_error = false
@@ -1829,7 +1825,6 @@ class VehiclesController < ApplicationController
     def validacion_menu
       session["menu1"] = "Maestro de vehículos"
       session["menu2"] = "Maestro"
-      session["menu2"] = "Asignación"
     end
 
     # Only allow a list of tvehicle_brand_idrusted parameters through.
