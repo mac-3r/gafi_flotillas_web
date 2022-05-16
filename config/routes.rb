@@ -221,7 +221,17 @@ Rails.application.routes.draw do
   get '/responsible_incident_excel', to: "responsible_incident_report#excel_incidentes", as: "responsible_incident_excel"
   
   #*******************************route agregadas **********  
+  get 'in_transit_data/:id', to: "vehicles#in_transit_data", as: "in_transit_data"
+  get 'show_in_transit', to: "vehicles#show_in_transit", as: "show_in_transit"
+  get 'show_assign_vehicle', to: "vehicles#show_assign_vehicle", as: "show_assign_vehicle"
+  get 'show_assigned', to: "vehicles#show_assigned", as: "show_assigned"
   get 'show_vehicle_receive', to: "vehicles#show_vehicle_receive", as: "show_vehicle_receive"
+  
+  get 'assign_vehicle_data/:id', to: "vehicles#assign_vehicle_data", as: "assign_vehicle_data"
+  get 'assigned_vehicle_data/:id', to: "vehicles#assigned_vehicle_data", as: "assigned_vehicle_data"
+  post 'register_assign_vehicle/:id', to: "vehicles#register_assign_vehicle", as: "register_assign_vehicle"
+  post 'register_assigned_vehicle/:id', to: "vehicles#register_assigned_vehicle", as: "register_assigned_vehicle"
+
   get 'checklist_delivery/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#checklist_delivery", as: "checklist_delivery"
   
   

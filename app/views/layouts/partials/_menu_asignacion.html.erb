@@ -1,39 +1,40 @@
-<% if can? :index, User %>   
-    <% if can? :index, VehicleChecklist %>    
-        <%= link_to show_vehicle_receive_path, class: "dropdown-item" do %>
-            <span class="menu-text">Recibir</span>
-            <span class="menu-desc"></span>
-        <% end %>
+
+
+
+<% if can? :show_vehicle_receive, Vehicle %>    
+<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Recibir"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+    <%= link_to show_vehicle_receive_path, class: "menu-link" do %>
+        <span class="menu-text">Recibir</span>
+        <span class="menu-desc"></span>
     <% end %>
-    <% if can? :index, VehicleChecklist %>    
-        <%= link_to accounting_impacts_path, class: "dropdown-item" do %>
-            <span class="menu-text">Asignar</span>
-            <span class="menu-desc"></span>
-        <% end %>
+</li>
+<% end %>
+   
+
+<% if can? :assign_vehicle, Vehicle %>    
+<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Asignar"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+    <%= link_to show_assign_vehicle_path, class: "menu-link" do %>
+        <span class="menu-text">Asignar</span>
+        <span class="menu-desc"></span>
     <% end %>
+</li>
+<% end %>
 
 
-    <% if can? :index, VehicleChecklist %>    
-        <%= link_to warehouses_path, class: "dropdown-item" do %>
-            <span class="menu-text">En tránsito</span>
-            <span class="menu-desc"></span>
-        <% end %>
+<% if can? :assign_vehicle, Vehicle %>    
+<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Transito"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+    <%= link_to show_in_transit_path, class: "menu-link" do %>
+        <span class="menu-text">En transito</span>
+        <span class="menu-desc"></span>
     <% end %>
+</li>
+<% end %>
 
-
-    <% if can? :index, VehicleChecklist %>    
-        <%= link_to vehicle_checklists_path, class: "dropdown-item" do %>
-            <span class="menu-text">Asignados</span>
-            <span class="menu-desc"></span>
-        <% end %>
+<% if can? :assign_vehicle, Vehicle %>    
+<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Asignados"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+    <%= link_to show_assigned_path, class: "menu-link" do %>
+        <span class="menu-text">Asignados</span>
+        <span class="menu-desc"></span>
     <% end %>
-
-    <% if can? :index, VehicleChecklist %>    
-        <%= link_to vehicle_checklists_path, class: "dropdown-item" do %>
-            <span class="menu-text">Verificación</span>
-            <span class="menu-desc"></span>
-        <% end %>
-    <% end %>
-
-    </li>
+</li>
 <% end %>

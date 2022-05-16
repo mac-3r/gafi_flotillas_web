@@ -1,0 +1,63 @@
+<div class="container">
+    <br>
+    <br>
+    <h1><center>
+         <% case view %>    
+         <%when "transit" %>
+            Vehículos en Tránsito   
+         <%when "assign" %>   
+            Vehículos por Asignar   
+        <%when "assigned" %>   
+            Vehículos  Asignados   
+        <%when "delivery" %>  
+            Vehículos para Recibir   
+         <%else%>                
+          Título
+        <%end%>                
+      
+        </center> </h1>
+    <div class="list-group">
+        <% ( vehicles || []).each do |vpr| %>
+            
+        <% case view %>    
+        <%when "transit" %>   
+            <a href="<%= in_transit_data_path(vpr.id) %>" class="list-group-item list-group-item-action">
+        <%when "assign" %>   
+            <a href="<%= assign_vehicle_data_path(vpr.id) %>" class="list-group-item list-group-item-action">
+        <%when "delivery" %>   
+            <a href="<%= checklist_delivery_path(vpr.id, vpr.numero_economico, vpr.vehicle_type_id) %>" class="list-group-item list-group-item-action">
+        <%else%>                
+            <a href="#" class="list-group-item list-group-item-action">
+        <%end%>                
+            <ul class="">
+                    <li class="list-group-item vehicle">
+                        <div class="card" style="border:white 0px">
+                            <div class="card-body">
+                                <h6 class="card-title"><label>Tipo de vehículo: <%=  vpr.vehicle_type.descripcion %> </label></h6>
+                                <h5 class="card-subtitle mb-2 text-muted"><label>TN° de vehículo: <%=  vpr.numero_economico%></label></h5>
+                                <div class="row">
+                                    <div class="col-md-6  col-sm-12">
+                                        <ul class="">
+                                            <li class="list-group-item">Estatus: <%= vpr.vehicle_status.descripcion %></li>
+                                            <li class="list-group-item">Placas: <%=  vpr.numero_placa %></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6  col-sm-12">
+                                        <ul class="">
+                                            <li class="list-group-item">Fecha compra: <%=  vpr.fecha_compra %></li>
+                                            <li class="list-group-item">Valor de compra: <%=  number_to_currency(vpr.valor_compra, precision: 2) %></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>            
+                    </li>
+        
+                </ul>
+            </a>
+        <% end %>
+
+
+    </div>
+
+</div>
