@@ -11,7 +11,7 @@
 <% end %>
    
 
-<% if can? :assign_vehicle, Vehicle %>    
+<% if can? :show_assign_vehicle, Vehicle %>    
 <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Asignar"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
     <%= link_to show_assign_vehicle_path, class: "menu-link" do %>
         <span class="menu-text">Asignar</span>
@@ -21,7 +21,7 @@
 <% end %>
 
 
-<% if can? :assign_vehicle, Vehicle %>    
+<% if can? :show_in_transit, Vehicle %>    
 <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Transito"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
     <%= link_to show_in_transit_path, class: "menu-link" do %>
         <span class="menu-text">En transito</span>
@@ -30,7 +30,7 @@
 </li>
 <% end %>
 
-<% if can? :assign_vehicle, Vehicle %>    
+<% if can? :show_assigned, Vehicle %>    
 <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Asignados"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
     <%= link_to show_assigned_path, class: "menu-link" do %>
         <span class="menu-text">Asignados</span>
@@ -38,3 +38,17 @@
     <% end %>
 </li>
 <% end %>
+
+<% if can? :show_vehicles_sales, Vehicle %>    
+<li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Ventas"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+    <%= link_to show_vehicles_sales_path, class: "menu-link" do %>
+        <span class="menu-text">Ventas</span>
+        <span class="menu-desc"></span>
+    <% end %>
+</li>
+<% end %>
+
+
+
+
+

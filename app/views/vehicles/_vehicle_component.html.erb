@@ -2,10 +2,12 @@
     <br>
     <br>
     <h1><center>
-         <% case view %>    
-         <%when "transit" %>
+        <% case view %>    
+        <%when "sales" %>
+            Vehículos en Venta   
+        <%when "transit" %>
             Vehículos en Tránsito   
-         <%when "assign" %>   
+        <%when "assign" %>   
             Vehículos por Asignar   
         <%when "assigned" %>   
             Vehículos  Asignados   
@@ -16,16 +18,28 @@
         <%end%>                
       
         </center> </h1>
+
+
+        <div class="row" style="margin-left:2%">
+            <div class="col-sm-4">
+              <input type="search" placeholder="Buscador" name="search" class="form-control searchbox-input" required="">
+            </div>
+          </div>
+          <br>
     <div class="list-group">
         <% ( vehicles || []).each do |vpr| %>
             
         <% case view %>    
         <%when "transit" %>   
-            <a href="<%= in_transit_data_path(vpr.id) %>" class="list-group-item list-group-item-action">
+            <a class="contenedor" href="#" class="list-group-item list-group-item-action">
+        <%when "sales" %>   
+                <a class="contenedor" href="#" class="list-group-item list-group-item-action">
         <%when "assign" %>   
-            <a href="<%= assign_vehicle_data_path(vpr.id) %>" class="list-group-item list-group-item-action">
+            <a class="contenedor" href="<%= assign_vehicle_data_path(vpr.id) %>" class="list-group-item list-group-item-action">
         <%when "delivery" %>   
-            <a href="<%= checklist_delivery_path(vpr.id, vpr.numero_economico, vpr.vehicle_type_id) %>" class="list-group-item list-group-item-action">
+            <a class="contenedor" href="<%= vehicle_receive_data_path(vpr.id, vpr.numero_economico, vpr.vehicle_type_id) %>" class="list-group-item list-group-item-action">
+        <%when "assigned" %>   
+                <a class="contenedor" href="<%= assign_vehicle_data_path(vpr.id) %>" class="list-group-item list-group-item-action">
         <%else%>                
             <a href="#" class="list-group-item list-group-item-action">
         <%end%>                
@@ -40,12 +54,22 @@
                                         <ul class="">
                                             <li class="list-group-item">Estatus: <%= vpr.vehicle_status.descripcion %></li>
                                             <li class="list-group-item">Placas: <%=  vpr.numero_placa %></li>
+                                            <% case view %>    
+                                            <%when "sales" %>   
+                                            <li class="list-group-item">Fecha venta: <%= vpr.sales[0].try(:fecha_inicial) %></li>
+                                            <%end%>
                                         </ul>
                                     </div>
                                     <div class="col-md-6  col-sm-12">
                                         <ul class="">
                                             <li class="list-group-item">Fecha compra: <%=  vpr.fecha_compra %></li>
                                             <li class="list-group-item">Valor de compra: <%=  number_to_currency(vpr.valor_compra, precision: 2) %></li>
+                                            <% case view %>    
+                                            <%when "sales" %>   
+                                            <li class="list-group-item">Valor de venta: <%= 
+                                                number_to_currency(vpr.sales[0].try(:precio_inicial), precision: 2) %></li>
+                                                
+                                            <%end%>                                            
                                         </ul>
                                     </div>
                                 </div>
@@ -61,3 +85,17 @@
     </div>
 
 </div>
+
+<script>
+$(document).ready(function(){
+
+    $('.searchbox-input').on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".contenedor").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+
+  });
+
+</script>

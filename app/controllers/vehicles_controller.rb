@@ -1,5 +1,5 @@
 class VehiclesController < ApplicationController
-  before_action :set_vehicle, only: [:show, :edit, :update, :destroy, :vehicle_expenses, :gastos_vehiculo_x_fecha]
+  before_action  :set_vehicle, only: [:show, :edit, :update, :destroy, :vehicle_expenses, :gastos_vehiculo_x_fecha]
   rescue_from ActiveRecord::InvalidForeignKey, with: :invalid_foreign_key
   load_and_authorize_resource except: [:index,:generar_excel,:filtrado_maestro, :reasignacion_vehiculos, :checklist_asignacion, :importar_maestro_vehiculos, :imprimir_adaptacion]
   after_action :validacion_menu
@@ -819,10 +819,23 @@ class VehiclesController < ApplicationController
     end
   end
 
+
+  def show_vehicles_sales
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Ventas"      
+    #@vehicle_para_venta = Vehicle.order(numero_economico: :asc).limit(20)
+    #@vehicle_para_venta.build.sale
+    @vehicle_para_venta = Vehicle.joins(:vehicle_status).where(vehicle_statuses: {descripcion:"Proceso de venta"})
+  end
+
+
+
+
   def show_assigned
+      self.set_responsable
+
       session["menu1"] = "Vehículo"
       session["menu2"] = "Asignados"    
-
       bandera_rol = false
       arreglo_areas = Array.new
       roles_reasignacion = Parameter.where("valor iLike 'rol_reasign%'").order(valor_extendido: :asc, valor: :asc)
@@ -875,6 +888,7 @@ class VehiclesController < ApplicationController
 
 
   def show_in_transit
+    self.set_responsable
     session["menu1"] = "Vehículo"
     session["menu2"] = "Transito"
 
@@ -1086,43 +1100,34 @@ class VehiclesController < ApplicationController
   end 
 
   def show_assign_vehicle 
+    self.set_responsable
     session["menu1"] = "Vehículo"
     session["menu2"] = "Asignar"
+
     if @responsable != nil
-        @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], responsable_id: @responsable.id).order(numero_economico: :asc)
-    else
-        @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
-    end
+      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], responsable_id: @responsable.id).order(numero_economico: :asc)
+  else
+      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+  end
 
     @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7]).order(numero_economico: :asc).limit(10)
   end; 
 
+
+
   def show_vehicle_receive    
+    self.set_responsable
+
     session["menu1"] = "Vehículo"
     session["menu2"] = "Recibir"
 
-    if current_user.catalog_personal
-      @personal = current_user.catalog_personal
-        puts "personal:"
-        puts @personal
-      if  @personal.responsable != nil
-        @responsable = @personal.responsable
-        @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7]).limit(100)
-        puts "vehicle_pendientes_recibir:"
-        puts @vehicle_pendientes_recibir
-        #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false )
-      else
-        flash[:alert] = "El usuario no es reponsable."
-      end
-    else
-      flash[:alert] = "El usuario no tiene empleado asignado."
-    end
-    #/*********************** PRUEBA ************************/ 
+    #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false ).order(numero_economico: :asc)
+
     @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], recibido:false ).order(numero_economico: :asc).limit(10)
 
   end 
 
-  def checklist_delivery  
+  def vehicle_receive_data  
     session["menu1"] = "Vehículo"
      @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
     if @vehiculo
@@ -1191,7 +1196,7 @@ class VehiclesController < ApplicationController
         end     
     else
       flash[:alert] = "No se encontró el vehículo o no se puede asignar."
-      redirect_to asignacion_vehiculos_path
+      redirect_to show_vehicle_receive_path
     end
   end 
   
@@ -1204,7 +1209,7 @@ class VehiclesController < ApplicationController
     bandera_list_error = false
     @mensaje = ""
     vehicle = Vehicle.find_by(id:params[:id_vehiculo])
-    puts "vehicle",vehicle.to_json
+
     imagenes=[]
 
     imagenes.push(params[:foto_herramienta])
@@ -1264,7 +1269,7 @@ class VehiclesController < ApplicationController
             format.json { render :show, status: :created, location: @vehicle }
           else 
             format.html { redirect_to show_vehicle_receive_url, alert: @mensaje}
-            #format.html { redirect_to checklist_delivery_path(@vehicle.id,@vehicle.numero_economico, @vehicle.vehicle_type_id) }
+            #format.html { redirect_to vehicle_receive_data_path(@vehicle.id,@vehicle.numero_economico, @vehicle.vehicle_type_id) }
             #format.json { render json: @checklist_response.errors, status: :unprocessable_entity }
             # format.json { render json: @mensaje, status: :unprocessable_entity }    
       end 
@@ -1329,13 +1334,16 @@ class VehiclesController < ApplicationController
   def assign_vehicle_data
     session["menu1"] = "Vehículo"
     session["menu2"] = "Asignar"
-    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
+    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo])
   end 
 
   def assigned_vehicle_data
     session["menu1"] = "Vehículo"
     session["menu2"] = "Asignado"
-    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
+
+    #@personal = CatalogPersonal.joins(:user).joins(user: [:catalog_branches_user]).where(catalog_branches_users: {catalog_branch_id: params[:catalog_branch_id]})
+
+    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo])
 end 
 
 
@@ -2091,6 +2099,24 @@ end
 
   
   
+  def set_responsable
+    if @current_user.catalog_branches
+      @user_branch = @current_user.catalog_branches.map{|x| x.id}
+    else
+      @user_branch = nil
+    end
+    if @current_user.catalog_personal   
+      @tipo_usuario = 1
+      @personal = @current_user.catalog_personal
+      if   @personal.responsable != nil
+        @responsable = @personal.responsable
+      else
+        @responsable = nil
+      end
+    end 
+  
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_vehicle
@@ -2101,6 +2127,7 @@ end
       session["menu1"] = "Maestro de vehículos"
       session["menu2"] = "Maestro"
     end
+
 
     # Only allow a list of tvehicle_brand_idrusted parameters through.
     def vehicle_params

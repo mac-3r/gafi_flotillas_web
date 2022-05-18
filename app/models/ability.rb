@@ -49,6 +49,7 @@ class Ability
     alias_action :borrar_carga,to: :borrrar_cargas_combustible
     alias_action :modal_cambio_usuario,:editar_usuario_aut, to: :cambio_usuario_combustible
     # Solicitudes autorizadas
+
     alias_action :indice_solicitud, :busqueda_solicitud, :ver_solicitud,:documentos_pdf, :descargar_pdf, :cargar_pdf,:generar_reporte, :imprimir_solicitud, :consumo_excel, :solicitar_autorizacion, :solicitar_autorizacion8, :solicitar_autorizacion16, to: :ver_index_solicitudes_aut
 
     # Reporte de control de combustible acumulado
@@ -246,8 +247,7 @@ class Ability
     alias_action :vehicle_expenses, :gastos_vehiculo_x_fecha, to: :ver_gastos_maestro_vehiculos
 
 
-
-
+    alias_action :vehicle_receive_data,:checklist_registration, to: :show_vehicle_receive 
 
 
 

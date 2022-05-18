@@ -220,19 +220,27 @@ Rails.application.routes.draw do
   post '/filtrado_incidentes', to: "responsible_incident_report#filtrado_incidentes", as: "filtrado_incidentes"
   get '/responsible_incident_excel', to: "responsible_incident_report#excel_incidentes", as: "responsible_incident_excel"
   
-  #*******************************route agregadas **********  
-  get 'in_transit_data/:id', to: "vehicles#in_transit_data", as: "in_transit_data"
-  get 'show_in_transit', to: "vehicles#show_in_transit", as: "show_in_transit"
-  get 'show_assign_vehicle', to: "vehicles#show_assign_vehicle", as: "show_assign_vehicle"
-  get 'show_assigned', to: "vehicles#show_assigned", as: "show_assigned"
+  #*******************************route agregadas Solidu Systems **********  
   get 'show_vehicle_receive', to: "vehicles#show_vehicle_receive", as: "show_vehicle_receive"
-  
-  get 'assign_vehicle_data/:id', to: "vehicles#assign_vehicle_data", as: "assign_vehicle_data"
-  get 'assigned_vehicle_data/:id', to: "vehicles#assigned_vehicle_data", as: "assigned_vehicle_data"
-  post 'register_assign_vehicle/:id', to: "vehicles#register_assign_vehicle", as: "register_assign_vehicle"
-  post 'register_assigned_vehicle/:id', to: "vehicles#register_assigned_vehicle", as: "register_assigned_vehicle"
+  get 'show_assign_vehicle', to: "vehicles#show_assign_vehicle", as: "show_assign_vehicle"
+  get 'show_in_transit', to: "vehicles#show_in_transit", as: "show_in_transit"
+  get 'show_assigned', to: "vehicles#show_assigned", as: "show_assigned"
+  get 'show_vehicles_sales', to: "vehicles#show_vehicles_sales", as: "show_vehicles_sales"
 
-  get 'checklist_delivery/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#checklist_delivery", as: "checklist_delivery"
+
+
+  get 'vehicle_receive_data/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#vehicle_receive_data", as: "vehicle_receive_data"
+  get 'assign_vehicle_data/:id', to: "vehicles#assign_vehicle_data", as: "assign_vehicle_data"
+  get 'in_transit_data/:id', to: "vehicles#in_transit_data", as: "in_transit_data"
+  get 'assigned_vehicle_data/:id', to: "vehicles#assigned_vehicle_data", as: "assigned_vehicle_data"
+  
+  post 'checklist_registration/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#registrar_checklist_vehiculo", as: "registrar_checklist_vehiculo"
+  
+  post 'register_assign_vehicle/:id', to: "vehicles#register_assign_vehicle", as: "register_assign_vehicle"
+  
+  post 'register_assigned_vehicle/:id', to: "vehicles#register_assigned_vehicle", as: "register_assigned_vehicle"
+  
+  #*******************************route agregadas Solidu Systems **********  
   
   
   #*******************************route agregadas **********  
@@ -558,7 +566,7 @@ Rails.application.routes.draw do
   # Reasignación, asignación y aceptación
   get 'vehicles_assignation', to: "vehicles#reasignacion_vehiculos", as: "asignacion_vehiculos"
   get 'assignation_checklist/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#checklist_asignacion", as: "checklist_asignacion"
-  post 'checklist_registration/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#registrar_checklist_vehiculo", as: "registrar_checklist_vehiculo"
+  
   
   #reporte de documentos
   get '/reporte_documentos', to: 'vehicles#reporte_documentos', as: "reporte_documentos"
