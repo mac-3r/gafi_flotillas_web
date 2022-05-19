@@ -226,18 +226,18 @@ Rails.application.routes.draw do
   get 'show_in_transit', to: "vehicles#show_in_transit", as: "show_in_transit"
   get 'show_assigned', to: "vehicles#show_assigned", as: "show_assigned"
   get 'show_vehicles_sales', to: "vehicles#show_vehicles_sales", as: "show_vehicles_sales"
-
-
+  get 'show_vehicles_verification', to: "vehicles#show_vehicles_verification", as: "show_vehicles_verification"
 
   get 'vehicle_receive_data/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#vehicle_receive_data", as: "vehicle_receive_data"
   get 'assign_vehicle_data/:id', to: "vehicles#assign_vehicle_data", as: "assign_vehicle_data"
   get 'in_transit_data/:id', to: "vehicles#in_transit_data", as: "in_transit_data"
   get 'assigned_vehicle_data/:id', to: "vehicles#assigned_vehicle_data", as: "assigned_vehicle_data"
   
+  get 'vehicle_verification_data/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#vehicle_verification_data", as: "vehicle_verification_data"
+  
+  
   post 'checklist_registration/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#registrar_checklist_vehiculo", as: "registrar_checklist_vehiculo"
-  
   post 'register_assign_vehicle/:id', to: "vehicles#register_assign_vehicle", as: "register_assign_vehicle"
-  
   post 'register_assigned_vehicle/:id', to: "vehicles#register_assigned_vehicle", as: "register_assigned_vehicle"
   
   #*******************************route agregadas Solidu Systems **********  

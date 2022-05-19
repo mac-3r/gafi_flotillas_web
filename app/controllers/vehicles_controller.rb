@@ -820,6 +820,14 @@ class VehiclesController < ApplicationController
   end
 
 
+  def show_vehicles_verification
+      session["menu1"] = "Vehículo"
+      session["menu2"] = "Verificaciones"      
+      #@verificaciones  =  Vehicle.where("proxima_verificacion <= ?", Time.zone.now).where(catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+
+      @verificaciones  =  Vehicle.joins(:vehicle_status).where("proxima_verificacion <= ?", Time.zone.now).order(numero_economico: :asc).limit(20)
+ end
+
   def show_vehicles_sales
     session["menu1"] = "Vehículo"
     session["menu2"] = "Ventas"      
@@ -1129,6 +1137,7 @@ class VehiclesController < ApplicationController
 
   def vehicle_receive_data  
     session["menu1"] = "Vehículo"
+    session["menu2"] = "Recibir"
      @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
     if @vehiculo
       @id_vehiculo = params[:id_vehiculo]
@@ -1314,9 +1323,6 @@ class VehiclesController < ApplicationController
 
     # end
 
-
-
-
   end
 
 
@@ -1344,8 +1350,84 @@ class VehiclesController < ApplicationController
     #@personal = CatalogPersonal.joins(:user).joins(user: [:catalog_branches_user]).where(catalog_branches_users: {catalog_branch_id: params[:catalog_branch_id]})
 
     @vehiculo = Vehicle.find_by(id: params[:id_vehiculo])
-end 
+  end 
 
+
+  def vehicle_verification_data
+
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Verificaciones"
+    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
+    if @vehiculo
+      @id_vehiculo = params[:id_vehiculo]
+      @num_economico = params[:numero_economico]
+      @tipo_vehiculo = params[:vehicle_type_id]
+      bandera_parametro = false
+        bandera_bateria = false    
+        bandera_llantas = false
+        bandera_extintor = false
+        tipo = ""
+        @vehicle_checklists = []
+        @vehicle_checklist = []
+        @params = Parameter.where(nombre:"Checklist")
+        vehicle_checklists = VehicleChecklist.select(:clasificacionvehiculo).distinct.where(vehicle_type_id:params[:vehicle_type_id])
+        vehicle_checklists.each do |vcs| 
+            hash_checklists = Hash.new
+            vehicle_checklist = VehicleChecklist.where(clasificacionvehiculo: vcs.clasificacionvehiculo,vehicle_type_id:params[:vehicle_type_id])
+            vehicle_checklist.each do |vc|
+                hash_checklist = Hash.new
+                tipo = ""
+                bandera_bateria = false    
+                bandera_llantas = false
+                bandera_extintor = false
+                bandera_parametro = false
+                if  @params != []
+                    @params.each do |param|
+                        if param.valor == vc.conceptovehiculo
+                            bandera_parametro = true    
+                            if bandera_parametro
+                                if param.valor == "BATERIA"
+                                    bandera_bateria = true
+                                elsif param.valor == "LLANTAS"
+                                    bandera_llantas = true
+                                elsif param.valor == "EXTINGUIDOR"
+                                    bandera_extintor = true
+                                end
+                            end
+                            tipo = param.valor_extendido
+                        end
+                    end
+                end 
+                if bandera_parametro
+                    hash_checklist["bandera_ticket"] = bandera_parametro
+                    hash_checklist["tipo"] = vc.conceptovehiculo
+                else
+                    hash_checklist["bandera_ticket"] = bandera_parametro
+                    hash_checklist["tipo"] = ""
+                end
+                hash_checklist["bandera_bateria"] =bandera_bateria
+                hash_checklist["bandera_llantas"] =bandera_llantas
+                hash_checklist["bandera_extintor"] =bandera_extintor
+            # @encabezado = vc.clasificacionvehiculo
+                hash_checklist["id"] = vc.id
+                hash_checklist["conceptovehiculo"] = vc.conceptovehiculo
+                hash_checklist["vehicle_type_id"] = vc.vehicle_type_id
+                hash_checklist["vehicle_type_name"] = vc.vehicle_type.descripcion
+                hash_checklist["valor"] = nil
+                @vehicle_checklist << hash_checklist
+            end
+            
+            hash_checklists["encabezado"] = vcs.clasificacionvehiculo
+            hash_checklists["descripcion"] = @vehicle_checklist
+            @vehicle_checklists << hash_checklists 
+            @vehicle_checklist = []
+        end     
+    else
+      flash[:alert] = "No se encontró el vehículo o no se puede asignar."
+      redirect_to show_vehicle_receive_path
+    end
+    
+  end
 
   def checklist_asignacion
     session["menu1"] = "Vehículo"

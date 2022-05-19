@@ -11,7 +11,7 @@
             Vehículos por Asignar   
         <%when "assigned" %>   
             Vehículos  Asignados   
-        <%when "delivery" %>  
+        <%when "receive" %>  
             Vehículos para Recibir   
          <%else%>                
           Título
@@ -36,7 +36,7 @@
                 <a class="contenedor" href="#" class="list-group-item list-group-item-action">
         <%when "assign" %>   
             <a class="contenedor" href="<%= assign_vehicle_data_path(vpr.id) %>" class="list-group-item list-group-item-action">
-        <%when "delivery" %>   
+        <%when "receive" %>   
             <a class="contenedor" href="<%= vehicle_receive_data_path(vpr.id, vpr.numero_economico, vpr.vehicle_type_id) %>" class="list-group-item list-group-item-action">
         <%when "assigned" %>   
                 <a class="contenedor" href="<%= assign_vehicle_data_path(vpr.id) %>" class="list-group-item list-group-item-action">
@@ -68,15 +68,25 @@
                                             <%when "sales" %>   
                                             <li class="list-group-item">Valor de venta: <%= 
                                                 number_to_currency(vpr.sales[0].try(:precio_inicial), precision: 2) %></li>
-                                                
+                                            
                                             <%end%>                                            
                                         </ul>
                                     </div>
                                 </div>
                             </div>
+                            <% case view %>    
+                            <%when "sales" %>  
+                                <%if vpr.vehicle_status.id ==10 %> 
+                                    <div class="card-footer text-right">
+                                            <button type="button" class="btn btn-primary">
+                                                Autorizar</button>
+                                            </button>
+                                    </div>
+                                <%end%>
+                            <%end%>
                         </div>            
                     </li>
-        
+                    
                 </ul>
             </a>
         <% end %>

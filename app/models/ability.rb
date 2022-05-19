@@ -247,8 +247,13 @@ class Ability
     alias_action :vehicle_expenses, :gastos_vehiculo_x_fecha, to: :ver_gastos_maestro_vehiculos
 
 
-    alias_action :vehicle_receive_data,:checklist_registration, to: :show_vehicle_receive 
+    alias_action :vehicle_receive_data, :registrar_checklist_vehiculo,  to: :show_vehicle_receive 
 
+    alias_action :assign_vehicle_data, :register_assign_vehicle,  to: :show_assign_vehicle 
+
+    alias_action :assigned_vehicle_data, :register_assigned_vehicle,  to: :show_assign_vehicle 
+
+    
 
 
 

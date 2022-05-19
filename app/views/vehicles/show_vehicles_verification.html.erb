@@ -1,0 +1,74 @@
+<div class="container">
+    <br>
+    <br>
+    <h1><center>
+             
+          Verificaciones             
+      
+        </center> </h1>
+
+
+
+        <div class="row" style="margin-left:2%">
+            <div class="col-sm-4">
+              <input type="search" placeholder="Buscador" name="search" class="form-control searchbox-input" required="">
+            </div>
+          </div>
+          <br>
+    <div class="list-group">
+        <% ( @verificaciones || []).each do |vpr| %>
+            
+      
+            <a class="contenedor" href="<%= vehicle_verification_data_path(vpr.id, vpr.numero_economico, vpr.vehicle_type_id) %>" class="list-group-item list-group-item-action">
+       
+            <ul class="">
+                    <li class="list-group-item vehicle">
+                        <div class="card" style="border:white 0px">
+                            <div class="card-body">
+                                <h6 class="card-title"><label>Tipo de vehículo: <%=  vpr.vehicle_type.descripcion %> </label></h6>
+                                <h5 class="card-subtitle mb-2 text-muted"><label>TN° de vehículo: <%=  vpr.numero_economico%></label></h5>
+                                <div class="row">
+                                    <div class="col-md-6  col-sm-12">
+                                        <ul class="">
+                                            <li class="list-group-item">Línea: <%= vpr.catalog_brand.descripcion %></li>
+                                            <li class="list-group-item">Placas: <%=  vpr.numero_placa %></li>
+                                            <li class="list-group-item">CEDIS: <%=  vpr.catalog_branch.decripcion %></li>
+                                            
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6  col-sm-12">
+                                        <ul class="">
+                                            <li class="list-group-item">Modelo: <%=  vpr.catalog_model.descripcion %></li>
+                                            <li class="list-group-item">Valor de compra: <%=  number_to_currency(vpr.valor_compra, precision: 2) %></li>
+                                            <li class="list-group-item">Última verificación: <%=  vpr.ultima_verificacion %></li>
+                                                                                 
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>            
+                    </li>
+        
+                </ul>
+            </a>
+        <% end %>
+
+
+    </div>
+
+</div>
+
+<script>
+$(document).ready(function(){
+
+    $('.searchbox-input').on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".contenedor").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+
+  });
+
+</script>
+
