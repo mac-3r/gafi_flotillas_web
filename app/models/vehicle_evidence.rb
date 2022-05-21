@@ -28,8 +28,9 @@ class VehicleEvidence < ApplicationRecord
       checklist_response_id = params[:checklist_response_id]
            @bandera = true
            params[:imagenes].each do |img|
-              decoded_data = Base64.decode64(img.read())
-                    imagen = { 
+            decoded_data = img.read()
+            #decoded_data = Base64.encode64(img.read())
+            imagen = { 
                     io: StringIO.new(decoded_data),
                     filename: "evidencia#{SecureRandom.hex}_#{Date.today.strftime('%y%m%d')}.png",
                     content_type: 'image/png'

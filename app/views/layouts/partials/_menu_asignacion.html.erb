@@ -51,7 +51,7 @@
 
 
 
-<% if can? :show_vehicles_sales, Vehicle %>    
+<% if can? :show_vehicles_verification, Vehicle %>    
 <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Verificaciones"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
     <%= link_to show_vehicles_verification_path, class: "menu-link" do %>
         <span class="menu-text">Verificaciones</span>

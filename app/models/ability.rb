@@ -251,7 +251,9 @@ class Ability
 
     alias_action :assign_vehicle_data, :register_assign_vehicle,  to: :show_assign_vehicle 
 
-    alias_action :assigned_vehicle_data, :register_assigned_vehicle,  to: :show_assign_vehicle 
+    alias_action :assigned_vehicle_data, :register_assigned_vehicle,  to: :show_assigned_vehicle 
+
+    alias_action :vehicle_verification_data, :registrar_checklist_vehiculo,  to: :show_vehicles_verification 
 
     
 

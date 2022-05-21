@@ -14,7 +14,25 @@ class VehicleChecklistsController < ApplicationController
   end
 
 
-  
+  def ver_evidencia_imagenes
+    @evidencias = []
+    vehicle_evidences = VehicleEvidence.where(checklist_response_id: params[:checklist_response_id]) 
+    vehicle_evidences.each do |ve|
+        hash_evidencias = Hash.new
+        hash_evidencias["id"] = ve.id
+        if ve.imagen.attachment
+            hash_evidencias["imagen"] = Rails.application.routes.url_helpers.rails_blob_url(ve.imagen, only_path: true)
+        else
+            hash_evidencias["imagen"] =nil
+        end
+        hash_evidencias["tipo"] = ve.tipo
+        hash_evidencias["checklist_response_id"] = ve.checklist_response_id
+        hash_evidencias["vehicles_id"] = ve.vehicles_id
+        @evidencias << hash_evidencias
+    end
+
+end
+
   # GET /vehicle_checklists/1
   # GET /vehicle_checklists/1.json
   def show

@@ -825,7 +825,7 @@ class VehiclesController < ApplicationController
       session["menu2"] = "Verificaciones"      
       #@verificaciones  =  Vehicle.where("proxima_verificacion <= ?", Time.zone.now).where(catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
 
-      @verificaciones  =  Vehicle.joins(:vehicle_status).where("proxima_verificacion <= ?", Time.zone.now).order(numero_economico: :asc).limit(20)
+      @verificaciones  =  Vehicle.joins(:vehicle_status).where("proxima_verificacion <= ?", Time.zone.now).where(vehicle_status_id: [1,5,6,7]).order(numero_economico: :asc).limit(20)
  end
 
   def show_vehicles_sales
@@ -1218,7 +1218,7 @@ class VehiclesController < ApplicationController
     bandera_list_error = false
     @mensaje = ""
     vehicle = Vehicle.find_by(id:params[:id_vehiculo])
-
+    #verificacion=params[:id_vehiculo]
     imagenes=[]
 
     imagenes.push(params[:foto_herramienta])
@@ -1358,6 +1358,7 @@ class VehiclesController < ApplicationController
     session["menu1"] = "Vehículo"
     session["menu2"] = "Verificaciones"
     @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
+    @verificacion=params[:verificacion]
     if @vehiculo
       @id_vehiculo = params[:id_vehiculo]
       @num_economico = params[:numero_economico]
@@ -1424,7 +1425,7 @@ class VehiclesController < ApplicationController
         end     
     else
       flash[:alert] = "No se encontró el vehículo o no se puede asignar."
-      redirect_to show_vehicle_receive_path
+      redirect_to show_vehicles_verification_path
     end
     
   end

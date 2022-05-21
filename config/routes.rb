@@ -106,6 +106,9 @@ Rails.application.routes.draw do
   post 'firma_usuario', to: "movil_api#firma_usuario"
   get 'ver_licencias/:user_id', to: "movil_api#ver_licencias"
   get 'ver_evidencia_check/:checklist_response_id', to: "movil_api#ver_evidencia_check"
+  
+  
+
   put 'firma_venta/:vehicle_id', to: "movil_api#firma_venta"
   get 'ver_firma_venta/:vehicle_id', to: "movil_api#ver_firma_venta"
   post 'agregar_img_llantas', to: "movil_api#agregar_img_llantas"
@@ -233,13 +236,18 @@ Rails.application.routes.draw do
   get 'in_transit_data/:id', to: "vehicles#in_transit_data", as: "in_transit_data"
   get 'assigned_vehicle_data/:id', to: "vehicles#assigned_vehicle_data", as: "assigned_vehicle_data"
   
-  get 'vehicle_verification_data/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#vehicle_verification_data", as: "vehicle_verification_data"
+  get 'vehicle_verification_data/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type(/:verificacion)', to: "vehicles#vehicle_verification_data", as: "vehicle_verification_data"
   
   
   post 'checklist_registration/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#registrar_checklist_vehiculo", as: "registrar_checklist_vehiculo"
   post 'register_assign_vehicle/:id', to: "vehicles#register_assign_vehicle", as: "register_assign_vehicle"
   post 'register_assigned_vehicle/:id', to: "vehicles#register_assigned_vehicle", as: "register_assigned_vehicle"
   
+  get 'ver_evidencia_imagenes/:checklist_response_id', to: "vehicle_checklists#ver_evidencia_imagenes"
+
+  
+
+
   #*******************************route agregadas Solidu Systems **********  
   
   

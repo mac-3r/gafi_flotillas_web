@@ -1,0 +1,8 @@
+<%= @evidencias %>
+
+
+<% (@evidencias || []).each do |evi| %>
+<br>
+
+<img src="<%=evi["imagen"] %>" alt="<%=evi["id"] %>" style="width: 30%; height: 30%;"/>
+<%end%> 
