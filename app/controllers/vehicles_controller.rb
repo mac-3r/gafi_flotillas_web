@@ -823,17 +823,21 @@ class VehiclesController < ApplicationController
   def show_vehicles_verification
       session["menu1"] = "Vehículo"
       session["menu2"] = "Verificaciones"      
-      #@verificaciones  =  Vehicle.where("proxima_verificacion <= ?", Time.zone.now).where(catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+      @verificaciones  =  Vehicle.where("proxima_verificacion <= ?", Time.zone.now).where(catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
 
-      @verificaciones  =  Vehicle.joins(:vehicle_status).where("proxima_verificacion <= ?", Time.zone.now).where(vehicle_status_id: [1,5,6,7]).order(numero_economico: :asc).limit(20)
+      #@verificaciones  =  Vehicle.joins(:vehicle_status).where("proxima_verificacion <= ?", Time.zone.now).where(vehicle_status_id: [1,5,6,7]).order(numero_economico: :asc).limit(20)
  end
 
   def show_vehicles_sales
+    self.set_responsable
     session["menu1"] = "Vehículo"
     session["menu2"] = "Ventas"      
-    #@vehicle_para_venta = Vehicle.order(numero_economico: :asc).limit(20)
-    #@vehicle_para_venta.build.sale
-    @vehicle_para_venta = Vehicle.joins(:vehicle_status).where(vehicle_statuses: {descripcion:"Proceso de venta"})
+    if @responsable != nil
+      @en_transito = Vehicle.where(responsable_id: @responsable.id, catalog_route_id: 2).order(numero_economico: :asc)
+    else
+      @en_transito = Vehicle.where(catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}, catalog_route_id: 2).order(numero_economico: :asc)
+    end
+    #@vehicle_para_venta = Vehicle.joins(:vehicle_status).where(vehicle_statuses: {descripcion:"Proceso de venta"})
   end
 
 
@@ -848,7 +852,7 @@ class VehiclesController < ApplicationController
       arreglo_areas = Array.new
       roles_reasignacion = Parameter.where("valor iLike 'rol_reasign%'").order(valor_extendido: :asc, valor: :asc)
       if roles_reasignacion.length > 0
-          consulta_roles = CatalogRolesUser.where(user_id: @current_user.id, catalog_role_id: roles_reasignacion.map{|x| x.valor_extendido})
+          consulta_roles = CatalogRolesUser.where(user_id: current_user.id, catalog_role_id: roles_reasignacion.map{|x| x.valor_extendido})
           if consulta_roles.length > 0
               params_nvo = Parameter.where("valor iLike 'rol_reasign%'").where(valor_extendido: consulta_roles.map{|x| x.catalog_role_id}).order(valor_extendido: :asc, valor: :asc)
               if params_nvo.length > 0
@@ -889,7 +893,7 @@ class VehiclesController < ApplicationController
           end
       end
             
-      @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1).order(numero_economico: :asc).limit(100)
+      #@vehiculos_entregados = Vehicle.where(vehicle_status_id: 1).order(numero_economico: :asc).limit(100)
 
 
   end 
@@ -903,13 +907,16 @@ class VehiclesController < ApplicationController
     if @responsable != nil
         @en_transito = Vehicle.where(responsable_id: @responsable.id, catalog_route_id: 2).order(numero_economico: :asc)
     else
-        @en_transito = Vehicle.where(catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}, catalog_route_id: 2).order(numero_economico: :asc)
+        @en_transito = Vehicle.where(catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}, catalog_route_id: 2).order(numero_economico: :asc)
     end
     @en_transito = Vehicle.where(catalog_route_id: 2).order(numero_economico: :asc).limit(20)
 
 
   end 
+
+
   def in_transit_data
+
     respond_to do |format|
       format.html { redirect_to show_in_transit_url, alert:  "Cargando"  }
 
@@ -1115,10 +1122,10 @@ class VehiclesController < ApplicationController
     if @responsable != nil
       @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], responsable_id: @responsable.id).order(numero_economico: :asc)
   else
-      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
   end
 
-    @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7]).order(numero_economico: :asc).limit(10)
+  #@vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7]).order(numero_economico: :asc).limit(10)
   end; 
 
 
@@ -1128,10 +1135,12 @@ class VehiclesController < ApplicationController
 
     session["menu1"] = "Vehículo"
     session["menu2"] = "Recibir"
-
-    #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false ).order(numero_economico: :asc)
-
-    @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], recibido:false ).order(numero_economico: :asc).limit(10)
+    if(@personal)
+      @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false ).order(numero_economico: :asc)
+    else
+      @vehicle_pendientes_recibir =[]
+    end
+    #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], recibido:false ).order(numero_economico: :asc).limit(10)
 
   end 
 
@@ -1259,7 +1268,7 @@ class VehiclesController < ApplicationController
                     #RolesMailer.correo_checklist_vehiculo(id_generado).deliver_later(wait: 20.seconds)
                     #Vehicle.carta_porte(params)
                 else
-                    @mensaje = "Datos agregados correctamente,  no se ha podido actualizar correctamente el estatus del checklist #{vehicle.errrors.full_messages}"
+                    @mensaje = "No se ha podido actualizar correctamente el estatus del checklist #{vehicle.errrors.full_messages}"
                 end
             end
 
@@ -1267,7 +1276,6 @@ class VehiclesController < ApplicationController
           @mensaje = "Mensaje: #{checklist_response.errors.full_messages}"     
         end       
       end 
-
 
     end
     
@@ -2183,12 +2191,16 @@ class VehiclesController < ApplicationController
   
   
   def set_responsable
-    if @current_user.catalog_branches
+    @personal = current_user.catalog_personal
+    puts "Personal:"
+    puts current_user.catalog_personal.to_json
+    puts @personal
+    if current_user.catalog_branches
       @user_branch = @current_user.catalog_branches.map{|x| x.id}
     else
       @user_branch = nil
     end
-    if @current_user.catalog_personal   
+    if current_user.catalog_personal   
       @tipo_usuario = 1
       @personal = @current_user.catalog_personal
       if   @personal.responsable != nil
