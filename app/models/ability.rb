@@ -253,7 +253,7 @@ class Ability
 
     alias_action :assigned_vehicle_data, :register_assigned_vehicle,  to: :show_assigned_vehicle 
 
-    alias_action :vehicle_verification_data, :registrar_checklist_vehiculo,  to: :show_vehicles_verification 
+    alias_action :vehicle_verification_data, :register_verification,  to: :show_vehicles_verification 
 
     
 

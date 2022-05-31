@@ -832,12 +832,7 @@ class VehiclesController < ApplicationController
     self.set_responsable
     session["menu1"] = "Vehículo"
     session["menu2"] = "Ventas"      
-    if @responsable != nil
-      @en_transito = Vehicle.where(responsable_id: @responsable.id, catalog_route_id: 2).order(numero_economico: :asc)
-    else
-      @en_transito = Vehicle.where(catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}, catalog_route_id: 2).order(numero_economico: :asc)
-    end
-    #@vehicle_para_venta = Vehicle.joins(:vehicle_status).where(vehicle_statuses: {descripcion:"Proceso de venta"})
+    @vehicle_para_venta = Vehicle.joins(:vehicle_status).where(vehicle_statuses: {descripcion:"Proceso de venta"})
   end
 
 
@@ -848,9 +843,13 @@ class VehiclesController < ApplicationController
 
       session["menu1"] = "Vehículo"
       session["menu2"] = "Asignados"    
+
       bandera_rol = false
       arreglo_areas = Array.new
       roles_reasignacion = Parameter.where("valor iLike 'rol_reasign%'").order(valor_extendido: :asc, valor: :asc)
+      puts "**********************************"
+      puts roles_reasignacion
+
       if roles_reasignacion.length > 0
           consulta_roles = CatalogRolesUser.where(user_id: current_user.id, catalog_role_id: roles_reasignacion.map{|x| x.valor_extendido})
           if consulta_roles.length > 0
@@ -871,9 +870,9 @@ class VehiclesController < ApplicationController
                       end
                   end
                   if bandera_rol == true
-                     # @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id).order(numero_economico: :asc)
+                      @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id).order(numero_economico: :asc)
                   else
-                      # @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id, catalog_area_id: arreglo_areas.map{|x| x.id}).order(numero_economico: :asc)
+                      @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id, catalog_area_id: arreglo_areas.map{|x| x.id}).order(numero_economico: :asc)
                   end
               else
                   @vehiculos_entregados = Vehicle.none
@@ -892,9 +891,7 @@ class VehiclesController < ApplicationController
               @vehiculos_entregados = Vehicle.none
           end
       end
-            
-      #@vehiculos_entregados = Vehicle.where(vehicle_status_id: 1).order(numero_economico: :asc).limit(100)
-
+      
 
   end 
 
@@ -909,7 +906,7 @@ class VehiclesController < ApplicationController
     else
         @en_transito = Vehicle.where(catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}, catalog_route_id: 2).order(numero_economico: :asc)
     end
-    @en_transito = Vehicle.where(catalog_route_id: 2).order(numero_economico: :asc).limit(20)
+    #@en_transito = Vehicle.where(catalog_route_id: 2).order(numero_economico: :asc).limit(20)
 
 
   end 
@@ -1218,7 +1215,77 @@ class VehiclesController < ApplicationController
     end
   end 
   
+  def register_verification
 
+        session["menu1"] = "Vehículo"
+        session["menu2"] = "Verificaciones"    
+        body_send = []
+        bandera_list_error = false
+        puts "**********************************************************"
+        puts params[:vehicle_check_list]
+        bimonthly_check_list = params[:vehicle_check_list]
+        imagenes=[]
+        vehicle = Vehicle.find_by(id:params[:id_vehiculo])
+
+        imagenes.push(params[:foto_herramienta])
+        imagenes.push(params[:foto_vehiculo1])
+        imagenes.push(params[:foto_vehiculo2])
+        puts "**********************************************************"
+        puts "Imagenes:",imagenes
+
+        mensaje = ""
+        BimonthlyVerification.transaction do
+           
+              biomonthly_verification =   BimonthlyVerification.new(
+                  vehicle_id: vehicle.id,
+                  catalog_personal_id:vehicle.catalog_personal_id,
+                  user_id: @current_user.id,
+                  fecha_captura: Date.today,
+                  motivo:params[:observaciones]
+              )
+              puts "biomonthly_verification:",biomonthly_verification
+              if  biomonthly_verification.save 
+                      body_send.push(imagenes: imagenes, bimonthly_verification_id: biomonthly_verification.id, vehicle_id: vehicle.id)
+                      bimonthly_check_list.each do |index, vl|
+                    biomonthly_detail = BimonthlyDetail.new(
+                          bimonthly_verification_id: biomonthly_verification.id,
+                          vehicle_checklist_id:index,
+                          estatus:vl
+                      )
+                      if !biomonthly_detail.save 
+                          
+                          mensaje = "#{biomonthly_detail.errors.full_messages}" 
+                          bandera_list_error = true
+                      end
+                  end
+              else
+                  bandera_list_error = true
+              end
+              puts "BimonthlyImg:",body_send[0]
+              response = BimonthlyImg.insertar_imagenWeb(body_send[0])
+              if bandera_list_error == false
+                rango_dias = Parameter.find_by(valor: "frecuencia de verificacion")                
+                vehicle.update(ultima_verificacion: Time.zone.now, proxima_verificacion:Time.zone.now + rango_dias.valor_extendido.to_i.days)
+                RolesMailer.correo_verificacion_vehiculo(biomonthly_verification.id).deliver_later
+              end
+   
+
+      end      
+      if bandera_list_error 
+          error!("Ocurrió un eror #{mensaje}",200)
+      else
+        @mensaje = "Datos agregados correctamente"
+      end
+
+      respond_to do |format|
+        if !bandera_list_error
+              format.html { redirect_to show_vehicles_verification_url, notice: 'Se creó correctamente' }
+              format.json { render :show, status: :created, location: @vehicle }
+        else 
+              format.html { redirect_to show_vehicles_verification_url, alert: @mensaje}
+        end 
+      end
+  end
 
   def registrar_checklist_vehiculo
     session["menu1"] = "Vehículo"    
@@ -1281,7 +1348,7 @@ class VehiclesController < ApplicationController
     
 
     respond_to do |format|
-      if bandera_list_error
+      if !bandera_list_error
             format.html { redirect_to show_vehicle_receive_url, notice: 'Se creó correctamente' }
             format.json { render :show, status: :created, location: @vehicle }
           else 
@@ -1365,7 +1432,7 @@ class VehiclesController < ApplicationController
 
     session["menu1"] = "Vehículo"
     session["menu2"] = "Verificaciones"
-    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
+    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico])
     @verificacion=params[:verificacion]
     if @vehiculo
       @id_vehiculo = params[:id_vehiculo]

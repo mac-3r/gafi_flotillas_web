@@ -1183,4 +1183,81 @@ class Vehicle < ApplicationRecord
     end
   end
 
+  def self.carta_porte_reasignacion(id_vehiculo)
+    vehicle = Vehicle.find_by(id: id_vehiculo)
+    remolque = nil
+    arreglo = Array.new
+    hash_vehiculo = Hash.new
+    hash_remolque = Hash.new
+    hash_secundario = Hash.new
+    hash_principal = Hash.new
+    if vehicle.reparto == true
+      repartoveh = 1
+    elsif vehicle.reparto == false
+      repartoveh = 0
+    else
+      repartoveh = "NA"
+    end
+    
+    hash_vehiculo["noEconomico"]              = vehicle.numero_economico
+    hash_vehiculo["Compania"]                 = vehicle.catalog_company.clave
+    hash_vehiculo["TipoUnidad"]                = vehicle.vehicle_type.clave
+    hash_vehiculo["placaVehicular"]             = vehicle.numero_placa
+    hash_vehiculo["anoModelo"]                = vehicle.catalog_model.descripcion
+    hash_vehiculo["noPoliza"]                  = vehicle.numero_poliza
+    hash_vehiculo["licencia"]                   = vehicle.numero_licencia
+    hash_vehiculo["permisoSCT"]               = vehicle.permission_type ? vehicle.permission_type.clave : "NA"
+    hash_vehiculo["configVehicular"]            = vehicle.vehicle_configuration ? vehicle.vehicle_configuration.clave : "NA"
+    hash_vehiculo["subtipoRemolque"]           = vehicle.trailer_subtype ? vehicle.trailer_subtype.clave : ""
+    hash_vehiculo["numeroPermisoSCT"]        = vehicle.permiso_sat
+    hash_vehiculo["nombreAseguradora"]        = vehicle.numero_aseguradora
+    hash_vehiculo["cedis"]                      = vehicle.catalog_branch.clave_jd
+    hash_vehiculo["area"]                      = vehicle.catalog_area.abreviacion
+    hash_vehiculo["responsable"]               = vehicle.catalog_personal.clave
+    hash_vehiculo["cobertura"]                 = vehicle.policy_coverage.clave
+    hash_vehiculo["unidadRemolque"]           = vehicle.vehicle_type.clave == "010" ? 1 : 0
+    hash_vehiculo["estatus"]                    = vehicle.vehicle_status.nombre == "Inac" ? 0 : 1
+    hash_vehiculo["noEconomicoRem"]           = remolque ? remolque.numero_economico : "NA"
+    hash_vehiculo["reparto"]                    = repartoveh
+    arreglo.push(hash_vehiculo)
+    hash_secundario["Vehiculo"]                 = arreglo
+    hash_principal["vehiculoInput"]              = hash_secundario
+    paremetro_nombre = Parameter.find_by(nombre:"Url Carta Porte")
+    if paremetro_nombre
+      url = URI(paremetro_nombre.valor_extendido)
+      https = Net::HTTP.new(url.host, url.port);
+      request = Net::HTTP::Put.new(url)
+      request["Content-Type"] = "application/json"
+      request["Accept"] = "application/json"
+      request.body = hash_principal.to_json
+      response = https.request(request)
+      @json_parciado = []
+      respuesta = JSON.parse response.body
+      if respuesta[0].nil?
+        @json_parciado.push(respuesta)
+      else
+        @json_parciado = respuesta
+      end
+      JdeVehiclesLog.create(
+        fecha: Time.zone.now.to_date,
+        hora: Time.zone.now,
+        json_enviado: arreglo,
+        respuesta: @json_parciado,
+        vehicle_id: vehicle.id,
+        tipo: "Asignación",
+        trailer_id: hash_vehiculo["noEconomicoRem"]
+      )
+      puts @json_parciado
+      if @json_parciado.map{|x| x['Exitoso']}.include?(false)
+        return false, @json_parciado
+      else
+        return true, ["Satisfactorio"]
+        #return [@json_parciado,true]
+      end
+    else
+      return false, ["El parámetro de envío de vehículos a JD Edwards no ha sido registrado."]
+    end
+  end
+
+
 end

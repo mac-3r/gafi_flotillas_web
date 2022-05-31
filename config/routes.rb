@@ -238,12 +238,17 @@ Rails.application.routes.draw do
   
   get 'vehicle_verification_data/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type(/:verificacion)', to: "vehicles#vehicle_verification_data", as: "vehicle_verification_data"
   
-  
+
   post 'checklist_registration/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type(/:verificacion)', to: "vehicles#registrar_checklist_vehiculo", as: "registrar_checklist_vehiculo"
   post 'register_assign_vehicle/:id', to: "vehicles#register_assign_vehicle", as: "register_assign_vehicle"
   post 'register_assigned_vehicle/:id', to: "vehicles#register_assigned_vehicle", as: "register_assigned_vehicle"
+  post 'register_verification/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type(/:verificacion)', to: "vehicles#register_verification", as: "register_verification"
   
+  
+
+
   get 'ver_evidencia_imagenes/:checklist_response_id', to: "vehicle_checklists#ver_evidencia_imagenes"
+  get 'ver_evidencia_bimonthly/:bimonthly_verification_id', to: "vehicle_checklists#ver_evidencia_bimonthly"
 
   
 
