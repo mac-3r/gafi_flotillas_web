@@ -939,20 +939,20 @@ class VehiclesController < ApplicationController
                       responsable = Responsable.find_by(catalog_personal_id: catalog_personal.id)
                       if responsable != nil
                           if@vehicle.update(catalog_personal_id:catalog_personal.id, responsable_id: responsable.id, vehicle_status_id: 7, recibido:false) 
-                              #envio_jde = enviar_jde(@vehicle.id)
+                              envio_jde = enviar_jde(@vehicle.id)
                               #envio_jde = [true]
-                              #if envio_jde[0] == true
-                              #    RolesMailer.correo_asignacion_vehiculo(@vehicle.id, catalog_personal.id).deliver_later(wait: 20.seconds)
-                              #    @vehicle
-                              #    @mensaje = "Asignado correctamente."
-                              #else
-                              #    mensaje = ""
-                              #    envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
-                              #        mensaje += "#{error}. "
-                              #    end
-                              #    error!("Error en la solicitud a JD Edwards: #{mensaje}", 200)
-                              #    raise ActiveRecord::Rollback
-                              #end
+                              if envio_jde[0] == true
+                                  RolesMailer.correo_asignacion_vehiculo(@vehicle.id, catalog_personal.id).deliver_later(wait: 20.seconds)
+                                  @vehicle
+                                  @mensaje = "Asignado correctamente."
+                              else
+                                 mensaje = ""
+                                  envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
+                                      mensaje += "#{error}. "
+                                 end
+                                  mensaje="Error en la solicitud a JD Edwards: #{mensaje}"
+                                  raise ActiveRecord::Rollback
+                              end
                           else
                               #@mensaje="Error al asignar vehiculo #{@vehicle.errors.full_messages}"
                               @mensaje="Error al asignar vehiculo 1"
@@ -970,20 +970,20 @@ class VehiclesController < ApplicationController
 
               else
                   if@vehicle.update(catalog_personal_id:catalog_personal.id, vehicle_status_id: 1, recibido:false) 
-                      #envio_jde = enviar_jde(@vehicle.id)
+                      envio_jde = enviar_jde(@vehicle.id)
                       #envio_jde = [true]
-                      #if envio_jde[0] == true
-                      #    RolesMailer.correo_asignacion_vehiculo(@vehicle.id, catalog_personal.id).deliver_later(wait: 20.seconds)
-                      #    @vehicle
-                      #    @mensaje = "Asignado correctamente."
-                      #else
-                      #    mensaje = ""
-                      #    envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
-                      #        mensaje += "#{error}. "
-                      #    end
-                      #    error!("Error en la solicitud a JD Edwards: #{mensaje}", 200)
-                      #    raise ActiveRecord::Rollback
-                      #end
+                      if envio_jde[0] == true
+                          RolesMailer.correo_asignacion_vehiculo(@vehicle.id, catalog_personal.id).deliver_later(wait: 20.seconds)
+                          @vehicle
+                          @mensaje = "Asignado correctamente."
+                      else
+                          mensaje = ""
+                          envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
+                              mensaje += "#{error}. "
+                          end
+                          mensaje="Error en la solicitud a JD Edwards: #{mensaje}"
+                          raise ActiveRecord::Rollback
+                      end
                   else
                       #@mensaje="Error al asignar vehiculo #{@vehicle.errors.full_messages}"
                       @mensaje="Error al asignar vehiculo"
@@ -1028,16 +1028,16 @@ class VehiclesController < ApplicationController
                                               raise ActiveRecord::Rollback
                                           end
                                       else
-                                          error!("Error al asignar vehiculo #{@vehicle.errors.full_messages}", 200)
+                                          mensaje="Error al asignar vehiculo #{@vehicle.errors.full_messages}"
                                           raise ActiveRecord::Rollback
                                       end
                                   else
-                                      error!("El usuario seleccionado debe de estar en el catalogo de responsables",200)
+                                      mensaje = "El usuario seleccionado debe de estar en el catalogo de responsables"
                                       raise ActiveRecord::Rollback
                                   end
                           
                               else
-                                  error!("El usuario seleccionado debe de estar en el catalogo de personal",200)
+                                  mensaje="El usuario seleccionado debe de estar en el catalogo de personal"
                                   raise ActiveRecord::Rollback
                               end
 
@@ -1054,17 +1054,17 @@ class VehiclesController < ApplicationController
                                       envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
                                           mensaje += "#{error}. "
                                       end
-                                      error!("Error en la solicitud a JD Edwards: #{mensaje}", 200)
+                                      mensaje="Error en la solicitud a JD Edwards: #{mensaje}"
                                       raise ActiveRecord::Rollback
                                   end
                               else
-                                  error!("Error al asignar vehiculo #{@vehicle.errors.full_messages}", 200)
+                                  mensaje="Error al asignar vehiculo #{@vehicle.errors.full_messages}"
                                   raise ActiveRecord::Rollback
                               end
 
                           end
                       else
-                          error!("Primero debe de responder el checklist antes de reasignar",200)
+                          mensaje="Primero debe de responder el checklist antes de reasignar"
                           raise ActiveRecord::Rollback
                       end
                   else
@@ -1072,7 +1072,7 @@ class VehiclesController < ApplicationController
                       usuario_cedis.errors.full_messages.each do |error|
                           mensaje += "#{error}. "
                       end
-                      error!("Error al asignar el empleado al cedis: #{mensaje}", 200)
+                      mensaje = "Error al asignar el empleado al cedis: #{mensaje}"
                       raise ActiveRecord::Rollback
                   end
               else
@@ -1080,7 +1080,7 @@ class VehiclesController < ApplicationController
                   personal.errors.full_messages.each do |error|
                       mensaje += "#{error}. "
                   end
-                  error!("Error al generar el empleado: #{mensaje}", 200)
+                  mensaje= "Error al generar el empleado: #{mensaje}"
                   raise ActiveRecord::Rollback
               end
           else
@@ -1088,7 +1088,7 @@ class VehiclesController < ApplicationController
               usuario.errors.full_messages.each do |error|
                   mensaje += "#{error}. "
               end
-              error!("Error al generar el usuario: #{mensaje}", 200)
+              mensaje="Error al generar el usuario: #{mensaje}"
               raise ActiveRecord::Rollback
           end
 
@@ -1131,11 +1131,7 @@ class VehiclesController < ApplicationController
 
     session["menu1"] = "Vehículo"
     session["menu2"] = "Recibir"
-    if @responsable != nil
-      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], responsable_id: @responsable.id).order(numero_economico: :asc)
-  else
-      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
-  end
+    @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false ).order(numero_economico: :asc)
   
     #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], recibido:false ).order(numero_economico: :asc).limit(10)
 
@@ -2281,6 +2277,12 @@ class VehiclesController < ApplicationController
   end
 
   private
+    def enviar_jde(vehiculo)
+      #if request.host_with_port == "gafi-api.apbsoluciones.com:8081"
+          Vehicle.carta_porte_reasignacion(vehiculo)
+      #end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_vehicle
       @vehicle = Vehicle.find(params[:id])
