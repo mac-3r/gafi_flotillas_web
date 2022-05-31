@@ -908,7 +908,6 @@ class VehiclesController < ApplicationController
     end
     #@en_transito = Vehicle.where(catalog_route_id: 2).order(numero_economico: :asc).limit(20)
 
-
   end 
 
 
@@ -1132,12 +1131,14 @@ class VehiclesController < ApplicationController
 
     session["menu1"] = "Vehículo"
     session["menu2"] = "Recibir"
-    if(@personal)
-      @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false ).order(numero_economico: :asc)
-    else
-      @vehicle_pendientes_recibir =[]
-    end
+    if @responsable != nil
+      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], responsable_id: @responsable.id).order(numero_economico: :asc)
+  else
+      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+  end
+  
     #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], recibido:false ).order(numero_economico: :asc).limit(10)
+
 
   end 
 
