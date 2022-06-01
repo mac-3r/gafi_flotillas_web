@@ -252,6 +252,9 @@ Rails.application.routes.draw do
 
   
 
+  get 'show_vehicle_consumptions', to: "vehicle_consumptions#show_vehicle_consumptions", as: "show_vehicle_consumptions"
+  
+
 
   #*******************************route agregadas Solidu Systems **********  
   

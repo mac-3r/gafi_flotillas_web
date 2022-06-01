@@ -769,13 +769,9 @@ class VehiclesController < ApplicationController
   def reasignacion_vehiculos
     if current_user.catalog_personal
       @personal = current_user.catalog_personal
-        puts "personal:"
-        puts @personal
       if  @personal.responsable != nil
         @responsable = @personal.responsable
         @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7]).limit(100)
-        puts "vehicle_pendientes_recibir:"
-        puts @vehicle_pendientes_recibir
         #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false )
       else
         flash[:alert] = "El usuario no es reponsable."
@@ -847,8 +843,6 @@ class VehiclesController < ApplicationController
       bandera_rol = false
       arreglo_areas = Array.new
       roles_reasignacion = Parameter.where("valor iLike 'rol_reasign%'").order(valor_extendido: :asc, valor: :asc)
-      puts "**********************************"
-      puts roles_reasignacion
 
       if roles_reasignacion.length > 0
           consulta_roles = CatalogRolesUser.where(user_id: current_user.id, catalog_role_id: roles_reasignacion.map{|x| x.valor_extendido})
@@ -869,11 +863,16 @@ class VehiclesController < ApplicationController
                           end                            
                       end
                   end
-                  if bandera_rol == true
-                      @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id).order(numero_economico: :asc)
-                  else
-                      @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id, catalog_area_id: arreglo_areas.map{|x| x.id}).order(numero_economico: :asc)
-                  end
+                  if@responsable
+                    if bandera_rol == true
+                        @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id).order(numero_economico: :asc)
+                    else
+                        @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id, catalog_area_id: arreglo_areas.map{|x| x.id}).order(numero_economico: :asc)
+                    end
+                  else 
+                      @vehiculos_entregados =[]
+                      mensaje ="El usuario no tiene permisos para ver este apartado"
+                  end 
               else
                   @vehiculos_entregados = Vehicle.none
               end
@@ -921,18 +920,13 @@ class VehiclesController < ApplicationController
   end
 
   def register_assign_vehicle
-    puts params
     bandera_list_error=false
-    puts "Paso 1"
     @mensaje ="Se guardo correctamente el registro"
     Vehicle.transaction do
-      puts "Entro Transacion ",params[:personal_existente]
       if params[:personal_existente] == true or params[:personal_existente] == "1" or params[:personal_existente] == 1
           id=params[:id]
-          puts "Entro Condicion",id
           @vehicle = Vehicle.find(params[:id])
           catalog_personal = CatalogPersonal.find_by(user_id:params[:user_id]) #id del catalog_personal_id
-          puts "catalog_personal: ",catalog_personal
           if @vehicle.recibido == true
               if (@vehicle.vehicle_status_id == 5  &&  @vehicle.catalog_route_id.to_i == 2) ||  @vehicle.vehicle_status_id == 5  
                   if catalog_personal != nil
@@ -1097,17 +1091,6 @@ class VehiclesController < ApplicationController
   end # Transaction
 
 
-  puts "Mensaje:",@mensaje
-    respond_to do |format|
-        
-      if(bandera_list_error)
-        format.html { redirect_to show_assign_vehicle_url, alert:  @mensaje  }
-      else 
-        format.html { redirect_to show_assign_vehicle_url, notice:  @mensaje  }
-      end 
-
-    end 
-    
   end 
 
   def show_assign_vehicle 
@@ -1131,8 +1114,12 @@ class VehiclesController < ApplicationController
 
     session["menu1"] = "Vehículo"
     session["menu2"] = "Recibir"
-    @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false ).order(numero_economico: :asc)
-  
+    puts "*******************************************************",@personal
+    if (@personal)
+        @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false ).order(numero_economico: :asc)
+    else 
+        @vehicle_pendientes_recibir = []
+    end
     #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], recibido:false ).order(numero_economico: :asc).limit(10)
 
 
@@ -1218,8 +1205,6 @@ class VehiclesController < ApplicationController
         session["menu2"] = "Verificaciones"    
         body_send = []
         bandera_list_error = false
-        puts "**********************************************************"
-        puts params[:vehicle_check_list]
         bimonthly_check_list = params[:vehicle_check_list]
         imagenes=[]
         vehicle = Vehicle.find_by(id:params[:id_vehiculo])
@@ -1227,9 +1212,6 @@ class VehiclesController < ApplicationController
         imagenes.push(params[:foto_herramienta])
         imagenes.push(params[:foto_vehiculo1])
         imagenes.push(params[:foto_vehiculo2])
-        puts "**********************************************************"
-        puts "Imagenes:",imagenes
-
         mensaje = ""
         BimonthlyVerification.transaction do
            
@@ -1240,7 +1222,6 @@ class VehiclesController < ApplicationController
                   fecha_captura: Date.today,
                   motivo:params[:observaciones]
               )
-              puts "biomonthly_verification:",biomonthly_verification
               if  biomonthly_verification.save 
                       body_send.push(imagenes: imagenes, bimonthly_verification_id: biomonthly_verification.id, vehicle_id: vehicle.id)
                       bimonthly_check_list.each do |index, vl|
@@ -1258,7 +1239,6 @@ class VehiclesController < ApplicationController
               else
                   bandera_list_error = true
               end
-              puts "BimonthlyImg:",body_send[0]
               response = BimonthlyImg.insertar_imagenWeb(body_send[0])
               if bandera_list_error == false
                 rango_dias = Parameter.find_by(valor: "frecuencia de verificacion")                
@@ -1314,7 +1294,6 @@ class VehiclesController < ApplicationController
                             vehicle_checklist_id:index,
                             estatus:vl
                         )
-                #puts "checklis_response_detail:",checklis_response_detail.to_json                        
                 if !checklis_response_detail.save 
                         @mensaje= "#{checklis_response_detail.errors.full_messages}" 
                         bandera_list_error = true
@@ -2256,9 +2235,6 @@ class VehiclesController < ApplicationController
   
   def set_responsable
     @personal = current_user.catalog_personal
-    puts "Personal:"
-    puts current_user.catalog_personal.to_json
-    puts @personal
     if current_user.catalog_branches
       @user_branch = @current_user.catalog_branches.map{|x| x.id}
     else

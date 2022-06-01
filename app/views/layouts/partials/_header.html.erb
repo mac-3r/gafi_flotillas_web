@@ -309,6 +309,15 @@
                                     <% end %>
                                 </li>
                                 <% end %>
+
+                                <% if can? :show_vehicle_consumptions, VehicleConsumption %>
+                                <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Autorizacion"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                    <%= link_to show_vehicle_consumptions_path, class: "menu-link" do %>
+                                        <span style="width: 120px;" class="menu-text">Autorización</span>
+                                    <% end %>
+                                </li>
+                                <% end %>
+
                                 <% if can? :indice_solicitud, Consumption %>
                                 <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Solicitudes Autorizadas"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
                                     <%= link_to indice_solicitud_path, class: "menu-link" do %>

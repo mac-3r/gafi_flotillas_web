@@ -437,7 +437,6 @@ class ServiceOrdersController < ApplicationController
         @busqueda.errors.full_messages.each do |error|
           mensaje += "#{error}. "
         end
-        puts mensaje
         redirect_to service_orders_path
       end
     else

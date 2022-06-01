@@ -16,6 +16,25 @@ class VehicleConsumptionsController < ApplicationController
     @encabezado = Consumption.consulta_cargas(session["fecha_inicio"], session["fecha_fin"],session["proveedor"], session["cedis"], session["estatus"])
   end
  
+
+  def show_vehicle_consumptions
+    session["menu1"]="Combustible"
+    session["menu2"]="Autorizacion"
+    puts "********************************************"
+    puts "current_user:",current_user
+    puts "current_user:",@current_user
+
+    #@encabezado = Consumption.select("catalog_vendor_id, catalog_branch_id, semana, estatus, fecha_inicio, fecha_fin").where("estatus = ?", [1]).where(usuario_autorizante_id:current_user.id).group("catalog_vendor_id, catalog_branch_id,semana, estatus, fecha_inicio, fecha_fin")
+    @encabezado = Consumption.select("catalog_vendor_id, catalog_branch_id, semana, estatus, fecha_inicio, fecha_fin").where("estatus = ?", [1]).group("catalog_vendor_id, catalog_branch_id,semana, estatus, fecha_inicio, fecha_fin")
+
+
+    #@folios = Consumption.select("folio, catalog_vendor_id, catalog_branch_id, semana, estatus, fecha_inicio, fecha_fin").where("estatus = ?", [1]).where(usuario_autorizante_id:current_user.id)
+    
+    @folios = Consumption.select("folio, catalog_vendor_id, catalog_branch_id, semana, estatus, fecha_inicio, fecha_fin").where("estatus = ?", [1])
+
+  end
+
+
   def filtrado_cargas
     session["proveedor"] = params[:catalog_vendor_id]
     session["cedis"] = params[:catalog_branch_id]

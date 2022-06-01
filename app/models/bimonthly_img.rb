@@ -24,14 +24,10 @@ class BimonthlyImg< ApplicationRecord
 
 
         def self.insertar_imagenWeb(params)
-                puts "-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-                puts "paramsBimonthy",params
                 
                 vehicle_id = params[:vehicle_id]
                 bimonthly_verification_id = params[:bimonthly_verification_id]
                 @bandera = true
-                puts "-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-                puts "Imagenes:",params[:imagenes]
                      params[:imagenes].each do |img|
 
                         decoded_data = img.read()

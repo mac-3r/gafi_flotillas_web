@@ -289,7 +289,6 @@ class InsuranceReportTicketsController < ApplicationController
         redirect_to insurance_report_tickets_path
       else
         @ticket.errors.full_messages.each do |error|
-          puts error
         end
         flash[:alert] = "Ocurrió un error."
         redirect_to insurance_report_tickets_path
