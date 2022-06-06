@@ -1208,7 +1208,7 @@ class Vehicle < ApplicationRecord
     hash_vehiculo["licencia"]                   = vehicle.numero_licencia
     hash_vehiculo["permisoSCT"]               = vehicle.permission_type ? vehicle.permission_type.clave : "NA"
     hash_vehiculo["configVehicular"]            = vehicle.vehicle_configuration ? vehicle.vehicle_configuration.clave : "NA"
-    hash_vehiculo["subtipoRemolque"]           = vehicle.trailer_subtype ? vehicle.trailer_subtype.clave : ""
+    hash_vehiculo["subtipoRemolque"]           = vehicle.trailer_subtype ? vehicle.trailer_subtype.clave : "NA"
     hash_vehiculo["numeroPermisoSCT"]        = vehicle.permiso_sat
     hash_vehiculo["nombreAseguradora"]        = vehicle.numero_aseguradora
     hash_vehiculo["cedis"]                      = vehicle.catalog_branch.clave_jd
