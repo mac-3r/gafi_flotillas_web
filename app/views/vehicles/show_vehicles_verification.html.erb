@@ -4,11 +4,6 @@
     <h1><center>             
           Verificación de Vehículos                   
         </center> </h1>
-        <div class="row" style="margin-left:2%">
-            <div class="col-sm-4">
-              <input type="search" placeholder="Buscador" name="search" class="form-control searchbox-input" required="">
-            </div>
-          </div>
           <br>
     <% if (false) %>  
     <div class="list-group">
@@ -54,70 +49,19 @@
     <div class="card card-custom">
         <div class="card-body">
 
-            <div class="container" style="display: none;">
-                    <%=form_for('', url: filtrado_maestro_path, remote: true) do |f|%> 
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">No. Económico: </label>
-                                <%= text_field_tag :keyword, params[:keyword], class:"form-control" %>
-                            </div>
-                            <div class="col">
-                                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Empresa:</label>
-                                <%= collection_select('', :catalog_company_id, CatalogCompany.listado_empresas,:id, :nombre, {prompt:"Seleccione la empresa"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
-                            </div>
-                            <div class="col">
-                                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">CEDIS:</label>
-                                <%= collection_select('',:catalog_branch_id ,CatalogBranch.listado_cedis, :id, :decripcion, {prompt:"Seleccione el cedis"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Área:</label>
-                                <%= collection_select('',:catalog_area_id ,CatalogArea.listado_areas, :id, :descripcion, {prompt:"Seleccione la área"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
-                            </div>
-                            <div class="col">
-                                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Tipo de vehículo:</label>
-                                <%= collection_select('',:vehicle_type_id ,VehicleType.listado_tipos, :id, :descripcion, {prompt:"Seleccione el tipo de vehículo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha inicio: </label>
-                                <div class="input-group date" id="datetimepicker7" data-target-input="nearest" data-date-format="DD/MM/YYYY">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7" name="start_date" id="start_date">
-                                    <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Fecha fin: </label>
-                                <div class="input-group date" id="datetimepicker8" data-target-input="nearest" data-date-format="DD/MM/YYYY">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker8" name="end_date" id="end_date">
-                                    <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <label class="col-sm-0 col-form-label" style="font-family: Arial; font-size:15px;">Solo activos: </label>
-                                <label class="switch">
-                                    <input type="checkbox" name="vendidos">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                            <div class="col">
-                                <br><br>
-                                <%= submit_tag "Buscar", class:"btn btn-primary" %>
-                            </div>
-                        </div>
-                    <% end %>
-            </div>
+            <% if (true) %>
+                <%= render :partial => 'vehicle_filter' %>
+            <%end%>
+
             <br>
 
             <div class="table-responsive" style="max-width: 100%; overflow: auto; min-height: 500px !important;">            
                 <table class="table table-bordered table-sm text-center">
                 <thead>
+                    <th>CEDIS</th>
+                    <th>Compañia</th>
+                    <th>Área</th>
+
                     <th>Tipo de vehículo</th>
                     <th>TN° de vehículo</th>
                     <th>Placas</th>
@@ -130,16 +74,20 @@
                 </thead>
                 <% ( @verificaciones || []).each do |vpr| %>
                     <tr class="contenedor">
+                        <td class="cedis"><%=  vpr.catalog_branch.decripcion %></td>
+                        <td class="company"><%=  vpr.catalog_company.nombre %></td>
+                        <td class="area"><%=  vpr.catalog_area.descripcion %></td>
+
                         <td class="tipo"> <%=  vpr.vehicle_type.descripcion %></td>
                         <td class="numero_economico"> <%=  vpr.numero_economico%></td>
                         <td class="placa"><%=  vpr.numero_placa %></td>
-                        <td class="numeroeconomico"><%= vpr.vehicle_status.descripcion %></td>
+                        <td class="status"><%= vpr.vehicle_status.descripcion %></td>
                         <td class="fecha_compra"""><%=  vpr.fecha_compra %></td>
                         <td class="valor_compra"><%=  number_to_currency(vpr.valor_compra, precision: 2) %></td>
                         <td><%=  vpr.ultima_verificacion %></td>
                         <td>
                              
-                                    <a href="<%= vehicle_verification_data_path(vpr.id, vpr.numero_economico, vpr.vehicle_type_id,1) %>" class="list-group-item list-group-item-action">
+                                    <a href="<%= vehicle_verification_data_path(vpr.id, vpr.numero_economico, vpr.vehicle_type_id,1) %>" class="">
                                
                                     <span class="svg-icon svg-icon-md"> 
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
@@ -166,17 +114,4 @@
 
 </div>
 
-<script>
-$(document).ready(function(){
-
-    $('.searchbox-input').on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $(".contenedor").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-      });
-
-  });
-
-</script>
-
+<%= render :partial => 'vehicle_filter_js' %>

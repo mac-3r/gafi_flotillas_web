@@ -1,0 +1,173 @@
+<script>
+$(document).ready(function(){
+    
+    $('#datetimepicker7').datetimepicker({
+        format: 'DD/MM/YYYY',
+        locale: 'es'
+        });
+    
+    $('#datetimepicker8').datetimepicker({
+        format: 'DD/MM/YYYY',
+        locale: 'es',
+        useCurrent: false
+        });
+        
+    $("#limpiar").on("click",function() {
+        $("#keyword").val(undefined)
+        $("#numero_economico").val(undefined);
+        $("#datetimepicker7").val(undefined)
+        $("#datetimepicker8").val(undefined)
+        $("#start_date").val(undefined)
+        $("#end_date").val(undefined)
+        
+        
+            console.log("VAl1:",$("#datetimepicker7").val())
+            console.log("VAl2:",$("#datetimepicker8").val())
+
+        $("#catalog_branch_id").val(undefined).trigger("chosen:updated")
+        $("#catalog_company_id").val(undefined).trigger("chosen:updated")
+        $("#catalog_area_id").val(undefined).trigger("chosen:updated")
+        $("#vehicle_type_id").val(undefined).trigger("chosen:updated")
+        $("#activo").val("")
+
+        $(".contenedor").filter(function() {
+            $(this).show(true)
+            //$content=$(this)             
+            //console.log($(this).find(".fecha_compra").text(),$content.css('display'))
+        });
+
+    })
+        
+    $('.searchbox-input').on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $(".contenedor").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $("#datetimepicker7").on("change.datetimepicker", function (e) {
+        allFiltro()
+    });
+
+    
+    $("#datetimepicker8").on("change.datetimepicker", function (e) {
+        allFiltro()
+    });
+
+
+
+    function setFiltroDate($elemento,$filtro,$comparacion="inicio") {
+        var text = $($elemento).val().toLowerCase();
+        text=moment( text, "MM/DD/YYYY" ).format('YYYY/MM/DD')
+        var dateText=moment( $($elemento).val(), "DD/MM/YYYY" )
+
+
+        $("."+$filtro).filter(function() {
+            textTabla=$(this).text()
+            var dateTabla=moment( textTabla, "DD/MM/YYYY" ) 
+
+            if( $(this).parent().css('display') != 'none' )
+                if($comparacion=="termino")
+                    $(this).parent().toggle(dateTabla<=dateText)
+                else 
+                    $(this).parent().toggle(dateTabla>=dateText)
+            });            
+        
+    }
+
+
+    
+    
+    function setFiltroText($elemento,$filtro) {
+        var text = $($elemento).val().toLowerCase();
+        $("."+$filtro).filter(function() {
+            if( $(this).parent().css('display') != 'none' )
+                $(this).parent().toggle($(this).text().toLowerCase().indexOf(text) > -1)
+        });            
+        
+    }
+
+
+        
+    function allFiltro(){
+        $(".contenedor").filter(function() {
+            $(this).show(true)
+            //$content=$(this)             
+            //console.log($(this).find(".fecha_compra").text(),$content.css('display'))
+        });
+        if($("#start_date").val()!=undefined &&$("#start_date").val()!="")
+              setFiltroDate("#start_date","fecha_compra")
+        
+
+        if($("#end_date").val()!=undefined &&$("#end_date").val()!="")
+              setFiltroDate("#end_date","fecha_compra","termino")
+        
+        
+        if($("#vehicle_type_id").val()>0 && $("#vehicle_type_id").val()!='' && $("#vehicle_type_id").val()!=undefined)
+            setFiltroSelect("#vehicle_type_id","tipo")
+        
+        if($("#catalog_branch_id").val()>0 && $("#catalog_branch_id").val()!='' && $("#catalog_branch_id").val()!=undefined)
+            setFiltroSelect("#catalog_branch_id","cedis")
+
+        if($("#catalog_company_id").val()>0 && $("#catalog_company_id").val()!='' && $("#catalog_company_id").val()!=undefined)
+            setFiltroSelect("#catalog_company_id","company")
+            
+            if($("#catalog_area_id").val()>0 && $("#catalog_area_id").val()!='' && $("#catalog_area_id").val()!=undefined)
+            setFiltroSelect("#catalog_area_id","area")
+        
+        if($("#keyword").val()>0 && $("#keyword").val()!='' && $("#keyword").val()!=undefined)
+            setFiltroText("#keyword","numero_economico")
+        
+        
+        if( $("#activo").val()!='on' && $("#activo").val()!='' && $("#activo").val()!=undefined)
+            setFiltroText("#activo","status")
+        
+   }
+
+
+    function setFiltroSelect($elemento,$filtro){
+        var text = $($elemento).val().toLowerCase();
+        text=$($elemento).find("option:selected").text().toLowerCase()
+        $("."+$filtro).filter(function() {
+            if( $(this).parent().css('display') != 'none' )
+                $(this).parent().toggle($(this).text().toLowerCase().indexOf(text) > -1)
+        });            
+    }
+
+    $("#keyword").on("keyup",function() {
+        allFiltro()
+    })
+
+
+
+    
+    $("#activo").on("change",function() {
+        if( $(this).is(":checked") ) {
+            $(this).val("Activo");
+        }else{
+            $(this).val("");
+        }
+        allFiltro()
+    })
+
+
+    $("#vehicle_type_id").on("change",function() {
+        allFiltro()
+    })
+
+    $("#catalog_branch_id").on("change",function() {
+        allFiltro()
+    })
+
+    $("#catalog_company_id").on("change",function() {
+        allFiltro()
+    })
+
+    $("#catalog_area_id").on("change",function() {
+        allFiltro()
+    })
+
+
+  });
+
+</script>
