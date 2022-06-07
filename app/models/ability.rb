@@ -257,6 +257,8 @@ class Ability
     
     alias_action :index,  to: :show_vehicle_consumptions 
 
+    alias_action :solicitud_pago, to: :show_vehicle_consumptions
+
     
 
 

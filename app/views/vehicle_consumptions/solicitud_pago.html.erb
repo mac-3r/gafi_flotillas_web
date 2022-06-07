@@ -1,0 +1,98 @@
+<br>
+<br>
+<center><h1>Autorización</h1></center>
+
+<div class="container">
+
+<div class="card card-custom">
+    <div class="card-body">
+        <div class="card-title">
+            <div class="row">
+                <label>Período del:<%=@encabezado[0].fecha_inicio%> al: <%=@encabezado[0].fecha_fin%></label>
+                
+            </div>
+            <div class="row">
+                <h2>Consumo de Combustible</h2>
+                
+            </div>
+            <div class="row">
+                <label>Cedis: <%=@encabezado[0].catalog_branch.decripcion%></label>            
+            </div>
+            
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive" style="max-width: 100%; overflow: auto; min-height: 500px !important;">            
+                <table class="table table-bordered table-sm text-center" >
+                <thead style="background-color: #C6EEF9;">
+                    <th>No. Economico</th>
+                    <th>Factura</th>
+                    <th>Área</th>
+                    <th>Responsable</th>
+                    <th>Litros</th>
+                    <th>Base</th>
+                    <th>Total con IVA</th>
+                    <th>Rendimiento</th>
+
+                </thead>
+                <% (@ventas[0]|| []).each do |vpr| %>
+                    <tr class="contenedor">
+                        <td class="no_economico"><%= vpr["no_economico"] %></td>
+                        <td class="factura"><%= vpr["factura"] %></td>
+                        <td class="area"><%= vpr["area"] %></td>
+                        <td class="responsable"><%= vpr["responsable"] %></td>
+                        <td class="litros"><%= vpr["cantidad"] %></td>
+                        <td class="base"> <%=  number_to_currency(vpr["base"], precision: 2) %> </td>
+                        <td class="monto"> <%=  number_to_currency(vpr["monto"], precision: 2) %> </td>
+                        <td class="promedio"> <%=  number_to_currency(vpr["promedio"], precision: 2) %> </td>
+                
+                    </tr>
+                <%end%>
+                <% (@admin[0]|| []).each do |vpr| %>
+                    <tr class="contenedor">
+                        <td class="no_economico"><%= vpr["no_economico"] %></td>
+                        <td class="factura"><%= vpr["factura"] %></td>
+                        <td class="area"><%= vpr["area"] %></td>
+                        <td class="responsable"><%= vpr["responsable"] %></td>
+                        <td class="litros"><%= number_with_precision(vpr["cantidad"],precision: 2, significant: true)%></td>
+                        <td class="base"> <%=  number_to_currency(vpr["base"], precision: 2) %> </td>
+                        <td class="monto"> <%=  number_to_currency(vpr["monto"], precision: 2) %> </td>
+                        <td class="promedio"> <%=  number_to_currency(vpr["promedio"], precision: 2) %> </td>
+                
+                    </tr>
+                <%end%>
+                <% (@ventas[0]|| []).each do |vpr| %>
+                    <tr class="contenedor">
+                        <td class="no_economico"><%= vpr["no_economico"] %></td>
+                        <td class="factura"><%= vpr["factura"] %></td>
+                        <td class="area"><%= vpr["area"] %></td>
+                        <td class="responsable"><%= vpr["responsable"] %></td>
+                        <td class="litros"><%= vpr["cantidad"] %></td>
+                        <td class="base"> <%=  number_to_currency(vpr["base"], precision: 2) %> </td>
+                        <td class="monto"> <%=  number_to_currency(vpr["monto"], precision: 2) %> </td>
+                        <td class="promedio"> <%=  number_to_currency(vpr["promedio"], precision: 2) %> </td>
+                
+                    </tr>
+                <%end%>
+                </table>
+            </div>
+            
+        </div>        
+
+
+    </div>
+
+</div>
+
+
+<!--br>
+<%=@encabezado%>
+<br><br>
+<%=@ventas[0]%>
+<br><br>
+<%=@almacen%>
+
+<br-->
+</div>
+
