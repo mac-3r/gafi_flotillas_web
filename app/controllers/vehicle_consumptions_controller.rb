@@ -64,6 +64,7 @@ class VehicleConsumptionsController < ApplicationController
       hash_encabezado["estatus"]=e.estatus
       hash_encabezado["catalog_branch_id"]=e.catalog_branch_id
       hash_encabezado["catalog_vendor_id"]=e.catalog_vendor_id
+      hash_encabezado["vendor"]=e.catalog_vendor.razonsocial
 
       @encabezado << hash_encabezado
     end
@@ -76,7 +77,19 @@ class VehicleConsumptionsController < ApplicationController
   end
 
 
-  def update_request
+
+  
+#let data = {
+#  id: this.encabezado.id,
+#  catalog_vendor_id: this.encabezado.catalog_vendor_id,
+#  catalog_branch_id: this.encabezado.catalog_branch_id,
+#  semana: this.encabezado.semana,
+#  estatus: estatus
+#}
+
+
+
+  def update_request_consumptions
     @mensaje_error = ""
     bandera_error = false
     estatus ="Autorizado"
@@ -140,13 +153,15 @@ class VehicleConsumptionsController < ApplicationController
         end
       end
         if bandera_error 
-            error!(@mensaje_error, 200)
+            @mensaje_error
         else
             @mensaje
         end
     else
-        error!("No se encontro la ruta para JDE, por favor verifique sus paramentros",200)
+        @mensaje="No se encontro la ruta para JDE, por favor verifique sus paramentros"
     end
+
+    redirect_to show_vehicle_consumptions_path
   end
 
 
@@ -176,6 +191,7 @@ class VehicleConsumptionsController < ApplicationController
     end
 
 end
+
 
 
   def filtrado_cargas

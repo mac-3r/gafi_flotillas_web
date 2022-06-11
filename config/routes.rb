@@ -256,7 +256,8 @@ Rails.application.routes.draw do
   get 'solicitud_pago/:semana/:catalog_branch_id/:catalog_vendor_id', to: "vehicle_consumptions#solicitud_pago", as: "solicitud_pago"
   
 
-  put "update_request", to: "consumptions#update_request"
+
+  post "update_request_consumptions", to: "vehicle_consumptions#update_request_consumptions"
 
   #solicitud_pago?semana=1&catalog_branch_id=11&catalog_vendor_id=505
 

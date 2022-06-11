@@ -1120,6 +1120,7 @@ class VehiclesController < ApplicationController
     else 
         @vehicle_pendientes_recibir = []
     end
+
     #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], recibido:false ).order(numero_economico: :asc).limit(10)
 
 
