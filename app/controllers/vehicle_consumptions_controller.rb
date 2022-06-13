@@ -2,6 +2,7 @@ class VehicleConsumptionsController < ApplicationController
   before_action :set_vehicle_consumption, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
   before_action :validacion_menu
+
   # except: [:reporte_acumulado,:detalle,:generar_excel_acumulado,:filtrado_acumulado,:filtrado_km,:indicador_presupuesto,:indicador_km]
 
   # GET /vehicle_consumptions
@@ -16,181 +17,6 @@ class VehicleConsumptionsController < ApplicationController
     @encabezado = Consumption.consulta_cargas(session["fecha_inicio"], session["fecha_fin"],session["proveedor"], session["cedis"], session["estatus"])
   end
 
-
-
-  def show_vehicle_consumptions
-    session["menu1"]="Combustible"
-    session["menu2"]="Autorizacion"
-    puts "********************************************"
-    puts "current_user:",current_user
-    puts "current_user:",@current_user
-
-    #@encabezado = Consumption.select("catalog_vendor_id, catalog_branch_id, semana, estatus, fecha_inicio, fecha_fin").where("estatus = ?", [1]).where(usuario_autorizante_id:current_user.id).group("catalog_vendor_id, catalog_branch_id,semana, estatus, fecha_inicio, fecha_fin")
-    
-    
-    #@folios = Consumption.select("folio, catalog_vendor_id, catalog_branch_id, semana, estatus, fecha_inicio, fecha_fin").where("estatus = ?", [1]).where(usuario_autorizante_id:current_user.id)
-    
-    encabezado = Consumption.select("catalog_vendor_id, catalog_branch_id, semana, estatus, fecha_inicio, fecha_fin").where("estatus = ?", [1]).group("catalog_vendor_id, catalog_branch_id,semana, estatus, fecha_inicio, fecha_fin")
-
-
-    folios = Consumption.select("folio, catalog_vendor_id, catalog_branch_id, semana, estatus, fecha_inicio, fecha_fin").where("estatus = ?", [1])
-
-    @encabezado=[]
-    @folios=[]
-    encabezado.each do |e|
-      hash_encabezado = Hash.new
-      hash_encabezado["id"]=e.id
-      foliosTodos=''
-      folios.each do |f|
-        if f.catalog_vendor_id == e.catalog_vendor_id && f.catalog_branch_id == e.catalog_branch_id && f.semana == e.semana && f.estatus == e.estatus && e.fecha_inicio == f.fecha_inicio && e.fecha_fin == f.fecha_fin
-            foliosTodos = foliosTodos + f.folio.to_s + " " 
-        end
-      end
-      hash_encabezado["folios"]=foliosTodos
-      hash_encabezado["fecha_inicio"]=e.fecha_inicio
-      hash_encabezado["fecha_fin"]=e.fecha_fin
-      hash_encabezado["cargas"]=Consumption.cargas_semana(e)
-      hash_encabezado["cedis"]=e.catalog_branch.decripcion
-      hash_encabezado["semana"]=e.semana
-
-      hash_encabezado["monto"]=Consumption.monto_semana(e)
-      if  e.estatus == "Por autorizar"
-        hash_encabezado["estatus_numero"]=1
-      elsif  e.estatus == "Autorizado"   
-        hash_encabezado["estatus_numero"]=2
-      elsif e.estatus ==  "Rechazado"
-        hash_encabezado["estatus_numero"]=3
-      end 
-      hash_encabezado["estatus"]=e.estatus
-      hash_encabezado["catalog_branch_id"]=e.catalog_branch_id
-      hash_encabezado["catalog_vendor_id"]=e.catalog_vendor_id
-      hash_encabezado["vendor"]=e.catalog_vendor.razonsocial
-
-      @encabezado << hash_encabezado
-    end
-
-     
-
-    
-
-
-  end
-
-
-
-  
-#let data = {
-#  id: this.encabezado.id,
-#  catalog_vendor_id: this.encabezado.catalog_vendor_id,
-#  catalog_branch_id: this.encabezado.catalog_branch_id,
-#  semana: this.encabezado.semana,
-#  estatus: estatus
-#}
-
-
-
-  def update_request_consumptions
-    @mensaje_error = ""
-    bandera_error = false
-    estatus ="Autorizado"
-    consumption = Consumption.where(semana:params[:semana],catalog_branch_id:params[:catalog_branch_id], catalog_vendor_id: params[:catalog_vendor_id], estatus: "Por autorizar")
-    parametro_nombre = Parameter.find_by(nombre:"Url Poliza JDE")
-    contador = 0
-    if parametro_nombre != nil
-        consumption.each do |consumption|
-        if consumption.catalog_vendor_id != nil
-            if !consumption.fecha_factura.nil? and !consumption.fecha_aplicacion.nil?
-                if params[:estatus].to_i == 2  
-                    estatus_json =  consumption.enviar_json(@current_user)
-                    if estatus_json[1]
-                    #if params[:estatus].to_i == 2
-                        if consumption.update(estatus: estatus) 
-                            @mensaje = "Solicitud Autorizada"
-                            @mostrar_json = estatus_json[0]
-                            begin
-                                contador += 1
-                                RolesMailer.autorizacion_combustible(consumption.id).deliver_later(wait: (20 * contador).seconds)
-                            rescue StandardError => exception
-                                puts exception
-                            end
-                        else 
-                            consumption.errors.full_messages.each do |error|
-                                puts "#{error}"
-                            end
-                            @mensaje_error += "No se pudo autorizar la solicitud, intente nuevamente"
-                        end 
-                    
-                    else
-                        @mostrar_json = estatus_json[0]
-                        if @mostrar_json[0]["Mensaje"] == nil
-                            bandera_error = true
-                            @mensaje_error +=" #{@mostrar_json[0]}. Folio: #{consumption.folio}<br><br> "
-                        else
-                            
-                            bandera_error = true
-                            @mensaje_error += "Error en JD Edwards: #{@mostrar_json[0]["Mensaje"]}. Folio: #{consumption.folio}  <br><br>"
-                        end
-                    end 
-                elsif  params[:estatus].to_i == 3
-                    estatus =  "Rechazado"
-                    if consumption.update(estatus: estatus)
-                        @mensaje = "Solicitud Rechazada"
-                    else
-                        bandera_error = true
-                        @mensaje_error +="No se pudo rechazar la solicitud, intente nuevamente. Folio:#{consumption.folio} <br><br>"
-                    end
-                else
-                    bandera_error = true
-                    @mensaje_error +='Estatus incorrecto'
-                end
-            else
-                bandera_error = true
-                @mensaje_error +="Se necesita capturar la fecha factura y la fecha aplicación. Folio:#{consumption.folio} <br><br>"
-            end
-        else
-            bandera_error = true
-            @mensaje_error +="Se necesita capturar un proveedor.  Folio:#{consumption.folio} <br><br>"
-        end
-      end
-        if bandera_error 
-            @mensaje_error
-        else
-            @mensaje
-        end
-    else
-        @mensaje="No se encontro la ruta para JDE, por favor verifique sus paramentros"
-    end
-
-    redirect_to show_vehicle_consumptions_path
-  end
-
-
-  def solicitud_pago
-    session["menu1"]="Combustible"
-    session["menu2"]="Autorizacion"
-        
-    @ventas = []
-    @admin = []
-    @almacen = []
-    #byebug
-    @encabezado = Consumption.where(semana:params[:semana],catalog_branch_id:params[:catalog_branch_id], catalog_vendor_id:params[:catalog_vendor_id], estatus: "Por autorizar" )# agrupar por semana y en estatus autorizar      #agruparlo por catalog_vendor, catalog_branch y semana
-    @encabezado.each do |encabezado|
-       venta = Consumption.litros_consumoDetalle(encabezado.fecha_inicio, encabezado.fecha_fin, encabezado.catalog_branch_id, encabezado.catalog_vendor_id) 
-       if venta[0] != nil
-        @ventas.push(venta)
-        end
-       # @ventas =  Consumption.litros_consumo(encabezado.id)
-        admin = Consumption.litros_adminDetalle(encabezado.fecha_inicio, encabezado.fecha_fin, encabezado.catalog_branch_id, encabezado.catalog_vendor_id)
-        if admin[0] != nil
-            @admin.push(admin)
-        end
-        almacen = Consumption.litros_almacenDetalle(encabezado.fecha_inicio, encabezado.fecha_fin, encabezado.catalog_branch_id, encabezado.catalog_vendor_id) 
-        if almacen[0] != nil
-            @almacen.push(almacen)
-        end
-    end
-
-end
 
 
 
@@ -901,7 +727,7 @@ end
     end
     # Use callbacks to share common setup or constraints between actions.
     def set_vehicle_consumption
-      @vehicle_consumption = VehicleConsumption.find(params[:id])
+      @vehicle_consumption = nil.try(VehicleConsumption.find(params[:id]))
     end
 
     # Only allow a list of trusted parameters through.

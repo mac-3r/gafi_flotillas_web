@@ -42,6 +42,20 @@ class User < ApplicationRecord
 		User.all.order(name: :asc)
 	end
 
+	def correo_combustibles
+		# if   self.email != nil and  self.email != ''
+		   array_correo = self.email.split("@")
+		   if array_correo[1] == "gafi.com.mx"
+			 return array_correo[0].upcase
+		   else
+			 return "MVELAZQUE"
+		   end
+		 # else
+		 #     return "DYENCALADA"
+		 # end
+	end
+
+	   
 	#tabla de competencias
 	def self.listado_competencias(consumption)
 		competencia = CompetitionTable.where("catalog_branch_id = #{consumption.catalog_branch_id} and monto >= #{consumption.monto} and tipo = 'Combustible'").order(monto: :asc)

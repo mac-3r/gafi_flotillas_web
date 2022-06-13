@@ -252,12 +252,12 @@ Rails.application.routes.draw do
 
   
 
-  get 'show_vehicle_consumptions', to: "vehicle_consumptions#show_vehicle_consumptions", as: "show_vehicle_consumptions"
-  get 'solicitud_pago/:semana/:catalog_branch_id/:catalog_vendor_id', to: "vehicle_consumptions#solicitud_pago", as: "solicitud_pago"
+  get 'show_vehicle_consumptions', to: "consumptions#show_vehicle_consumptions", as: "show_vehicle_consumptions"
+  get 'solicitud_pago/:semana/:catalog_branch_id/:catalog_vendor_id', to: "consumptions#solicitud_pago", as: "solicitud_pago"
   
 
 
-  post "update_request_consumptions", to: "vehicle_consumptions#update_request_consumptions"
+  post "update_request_consumptions", to: "consumptions#update_request_consumptions"
 
   #solicitud_pago?semana=1&catalog_branch_id=11&catalog_vendor_id=505
 
