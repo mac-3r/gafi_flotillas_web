@@ -843,11 +843,11 @@ class VehiclesController < ApplicationController
       bandera_rol = false
       arreglo_areas = Array.new
       roles_reasignacion = Parameter.where("valor iLike 'rol_reasign%'").order(valor_extendido: :asc, valor: :asc)
-
       if roles_reasignacion.length > 0
           consulta_roles = CatalogRolesUser.where(user_id: current_user.id, catalog_role_id: roles_reasignacion.map{|x| x.valor_extendido})
           if consulta_roles.length > 0
               params_nvo = Parameter.where("valor iLike 'rol_reasign%'").where(valor_extendido: consulta_roles.map{|x| x.catalog_role_id}).order(valor_extendido: :asc, valor: :asc)
+
               if params_nvo.length > 0
                   params_nvo.each do |param|
                       split_rol = param.valor.split("_")
@@ -863,16 +863,12 @@ class VehiclesController < ApplicationController
                           end                            
                       end
                   end
-                  if@responsable
                     if bandera_rol == true
-                        @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id).order(numero_economico: :asc)
-                    else
-                        @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id, catalog_area_id: arreglo_areas.map{|x| x.id}).order(numero_economico: :asc)
-                    end
-                  else 
-                      @vehiculos_entregados =[]
-                      mensaje ="El usuario no tiene permisos para ver este apartado"
-                  end 
+                      @vehiculos_entregados = Vehicle.where(vehicle_status_id:  1, catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+                      #@vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id).order(numero_economico: :asc)
+                  else
+                      @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, catalog_area_id: arreglo_areas.map{|x| x.id}, catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+                  end
               else
                   @vehiculos_entregados = Vehicle.none
               end
@@ -1099,10 +1095,10 @@ class VehiclesController < ApplicationController
     session["menu2"] = "Asignar"
 
     if @responsable != nil
-      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], responsable_id: @responsable.id).order(numero_economico: :asc)
-  else
-      @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
-  end
+        @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], responsable_id: @responsable.id).order(numero_economico: :asc)
+    else
+        @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+    end
 
   #@vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7]).order(numero_economico: :asc).limit(10)
   end; 
@@ -2236,6 +2232,10 @@ class VehiclesController < ApplicationController
   
   def set_responsable
     @personal = current_user.catalog_personal
+    puts "****************current_user: #{@current_user}"
+    puts "****************current_user.catalog_personal: #{@current_user.email}"
+    
+    puts "****************Personal: #{@personal}"
     if current_user.catalog_branches
       @user_branch = @current_user.catalog_branches.map{|x| x.id}
     else
@@ -2249,6 +2249,7 @@ class VehiclesController < ApplicationController
       else
         @responsable = nil
       end
+      puts "****************Responsable: #{@responsable}"
     end 
   
   end

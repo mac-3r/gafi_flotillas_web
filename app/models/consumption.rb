@@ -13,6 +13,9 @@ class Consumption < ApplicationRecord
 
     def enviar_json(current_user)
         @current_user = current_user
+        
+        enviar_json_comb_tres(@current_user)
+        
         @objeto_principal = []
         @polizaInput = []
         @poliza = []
@@ -2089,6 +2092,418 @@ class Consumption < ApplicationRecord
 
         # aquí, para no  enviar  el json a JDE
         #return[@objeto_principal,true]   #descomentar este return para que ver el json que se esta mandando a JDE
+    end
+
+
+    def enviar_json_comb_tres(current_user)
+        @current_user = current_user
+        @objeto_principal = []
+        @polizaInput = []
+        @poliza = []
+        @base = []
+        @asientoDeDiario = []
+        @info_adicional = []
+        impuestos_totales = 0
+        hash_principal = Hash.new
+        hash_polizaInput = Hash.new
+        hash_poliza = Hash.new
+        hash_base = Hash.new
+        hash_info_adicional = Hash.new
+        hash_poliza["usuario"] = @current_user.correo_combustibles
+        hash_poliza["numeroTransaccion"] = "1"
+        hash_poliza["numeroLinea"] = "1000"
+        hash_poliza["numeroBatch"] = "0"
+        cat_company = CatalogCompany.find_by(id: self.company_id)
+        hash_poliza["compañiaDocumento"] = cat_company.clave
+        hash_poliza["tipoDocumento"] = "PV"
+        hash_poliza["numeroProveedor"] = self.catalog_vendor.clave #"49965"#self.vehicle_consumptions[0].vehicle.catalog_company.clave    sacar de la relacion
+        hash_poliza["numeroBeneficiario"] = self.catalog_vendor.clave  #"49965"#self.vehicle_consumptions[0].vehicle.catalog_company.clave  sacar de la relacion con proveedor numero de (proveedor)
+        hash_poliza["fechaFactura"] = "1#{self.fecha_factura.strftime("%y")}#{(self.fecha_factura).strftime("%j")}"
+        hash_poliza["fechaEfectiva"] = "1#{self.created_at.strftime("%y")}#{(self.created_at).strftime("%j")}"
+        hash_poliza["fechaVencimiento"] = "" #"120252" 
+        hash_poliza["fechaDescuento"] = "1#{self.fecha_factura.strftime("%y")}#{(self.fecha_factura).strftime("%j")}" #"120252"
+        hash_poliza["fechaLM"] = "1#{self.fecha_aplicacion.strftime("%y")}#{(self.fecha_aplicacion).strftime("%j")}"
+        hash_poliza["añoFiscal"] = "0"
+        hash_poliza["sigloFiscal"] = "20"
+        hash_poliza["periodoFiscal"] = "0"
+        hash_poliza["compañia"] = hash_poliza["compañiaDocumento"]
+        hash_poliza["tipoBatch"] = "V"
+        hash_poliza["transaccionBalanceada"] = "Y"
+        hash_poliza["estatusDePago"] = "H"
+        valuation = self.valuation
+        if valuation
+            valor_iva = valuation.valor / 100
+        else
+            valor_iva = 0.16
+        end
+        imponible = (self.impuestos.to_f / valor_iva)
+        imponible_global = ((imponible) * 100).to_i
+
+        acumulado_impuesto_base_cero = 0
+        acumulado_monto_total_base_cero = 0
+        acumulado_imponible_base_cero = 0
+        acumulado_impuesto = 0
+        acumulado_monto_total = 0
+        acumulado_imponible = 0
+
+
+        bandera_base_cero = false
+        bandera_impuesto = (self.impuestos.round(2) / valor_iva)
+        if ((self.monto - self.impuestos).round(2) - bandera_impuesto) > 0
+            bandera_base_cero = true
+        end
+        # Importe -------
+        valor_importe_global = (((self.impuestos / valor_iva) * (1 + valor_iva)) * 100)
+        hash_poliza["importe"] = (valor_importe_global.to_f).to_i
+        hash_poliza["importePendiente"] = (valor_importe_global.to_f).to_i
+        # Importe --------
+
+        #Imponible --------
+        enc_imponible = ((self.impuestos / valor_iva).ceil(2) * 100).to_i
+        #Imponible -------
+        #impuesto ------------
+        hash_poliza["importeImpuesto"] = (self.impuestos * 100).to_i
+        # impuesto ----------
+
+        valuation ? hash_poliza["tasaFiscal"] = valuation.tipo_zona : hash_poliza["tasaFiscal"] = "IVA15GAS"
+        hash_poliza["explicacionFiscal"] = "V"
+        hash_poliza["tipoMoneda"] = "D"
+        hash_poliza["moneda"] = "MXP"
+        hash_poliza["glClass"] = self.catalog_vendor.compenlm
+        hash_poliza["modoDeCuenta"] = "2"
+        area_mayor = nil
+        bandera_total = 0
+        
+        if cat_company.clave == "00001" and self.catalog_branch.clave == "008"
+            hash_poliza["unidadDeNegocio"] = "01990804"
+        else
+            CatalogArea.all.each do |area|
+                cuenta = self.vehicle_consumptions.joins(:vehicle).where(vehicles: {catalog_area_id: area.id}).count
+                if cuenta > 0
+                    suma = self.vehicle_consumptions.joins(:vehicle).where(vehicles: {catalog_area_id: area.id}).sum(:monto)
+                    if suma > bandera_total
+                        bandera_total = suma
+                        area_mayor = area.clave
+                    end
+                end
+            end
+            hash_poliza["unidadDeNegocio"] = "#{self.catalog_branch.unidad_negocio}#{area_mayor}"
+        end
+        hash_poliza["plazo"] = self.catalog_vendor.plazo #sacar de vendors -----------------------------------------
+        hash_poliza["factura"] = self.n_factura # "145525"#self.n_factura
+        hash_poliza["nameRemark"] = "#{self.catalog_branch.abreviacion} COMB #{self.fecha_inicio.strftime("%d")}-#{self.fecha_fin.strftime("%d")} #{ I18n.l(self.fecha_fin, format: '%B') }"
+        hash_poliza["instrumentoDePago"] = self.catalog_vendor.instrumentopago
+        hash_poliza["originador"] = @current_user.correo_combustibles
+        hash_poliza["usuarioActualizacion"] = @current_user.correo_combustibles
+        hash_poliza["idPrograma"] = self.id
+        hash_poliza["fechaActualizacion"] = "1#{Time.zone.now.strftime("%y")}#{(Time.zone.now).strftime("%j")}" #"1#{self.updated_at.strftime("%y")}#{(self.updated_at).strftime("%j")}"
+        hash_poliza["horaActualizacion"] = Time.zone.now.strftime("%H%M%S")
+        hash_poliza["estacionDeTrabajo"] = "WEB91a"
+
+        valor_Base_cero = 0
+        valor_Impuestos = hash_poliza["importeImpuesto"]
+        valor_Montos = 0
+        if bandera_base_cero == true
+            hash_base["usuario"] = @current_user.correo_combustibles
+            hash_base["numeroTransaccion"] = "1"
+            hash_base["numeroLinea"] = "2000"
+            hash_base["numeroBatch"] = "0"
+            hash_base["compañiaDocumento"] = cat_company.clave
+            hash_base["tipoDocumento"] = "PV"
+            hash_base["numeroProveedor"] = self.catalog_vendor.clave#"49965"#self.vehicle_consumptions[0].vehicle.catalog_company.clave    sacar de la relacion
+            hash_base["numeroBeneficiario"] = self.catalog_vendor.clave #"49965"#self.vehicle_consumptions[0].vehicle.catalog_company.clave  sacar de la relacion con proveedor numero de (proveedor)
+            hash_base["fechaFactura"] = "1#{self.fecha_factura.strftime("%y")}#{(self.fecha_factura).strftime("%j")}"
+            hash_base["fechaEfectiva"] = "1#{self.created_at.strftime("%y")}#{(self.created_at).strftime("%j")}"
+            hash_base["fechaVencimiento"] = "" #"120252" 
+            hash_base["fechaDescuento"] = "1#{self.fecha_factura.strftime("%y")}#{(self.fecha_factura).strftime("%j")}" #"120252"
+            hash_base["fechaLM"] = "1#{self.fecha_aplicacion.strftime("%y")}#{(self.fecha_aplicacion).strftime("%j")}"
+            hash_base["añoFiscal"] = "0"
+            hash_base["sigloFiscal"] = "20"
+            hash_base["periodoFiscal"] = "0"
+            hash_base["compañia"] = hash_base["compañiaDocumento"]
+            hash_base["tipoBatch"] = "V"
+            hash_base["transaccionBalanceada"] = "Y"
+            hash_base["estatusDePago"] = "H"
+            importes = (((self.monto - self.impuestos).round(2) - bandera_impuesto) * 100).to_i.round(2)
+            importes2 = ((valor_importe_global - enc_imponible).ceil)
+            importes = (((self.monto - self.impuestos) - (self.impuestos / valor_iva)) * 100).round(2).to_i
+            valor_Base_cero = importes
+            hash_base["importe"] =  importes
+            hash_base["importePendiente"] =   importes 
+            hash_base["importeImponible"] =  importes
+            hash_base["importeImpuesto"] = "0"
+            hash_base["tasaFiscal"] = "IVA0GAS"
+            hash_base["explicacionFiscal"] = "V"
+            hash_base["tipoMoneda"] = "D"
+            hash_base["moneda"] = "MXP"
+            hash_base["glClass"] = self.catalog_vendor.compenlm
+            hash_base["modoDeCuenta"] = "2"
+            hash_base["unidadDeNegocio"] = "#{self.catalog_branch.unidad_negocio}#{area_mayor}"
+            hash_base["plazo"] = self.catalog_vendor.plazo
+            hash_base["factura"] = self.n_factura 
+            hash_base["nameRemark"] = "#{self.catalog_branch.abreviacion} COMB #{self.fecha_inicio.strftime("%d")}-#{self.fecha_fin.strftime("%d")} #{ I18n.l(self.fecha_fin, format: '%B') }"
+            hash_base["instrumentoDePago"] = self.catalog_vendor.instrumentopago
+            hash_base["originador"] = @current_user.correo_combustibles
+            hash_base["usuarioActualizacion"] = @current_user.correo_combustibles
+            hash_base["idPrograma"] = self.id
+            hash_base["fechaActualizacion"] = "1#{Time.zone.now.strftime("%y")}#{(Time.zone.now).strftime("%j")}"
+            hash_base["horaActualizacion"] = Time.zone.now.strftime("%H%M%S")
+            hash_base["estacionDeTrabajo"] = "WEB91a"
+        else
+
+        end
+            @costos = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {id: self.id}).group("vehicles.catalog_area_id, consumptions.catalog_branch_id, vehicles.catalog_branch_id, vehicles.catalog_company_id").select("sum(vehicle_consumptions.monto) as monto, sum(vehicle_consumptions.impuestos) as impuestos, consumptions.catalog_branch_id as cediscarga, vehicles.catalog_branch_id as cedisorigen, vehicles.catalog_area_id as catalog_area_id, vehicles.catalog_company_id as veh_comp_id")
+            @costos.each_with_index do |ac,index|
+
+                hash_asientoDeDiario = Hash.new 
+                hash_asientoDeDiario["numeroLinea"] = "#{index+1}000"
+                hash_asientoDeDiario["numeroBatch"] = "0"
+                hash_asientoDeDiario["fechaLM"] = "1#{self.fecha_fin.strftime("%y")}#{(self.fecha_fin).strftime("%j")}"
+                hash_asientoDeDiario["tipoBatch"] = "V"
+                hash_asientoDeDiario["compañia"] = hash_poliza["compañia"]
+                catalogo = CatalogArea.find_by(id: ac.catalog_area_id)
+
+                if catalogo.descripcion == "Operaciones"
+                    if catalogo == nil
+                        @mensaje_error  = ["No se encontro un Área con los datos proporcionados, por favor revise la información. Folio: #{self.folio}"]
+                        return [@mensaje_error,false]
+                    end
+
+                end
+                if valuation
+                    cedis_de_carga = CatalogBranch.find_by(id: ac.cediscarga)
+                    if ac.cedisorigen == 7
+                        hash_asientoDeDiario["numeroCuenta"] = "01990804.6103.0101"
+                    elsif ac.cedisorigen == 19
+                        hash_asientoDeDiario["numeroCuenta"] = "01990705.6103.0101"
+                    else
+                        if cat_company.id == cedis_de_carga.catalog_company_id
+                            tasa_costo = AccountingImpact.find_by(catalog_branch_id: self.catalog_branch_id,  cuenta_contable: "Combustible",catalog_area_id:catalogo.id,status:true)
+                            if tasa_costo
+                                hash_asientoDeDiario["numeroCuenta"] = tasa_costo.nombre
+                            else
+                                @mensaje_error  = ["No se encontró el Numero de cuenta para el cedis: #{self.catalog_branch.decripcion} y área: #{catalogo.descripcion} para el concepto de combustible, por favor revise la información. Folio: #{self.folio}"]
+                                return [@mensaje_error,false]
+                            end
+                        else
+                            account_impact = AccountingImpact.find_by(catalog_branch_id: self.catalog_branch_id,  cuenta_contable: "Otros gastos",catalog_area_id:catalogo.id,status:true)#.select(:nombre)#    "01060102.6103.0101"
+                            if account_impact == nil
+                                @mensaje_error  = ["No se encontró el Numero de cuenta para el cedis: #{self.catalog_branch.decripcion} y área: #{catalogo.descripcion} para el concepto de combustible otros gastos, por favor revise la información. Folio: #{self.folio}"]
+                                return [@mensaje_error,false] 
+                            else
+                                hash_asientoDeDiario["numeroCuenta"] = account_impact.nombre
+                            end
+                        end
+                    end
+                else
+                    @mensaje_error  = ["El cedis: #{self.catalog_branch.decripcion} no tiene asignada la tasa correspondiente al iva de la factura."]
+                    return [@mensaje_error,false]
+                end
+                #------------------------------------------------------------------------------------
+                hash_asientoDeDiario["modoDeCuenta"] = "2"
+                hash_asientoDeDiario["subledger"] = self.catalog_vendor.clave
+                hash_asientoDeDiario["subledgerType"] = "A"
+                #---------------------------------------------------------------------------------------
+                hash_asientoDeDiario["tipoLibro"] = "AA"
+                hash_asientoDeDiario["periodoFiscal"] = "0"
+                hash_asientoDeDiario["sigloFiscal"] = "20"
+                hash_asientoDeDiario["añoFiscal"] = "0"
+                hash_asientoDeDiario["moneda"] = "MXP"
+                if self.es_detallado
+                    bandera_impuesto = (ac.impuestos.to_f.round(2) / valor_iva).round(2)
+                    if ((ac.monto.to_f - ac.impuestos) - bandera_impuesto) > 0
+                        bandera_base_cero = true
+                    end
+                    if bandera_base_cero == true
+                        monto_total = (ac.impuestos / valor_iva).ceil(2)
+                        impuestos_total = ac.impuestos.to_f
+
+                        impuesto_base_renglon = ac.impuestos.to_f
+                        monto_base_renglon = ac.monto.to_f
+                        impuesto_base_cero_renglon = ac.monto - monto_total
+                        impuesto_base_cero = ((ac.monto.ceil(2) - ac.impuestos.ceil(2)) - monto_total).ceil
+                        imponible = monto_total.to_f
+                        valor_diario_monto = (((imponible + impuesto_base_cero)*100)).ceil(2).to_i
+                        acumulado_impuesto_base_cero += (impuesto_base_cero.round(2)*100).round
+                        acumulado_monto_total_base_cero += (monto_total.round(2)*100).round
+                        acumulado_imponible_base_cero += (valor_diario_monto.round(2)).round
+                    else
+                        monto_total = ac.monto.to_f
+                        impuestos_total = ac.impuestos.to_f
+                        imponible = (monto_total.to_f - impuestos_total.to_f)
+                        valor_diario_monto = (((imponible.round(2)*100).round(2)).to_f).to_s
+                        acumulado_impuesto += (impuestos_total.round(2)*100).round
+                        acumulado_monto_total += (monto_total.round(2)*100).round
+                        acumulado_imponible += (valor_diario_monto.round(2)).round
+                    end
+                else
+
+                    division_mto_fact = (ac.monto / self.monto).round(2)
+
+                    prorrat_imp = (division_mto_fact * self.impuestos).round(2)
+
+                    bandera_impuesto = (self.impuestos.ceil / valor_iva).ceil
+
+                    bandera_impuesto_renglon = prorrat_imp / valor_iva
+
+                    prorrat_base_cero = (division_mto_fact * ((self.monto - self.impuestos) - bandera_impuesto))
+
+                    if ((ac.monto.to_f - prorrat_imp) - bandera_impuesto) > 0
+                        bandera_base_cero = true
+                    end
+                    if bandera_base_cero == true
+                        monto_total = ac.monto - prorrat_imp
+                        impuestos_total = prorrat_imp.to_f
+
+                        impuesto_base_renglon = prorrat_imp.to_f
+                        monto_base_renglon = prorrat_imp.to_f
+                        impuesto_base_cero_renglon = prorrat_base_cero
+
+                        impuesto_base_cero = prorrat_base_cero
+
+                        imponible = monto_total.to_f
+
+                        valor_diario_monto = ((imponible.round(2))*100).round
+                        acumulado_impuesto_base_cero += (impuesto_base_cero.round(2)*100).round
+                        acumulado_monto_total_base_cero += (monto_total.round(2)*100).round
+                        acumulado_imponible_base_cero += (valor_diario_monto.round(2)).round
+                    else
+                        monto_total = ac.monto - prorrat_imp
+                        impuestos_total = prorrat_imp.to_f
+                        valor_diario_monto = (monto_total.round(2)*100).round
+                        acumulado_impuesto += (impuestos_total.round(2)*100).round
+                        acumulado_monto_total += (monto_total.round(2)*100).round
+                        acumulado_imponible += (valor_diario_monto.round(2)).round
+                    end
+                end
+                    if (@costos.length - 1) == index
+                        if @asientoDeDiario.length > 0 
+                            valor_bandera = valor_diario_monto + @asientoDeDiario.map{|x| x["monto"]}.inject(:+)
+                        else
+                            valor_bandera = valor_diario_monto
+                        end
+                        if bandera_base_cero == true
+                            resta_diario_monto =  ((((self.impuestos / valor_iva) * 100) + importes) - valor_bandera).round(2).to_f
+                        else
+                            resta_diario_monto = ((((self.impuestos / valor_iva) * 100)) - valor_bandera).round(2).to_f
+
+                        end
+                        if resta_diario_monto > 0.0
+                            hash_asientoDeDiario["monto"] = (valor_diario_monto + resta_diario_monto).to_i
+                        elsif resta_diario_monto < 0.0 
+                            hash_asientoDeDiario["monto"] = (valor_diario_monto + resta_diario_monto).to_i
+                        else
+                            hash_asientoDeDiario["monto"] = valor_diario_monto
+                        end
+
+
+                        if resta_diario_monto > 0.0
+                            hash_asientoDeDiario["monto"] = (valor_diario_monto + resta_diario_monto).to_i
+                        elsif resta_diario_monto < 0.0 
+                            hash_asientoDeDiario["monto"] = (valor_diario_monto + resta_diario_monto).to_i
+                        else
+                            hash_asientoDeDiario["monto"] = valor_diario_monto
+                        end
+
+
+
+                        suma_imponible = valor_Base_cero + valor_Impuestos + enc_imponible
+                        if @asientoDeDiario == []
+                            suma_total = (hash_asientoDeDiario["monto"]) + valor_Impuestos
+                        else
+                            suma_total = (@asientoDeDiario.map{|x| x["monto"]}.inject(:+) + hash_asientoDeDiario["monto"]) + valor_Impuestos
+                        end
+                        resta_bandera = (self.monto.round(2) * 100).to_i - suma_total
+                        #byebug
+                        if resta_bandera > 0.0 
+                            hash_asientoDeDiario["monto"] = (hash_asientoDeDiario["monto"] - resta_bandera).to_i
+                        elsif resta_bandera < 0.0
+                            hash_asientoDeDiario["monto"] = (hash_asientoDeDiario["monto"] + resta_bandera).to_i
+                            #hash_poliza["importeImponible"] = suma_imponible + resta_bandera
+                        end
+                        
+                        if @asientoDeDiario.length > 0
+                            diferencia_bandera = (enc_imponible + valor_Base_cero) - (@asientoDeDiario.map{|x| x["monto"]}.inject(:+) + hash_asientoDeDiario["monto"])
+                        else
+                            diferencia_bandera = (enc_imponible + valor_Base_cero) - (hash_asientoDeDiario["monto"])
+                        end
+                        if diferencia_bandera > 0.0 
+                            hash_asientoDeDiario["monto"] = (hash_asientoDeDiario["monto"] + diferencia_bandera).to_i
+                        elsif diferencia_bandera < 0.0
+                            hash_asientoDeDiario["monto"] = (hash_asientoDeDiario["monto"] - diferencia_bandera).to_i
+                            #hash_poliza["importeImponible"] = suma_imponible + resta_bandera
+                        end
+                    else
+                        hash_asientoDeDiario["monto"] = valor_diario_monto
+                    end
+                hash_asientoDeDiario["explicacion"] = self.catalog_vendor.razonsocial.first(30) #"Servicios Gasolineros de Mexic"# //eeee
+                cons_cedis_origen = CatalogBranch.find_by(id: ac.cedisorigen)
+                if ac.cedisorigen == ac.cediscarga
+                    hash_asientoDeDiario["observaciones"] = "#{self.catalog_branch.abreviacion} COMB #{self.fecha_inicio.strftime("%d")}-#{self.fecha_fin.strftime("%d")} #{ I18n.l(self.fecha_fin, format: '%B')}" # cambiar las 3 primeras letras del cedis comb se queda
+                else
+                    hash_asientoDeDiario["observaciones"] = "#{cons_cedis_origen.catalog_company.abreviatura} #{cons_cedis_origen.abreviacion} COMB #{self.fecha_inicio.strftime("%d")}-#{self.fecha_fin.strftime("%d")} #{ I18n.l(self.fecha_fin, format: '%B')}" # cambiar las 3 primeras letras del cedis comb se queda
+                end
+                hash_asientoDeDiario["numeroBeneficiario"] = self.catalog_vendor.clave # self.vehicle_consumptions[0].vehicle.catalog_company.clave
+
+                hash_asientoDeDiario["factura"] = self.n_factura #""#"145525"
+                #----------------------------------
+
+                hash_asientoDeDiario["fechaFactura"] = "1#{self.fecha_fin.strftime("%y")}#{(self.fecha_fin).strftime("%j")}"
+                hash_asientoDeDiario["fechaEfectiva"] = "1#{self.created_at.strftime("%y")}#{(self.created_at).strftime("%j")}"
+                hash_asientoDeDiario["codigoMoneda"] = "D"
+                hash_asientoDeDiario["originador"] = @current_user.correo_combustibles #sacar de usuario de correo verificar que sea gafi.com.mx si no DYENCALADA 
+                hash_asientoDeDiario["usuarioActualizacion"] = @current_user.correo_combustibles #sacar de usuario de correo verificar que sea gafi.com.mx si no DYENCALADA 
+                hash_asientoDeDiario["idPrograma"] = self.id
+                hash_asientoDeDiario["fechaActualizacion"] = "1#{Time.zone.now.strftime("%y")}#{(Time.zone.now).strftime("%j")}"
+                hash_asientoDeDiario["horaActualizacion"] = Time.zone.now.strftime("%H%M%S")
+                hash_asientoDeDiario["estacionDeTrabajo"]  = "WEB91a"
+                @asientoDeDiario <<hash_asientoDeDiario
+                valor_Montos = @asientoDeDiario.map{|x| x["monto"]}.inject(:+)
+        end
+        hash_poliza["importeImponible"] = enc_imponible
+        if bandera_base_cero == true
+            hash_polizaInput["poliza"] = hash_poliza,hash_base
+        else
+            @poliza << hash_poliza
+            hash_polizaInput["poliza"] = @poliza
+        end
+
+        
+        hash_info_adicional["UUID"] = self.uuid
+        @info_adicional << hash_info_adicional
+        hash_polizaInput["asientoDeDiario"] = @asientoDeDiario
+        hash_polizaInput["infoAdicional"] = @info_adicional
+        @polizaInput << hash_polizaInput
+        hash_principal["polizaInput"] = @polizaInput[0]
+        @objeto_principal << hash_principal
+        paremetro_nombre = Parameter.find_by(nombre:"Url Poliza JDE")
+        url = URI(paremetro_nombre.valor_extendido)
+        https = Net::HTTP.new(url.host, url.port);
+        request = Net::HTTP::Put.new(url)
+        request["Content-Type"] = "application/json"
+        request["Accept"] = "application/json"
+        request.body = @objeto_principal[0].to_json
+        response = https.request(request)
+        @json_parciado = []
+        respuesta = JSON.parse response.body
+        if respuesta[0].nil?
+            @json_parciado.push(respuesta)
+        else
+            @json_parciado = respuesta
+        end
+        JdeLog.create(
+            fecha: Time.zone.now.to_date,
+            hora: Time.zone.now,
+            json_enviado: @objeto_principal,
+            respuesta: @json_parciado
+        )
+            
+        if @json_parciado.map{|x| x['Exitoso']}.include?(false) 
+            return [@json_parciado,false]
+        else
+            return [@json_parciado,true]
+        end
+
     end
 
     def enviar_json_comb_dos(current_user)
