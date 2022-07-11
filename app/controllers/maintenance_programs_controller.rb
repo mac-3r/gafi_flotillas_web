@@ -35,31 +35,36 @@ class MaintenanceProgramsController < ApplicationController
     session["tipo_pro"] = params[:vehicle_type_id]
     session["linea_pro"] = params[:catalog_brand_id]
     session["area_pro"] = params[:catalog_area_id]
-    session["fecha_ini_pro"] = params[:fecha_inicio]
-    session["fecha_fin_pro"] = params[:fecha_fin]
-    if (session["fecha_ini_pro"] == "" and session["fecha_fin_pro"] == "") or (session["fecha_ini_pro"] != "" and session["fecha_fin_pro"] != "")
-    @maintenance_programs = MaintenanceProgram.consulta_programas(session["vehiculo_pro"],session["empresa_pro"],session["cedis_pro"], session["user_pro"], session["tipo_pro"], session["linea_pro"], session["area_pro"])
-    if session["cedis_pro"] == ""
-      @branch = nil
-      @sin_kilometraje = true
-      @mostrar_btn = false
-    else
-      @arreglo_pendientes = Array.new
-      @branch = CatalogBranch.find_by(id: params[:catalog_branch_id])
-      @sin_kilometraje = false
-      vehiculos = Vehicle.where(catalog_branch_id: @branch.id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [3, 8, 10], vehicle_type_id: [6, 11])
-      @contador = 0
-      vehiculos.each do |vh|
-        kilometraje = MileageIndicator.where(vehicle_id:vh.id).where("fecha between ? and ?", Time.zone.now.beginning_of_week.to_s ,Time.zone.now.end_of_week.to_s)
-        if kilometraje == []
-          @contador += 1
-        end
-      end
-      if @contador > 0
+    # session["fecha_ini_pro"] = params[:fecha_inicio]
+    # session["fecha_fin_pro"] = params[:fecha_fin]
+    # @bandera_error = false
+    # if (session["fecha_ini_pro"] == "" and session["fecha_fin_pro"] == "") or (session["fecha_ini_pro"] != "" and session["fecha_fin_pro"] != "")
+      @maintenance_programs = MaintenanceProgram.consulta_programas(session["vehiculo_pro"],session["empresa_pro"],session["cedis_pro"], session["user_pro"], session["tipo_pro"], session["linea_pro"], session["area_pro"])
+      if session["cedis_pro"] == ""
+        @branch = nil
         @sin_kilometraje = true
+        @mostrar_btn = false
+      else
+        @arreglo_pendientes = Array.new
+        @branch = CatalogBranch.find_by(id: params[:catalog_branch_id])
+        @sin_kilometraje = false
+        vehiculos = Vehicle.where(catalog_branch_id: @branch.id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [4, 3, 8, 10, 9], vehicle_type_id: [6, 11])
+        @contador = 0
+        vehiculos.each do |vh|
+          kilometraje = MileageIndicator.where(vehicle_id:vh.id).where("fecha between ? and ?", Time.zone.now.beginning_of_week.to_s ,Time.zone.now.end_of_week.to_s)
+          if kilometraje == []
+            @contador += 1
+          end
+        end
+        if @contador > 0
+          @sin_kilometraje = true
+        end
+        @mostrar_btn = true
       end
-      @mostrar_btn = true
-    end
+    # else
+    #   @bandera_error = true
+    #   @mensaje = "Escribe fechas válidas o deja los campos de fecha en blanco para ver el programa actual."
+    # end
     respond_to do |format|
       format.js
     end
@@ -67,7 +72,7 @@ class MaintenanceProgramsController < ApplicationController
 
   def modal_pendientes_captura_km
     @branch = CatalogBranch.find_by(id: params[:branch_id])
-    vehiculos = Vehicle.where(catalog_branch_id: @branch.id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [3, 8, 10], vehicle_type_id: [6, 11])
+    vehiculos = Vehicle.where(catalog_branch_id: @branch.id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [4, 3, 8, 10, 9], vehicle_type_id: [6, 11])
     @arreglo_pendientes = Array.new
     vehiculos.each do |vh|
       kilometraje = MileageIndicator.where(vehicle_id:vh.id).where("fecha between ? and ?", Time.zone.now.beginning_of_week.to_s ,Time.zone.now.end_of_week.to_s)

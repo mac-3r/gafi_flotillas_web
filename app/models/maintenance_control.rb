@@ -152,6 +152,8 @@ end
       hash = archivo["Comprobante"]
       impuestos_fact = hash["Impuestos"]["TotalImpuestosTrasladados"].to_f
       iva_fact = hash["Impuestos"]["Traslados"]["Traslado"]["TasaOCuota"].to_f.round(2)
+      subtotal_fact = hash["SubTotal"].to_f.round(2)
+      total_fact = hash["Total"].to_f.round(2)
       #importe_fact = 
 
       @current_user = current_user
@@ -198,9 +200,10 @@ end
       imponible_global = ((imponible) * 100).to_i
       valor_importe_global = (((impuestos_fact / iva_fact) * (1 + iva_fact)) * 100)
       enc_imponible = ((impuestos_fact / iva_fact).ceil(2) * 100).to_i
-      hash_poliza["importe"] = (valor_importe_global.to_f).to_i
-      hash_poliza["importePendiente"] = (valor_importe_global.to_f).to_i
-      hash_poliza["importeImponible"] = enc_imponible
+      hash_poliza["importe"] = (total_fact * 100).to_i
+      hash_poliza["importePendiente"] = (total_fact * 100).to_i
+      hash_poliza["importeImponible"] = (subtotal_fact * 100).to_i
+
       hash_poliza["importeImpuesto"] = (impuestos_fact * 100).to_i
 
       
@@ -283,7 +286,7 @@ end
   # imponible = (self.monto/1.16).round(2)
   #     if index == 0
   #byebug
-        hash_asientoDeDiario["monto"] = (imponible.round(2)*100).round#  (imponible * 100).to_i #((self.monto * 0.8654)*100).to_i
+        hash_asientoDeDiario["monto"] = hash_poliza["importeImponible"]#  (imponible * 100).to_i #((self.monto * 0.8654)*100).to_i
   #     else
   #     hash_asientoDeDiario["monto"] = ((imponible * 0.16).round(2) *100).to_i#((self.monto - (self.monto * 0.8654))*100).to_i
   #     end

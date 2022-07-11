@@ -10,7 +10,7 @@ class PurchaseOrder < ApplicationRecord
   has_one_attached :factura
 
   enum status: {"Pendiente de autorizar": 0, "Autorizado":1, "Rechazado": 2, "Cancelado": 3}
-  enum tipo: {"Compra de vehículo":3}
+  enum tipo: {"Compra de vehículo":3, "Compra de llantas":4, "Compra de baterías":5, "Compra de extintores":6 } #Se agregó tipo (4,5,6) para la compra de artículos
 
     def self.consulta_ordenes(status,fecha_ini,fecha_fin,rango)
         cadena_consulta = ""
@@ -156,7 +156,7 @@ class PurchaseOrder < ApplicationRecord
                 if params[:purchase_order][:catalog_company_id] == "" and params[:purchase_order][:catalog_vendor_id] and params[:purchase_order][:fecha] == "" and params[:purchase_order][:cost_center_id]== "" and params[:purchase_order][:condicion] == ""
                 bandera_error =  1
                 else
-                    orden = PurchaseOrder.new(catalog_company_id:params[:purchase_order][:catalog_company_id],catalog_vendor_id:params[:purchase_order][:catalog_vendor_id],fecha:params[:purchase_order][:fecha],cost_center_id:params[:purchase_order][:cost_center_id],condicion:params[:purchase_order][:condicion],plazo_dias:params[:purchase_order][:plazo_dias] ,status:0,clave:nuevo_numero,catalog_branch_id:params[:purchase_order][:catalog_branch_id],tipo:"Compra de vehículo",ultima_fecha_pago:params[:purchase_order][:ultima_fecha_pago],usuario_creador: User.current_user.id)
+                    orden = PurchaseOrder.new(catalog_company_id:params[:purchase_order][:catalog_company_id],catalog_vendor_id:params[:purchase_order][:catalog_vendor_id],fecha:params[:purchase_order][:fecha],cost_center_id:params[:purchase_order][:cost_center_id],condicion:params[:purchase_order][:condicion],plazo_dias:params[:purchase_order][:plazo_dias] ,status:0,clave:nuevo_numero,catalog_branch_id:params[:purchase_order][:catalog_branch_id],tipo:params[:purchase_order][:tipo],ultima_fecha_pago:params[:purchase_order][:ultima_fecha_pago],usuario_creador: User.current_user.id)
                 end 
                 if orden.save 
                     bandera_error = 4

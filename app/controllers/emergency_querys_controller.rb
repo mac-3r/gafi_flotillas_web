@@ -196,24 +196,34 @@ class EmergencyQuerysController < ApplicationController
 
     def importa_gastos_mmto
         require 'axlsx'
-        spreadsheet = Roo::Spreadsheet.open("public/packs/Importaciones/layout_control.xlsx")
+        spreadsheet = Roo::Spreadsheet.open("public/packs/Importaciones/ene22.xlsx")
         arreglo = Array.new()
         header = spreadsheet.row(1)
+        #byebug
             (2..spreadsheet.last_row).each do |i|
+                #if i == 0
+                #    byebug
+                #end
                 row = Hash[[header, spreadsheet.row(i)].transpose]
                 vehicle = Vehicle.find_by(numero_economico: row["vehicle_id"])
                 if !vehicle
                     arreglo.push(fila: row, error: "No se encontró el vehículo ingresado #{row["vehicle_id"]}")
                     next
                 end
-                taller = CatalogWorkshop.find_by(clave:row["clave taller"])
-                if !taller
-                    arreglo.push(fila: row, error: "No se encontró el taller ingresado")
+                proveedor = CatalogVendor.find_by(clave:row["clave taller"])
+                if !proveedor
+                    arreglo.push(fila: row, error: "No se encontró el proveedor ingresado")
                     next
+                else
+                    taller = CatalogWorkshop.find_by(catalog_vendor_id: proveedor.id)
+                    if !taller
+                        arreglo.push(fila: row, error: "No se encontró el taller ingresado")
+                        next
+                    end
                 end
                 reparacion = CatalogRepair.find_by(clave:row["clave repair"])
                 if !reparacion
-                    arreglo.push(fila: row, error: "No se encontró la reparación ingresado")
+                    arreglo.push(fila: row, error: "No se encontró la reparación ingresada")
                     next
                 end
                 begin
@@ -433,6 +443,14 @@ class EmergencyQuerysController < ApplicationController
             begin
                 programas = MaintenanceProgram.where(vehicle_id: veh.id)
                 if programas.update_all(km_actual: veh.km_actual)
+                    control_mantenimientos = MaintenanceControl.where(vehicle_id: veh.id).order(km_actual: :asc) 
+                    if control_mantenimientos.length == 0
+
+                    elsif control_mantenimientos.length == 1
+                        control_mantenimientos.first.update(km_actual: veh.km_actual)
+                    else   
+                        control_mantenimientos.last.update(km_actual: veh.km_actual)
+                    end
                     next
                 else
                     programas.errors.full_messages.each do |error|

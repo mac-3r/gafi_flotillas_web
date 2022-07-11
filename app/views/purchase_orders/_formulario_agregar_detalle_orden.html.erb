@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-lg-12">
     <label>Cantidad</label><br>
-    <%= form.number_field :cantidad, class: "form-control", style:"width: 250px !important;" %>
+    <%= form.number_field :cantidad, class: "form-control", style:"width: 250px !important;",oninput:"operacion();" %>
     <br>
     </div>
 </div>
@@ -29,6 +29,16 @@
     <br>    
     </div>
 </div>
+<% if @tipo_orden.tipo != "Compra de vehículo"%>
+<div class="row">
+    <div class="col-lg-12">
+    <label>Modelo artículo*</label><br>
+    <select class="form-control m-input m-input--air uneditable-input chosen-select" id="catalog_tires_battery_id" name="purchase_detail[catalog_tires_battery_id]" required="true"></select>
+    <%#= collection_select('',:catalog_tires_battery_id ,CatalogTiresBattery.listado_articulos(87,"Llanta"), :id, :datoscombo, {prompt:"Seleccione el modelo"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select"})%>
+    <br>    
+    </div>
+</div>
+<% end %>
 <div class="row">
     <div class="col-lg-12">
     <label>Precio</label><br>
@@ -36,7 +46,7 @@
         <div class="input-group-prepend">
         <span class="input-group-text">$</span>
         </div>
-        <%= form.number_field :precio, step: :any,oninput:"operacion();" %>
+        <%= form.number_field :precio, step: :any,oninput:"operacion();", readonly: @tipo_orden.tipo != "Compra de vehículo" %>
     </div>
     </div>
     <br>
@@ -48,7 +58,7 @@
         <div class="input-group-prepend">
         <span class="input-group-text">$</span>
         </div>
-        <%= form.number_field :total_detalle, step: :any %>
+        <%= form.number_field :total_detalle, step: :any, readonly: @tipo_orden.tipo != "Compra de vehículo" %>
     </div>
     </div>
     <br>
@@ -64,10 +74,43 @@
 <% end %>
 <script>
     function operacion(){
-    var a = document.getElementById("purchase_detail_cantidad").value
-    var b = document.getElementById("purchase_detail_precio").value
-    
-    var total= (a * b)
-    document.getElementById("purchase_detail_total_detalle").value = total
+        var a = document.getElementById("purchase_detail_cantidad").value;
+        var b = document.getElementById("purchase_detail_precio").value;
+        
+        var total= (a * b);
+        document.getElementById("purchase_detail_total_detalle").value = total;
     }
+
+    function modelosArticulos() {
+        $.ajax({
+            type: "POST",
+            url: "<%= get_modelos_articulos_path %>",
+            data: { brand_id: $("#catalog_brand_id").val(), tipo: "<%= @tipo_orden.tipo %>", authenticity_token: $('meta[name=csrf-token]').attr('content')}
+        });
+    }
+
+    function precioArticulo() {
+        $.ajax({
+            type: "POST",
+            url: "<%= get_precios_articulos_path %>",
+            data: { catalog_tires_battery_id: $("#catalog_tires_battery_id").val(), authenticity_token: $('meta[name=csrf-token]').attr('content')}
+        });
+    }
+
+    $(document).ready( function() {
+        
+        $("#catalog_brand_id").change(function() {
+            modelosArticulos();
+            if (<%= @tipo_orden.tipo != "Compra de vehículo" %>) {
+                $("#purchase_detail_precio").val("");
+                $("#purchase_detail_total_detalle").val("");
+            }
+        });
+
+        $("#catalog_tires_battery_id").change(function() {
+            console.log("Cambió", $("#catalog_tires_battery_id").val());
+            precioArticulo();
+        })
+    });
+
 </script>

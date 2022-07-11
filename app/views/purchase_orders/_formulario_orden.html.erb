@@ -47,6 +47,19 @@
           </div>
       </div>
     </div>
+      <div class="form-group col-lg-4">
+      <label>Tipo de compra</label><br>
+      <%= form.select :tipo, options_for_select([
+        ["Seleccione un tipo de compra", ""], 
+        "Compra de vehículo", 
+        "Compra de llantas", 
+        "Compra de baterías",
+        "Compra de extintores"]), 
+    {}, { class: "form form-group form-control", required:true } %>
+    </div>
+  </div>
+  
+  <div class="form-row">
     <div class="form-group col-lg-4">
       <label>Condición de pago</label><br>
       <%= form.select :condicion, options_for_select([
@@ -58,7 +71,6 @@
     {}, { class: "form form-group form-control", onchange: "OpenCheck(this);", required:true } %>
     </div>
   </div>
-
 
   <div id="div" style="display: none;" class="form-group row">
     <label class="col-sm-2 col-form-label" style="font-family: Arial; font-size:16px;">Días*</label>

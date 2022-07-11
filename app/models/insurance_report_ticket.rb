@@ -2030,4 +2030,38 @@ class InsuranceReportTicket < ApplicationRecord
 		end
 		return resultados
 	end
+
+	def self.consulta_siniestros_indicador_fecha(empresa,cedis,responsabilidad,area,vehiculo,anio)
+		hoy_date = Time.zone.now.to_date
+		hoy = Date.new(anio.to_i, hoy_date.month, hoy_date.day)
+		resultados = Array.new
+		if hoy.month.to_i >= 10
+			fecha_inicio = Date.new(hoy.year.to_i, 10, 16)
+			fecha_fin = Date.new(hoy.year.to_i + 1, 10, 15)
+		else
+			fecha_inicio = Date.new(hoy.year.to_i - 1, 10, 16)
+			fecha_fin = Date.new(hoy.year.to_i, 10, 15)
+		end
+		responsables = CatalogPersonal.all
+		responsables.each do |responsable|
+			siniestros = InsuranceReportTicket.where(fecha_ocurrio:fecha_inicio..fecha_fin,estatus:"Cerrado", responsable: responsable.nombre)
+			if siniestros.length >= 2
+				responsable_ = 0
+				monto_responsable = 0
+				afectado = 0
+				monto_afectado = 0
+				siniestros.each do |siniestro|
+					if siniestro.estatus_responsabilidad_gafi == 0
+						responsable_ += 1
+						monto_responsable += siniestro.monto_siniestro
+					else
+						afectado += 1
+						monto_afectado += siniestro.monto_siniestro
+					end
+				end
+				resultados.push(conductor: responsable.nombre, responsable: responsable_, monto_responsable: monto_responsable, afectado: afectado, monto_afectado: monto_afectado, total: responsable_ + afectado, monto_total: monto_responsable + monto_afectado)
+			end
+		end
+		return resultados
+	end
 end

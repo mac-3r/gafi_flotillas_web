@@ -812,7 +812,7 @@ class ServiceOrdersController < ApplicationController
         mtto = MaintenanceControl.update_request(control_mmto.id, current_user)
         if mtto[1] == 1
           flash[:alert] = mtto[0]
-          #control_mmto.destroy
+          control_mmto.destroy
           # respond_to do |format|
           #   format.html{redirect_to service_orders_path, alert: mtto[0]}
           # end

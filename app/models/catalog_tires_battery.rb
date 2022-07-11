@@ -1,5 +1,6 @@
 class CatalogTiresBattery < ApplicationRecord
   belongs_to :catalog_brand
+  has_one :purchase_detail
 
   def self.consulta_llantas(tipo,linea)
     cadena_consulta = ""

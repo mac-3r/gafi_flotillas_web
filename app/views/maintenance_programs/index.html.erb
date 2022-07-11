@@ -8,6 +8,11 @@
             </div>
             <div class="card-toolbar">
               <div class="dropdown dropdown-inline mr-2">
+                <button type="button" class="btn btn-default float-right" data-toggle="modal" data-target="#exampleModal1">
+                  Importar gastos de mantenimiento
+                </button>
+              </div>
+              <div class="dropdown dropdown-inline mr-2">
                   <%= link_to 'Exportar a excel' ,generar_excel_programa_path, target: "_blank", class: "btn btn-primary float-right" %>
               </div>
             </div>
@@ -71,3 +76,34 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cargar gastos de mantenimiento</h5>
+                <button type="button" class="close float-right" data-dismiss="modal">&times;</button>   
+            </div>
+            <div class="modal-body">
+                <%= form_tag importar_gastos_mantenimiento_path, multipart: true do %>
+                <%= file_field_tag :file, :class => "form-control-file", accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %>
+                <br>
+            </div>
+            <div class="modal-footer">
+                    <%= submit_tag "Cargar", class: "form_submit btn btn-primary", :id => "file_button",disabled: true%>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  $(document).ready(function(){
+        $('input:file').change(
+            function(){
+                if ($(this).val()) {
+                    $('input:submit').attr('disabled',false);
+                } 
+            }
+        );
+
+    });
+</script>

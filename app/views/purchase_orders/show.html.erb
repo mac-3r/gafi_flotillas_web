@@ -42,46 +42,52 @@
             <%= render "partidas" %>
           </div>
           <br><br>
-          <table class="center">
-            <tr>
-              <th>
-                <br>
-                <div style="width:350px;">
-                  <br><br><br><br><br><br><br><br><br><br>
-                   <hr size="8" width="90%" color="black"> 
-                   <div  style="justify-content:center; align-items:center;display: flex;">
-                    <% if @usuario %>
-                      <p><strong style="text-align: center;"><%= @usuario.name%> <%= @usuario.last_name %></strong></p>
-                    <% end %>
-                   </div>
-                   <div  style="justify-content:center; align-items:center;display: flex;">
-                      <p><strong style="text-align: center;">Firma de quien elaboró</strong></p>
-                   </div>
-                </div>
-              </th>
-              <% if @firma %>
-              <th style="text-align: center;">
-                <div style=" width:350px;">
-                  <%= image_tag(url_for(@firma.firma)) if @firma.firma.attached? and @purchase_order.status == "Autorizado" %>
-                  <hr size="8" width="90%" color="black"> 
-                  <div  style="justify-content:center; align-items:center;display: flex;">
-                    <p><strong style="text-align: center;"><%= @firma.user.name %> <%= @firma.user.last_name %></strong></p>
-                  </div>
-                  <p><strong style="text-align: center;">Firma de autorización</strong></p>
-                </div>
-              </th>
-                <% else %>
-                <th style="text-align: center;">
-                  <div style=" width:350px;">
+          <div class="row" style="height: 300px;place-content: flex-end;">
+            <table class="center">
+              <tr>
+                <th>
+                  <br>
+                  <div style="width:350px;">
                     <hr size="8" width="90%" color="black"> 
                     <div  style="justify-content:center; align-items:center;display: flex;">
-                      <strong style="text-align: center;">Firma de autorización</strong>
+                      <% if @usuario %>
+                        <p><strong style="text-align: center;"><%= @usuario.name%> <%= @usuario.last_name %></strong></p>
+                      <% end %>
+                    </div>
+                    <div  style="justify-content:center; align-items:center;display: flex;">
+                        <p><strong style="text-align: center;">Firma de quien elaboró</strong></p>
                     </div>
                   </div>
                 </th>
-              <% end %>
-            </tr>
-          </table>
+                <% if @firma %>
+                <th style="text-align: center;">
+                  <div style=" width:350px;">
+                    <%= image_tag(url_for(@firma.firma)) if @firma.firma.attached? and @purchase_order.status == "Autorizado" %>
+                    <hr size="8" width="90%" color="black"> 
+                    <div  style="justify-content:center; align-items:center;display: flex;">
+                      <p><strong style="text-align: center;"><%= @firma.user.name %> <%= @firma.user.last_name %></strong></p>
+                    </div>
+                    <div  style="justify-content:center; align-items:center;display: flex;">
+                      <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                    </div>
+                  </div>
+                </th>
+                  <% else %>
+                  <th style="text-align: center;">
+                    <div style=" width:350px;">
+                      <hr size="8" width="90%" color="black"> 
+                      <div  style="justify-content:center; align-items:center;display: flex;">
+                        <p><strong style="text-align: center;"></strong></p>
+                      </div>
+                      <div  style="justify-content:center; align-items:center;display: flex;">
+                        <p><strong style="text-align: center;">Firma de autorización</strong></p>
+                      </div>
+                    </div>
+                  </th>
+                <% end %>
+              </tr>
+            </table>
+          </div>
         </div>
     </div>
 </div>

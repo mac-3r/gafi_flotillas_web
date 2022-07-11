@@ -59,18 +59,18 @@ class MovilApiController < ApplicationController
     def ver_licencias
         @evidencias = []
         licences_evidences = LicencesPicture.where(user_id: params[:user_id]) 
-        licences_evidences.each do |le|
+        licences_evidences.each do |licencia|
             hash_evidencias = Hash.new
-            hash_evidencias["id"] = le.id
-            if le.imagen.attachment
-                #hash_evidencias["imagen"] = Rails.application.routes.url_helpers.rails_blob_path(le.imagen, only_path: true)
-                hash_evidencias["imagen"] = url_for(le.imagen)
+            hash_evidencias["id"] = licencia.id
+            if licencia.imagen.attached?
+                #hash_evidencias["imagen"] = Rails.application.routes.url_helpers.rails_blob_path(licencia.imagen, only_path: true)
+                hash_evidencias["imagen"] = url_for(licencia.imagen)
             else
                 hash_evidencias["imagen"] =nil
             end
-            hash_evidencias["tipo"] = le.tipo
-            hash_evidencias["vehicle_id"] = le.vehicle_id
-            hash_evidencias["user_id"] = le.user_id
+            hash_evidencias["tipo"] = licencia.tipo
+            hash_evidencias["vehicle_id"] = licencia.vehicle_id
+            hash_evidencias["user_id"] = licencia.user_id
             @evidencias << hash_evidencias
         end
         render json: (@evidencias)

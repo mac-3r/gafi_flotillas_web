@@ -31,6 +31,7 @@ class PurchaseOrdersController < ApplicationController
   # GET /purchase_orders/1
   # GET /purchase_orders/1.json
   def show
+    @tipo_orden = @purchase_order #Se agregó en los métodos que se usa para registrar una orden de compra para identificar el tipo de orden
     @purchase_details = @purchase_order.purchase_details
     @firma = UserSignature.find_by(user_id: @purchase_order.user_id)
     @usuario = User.find_by(id: @purchase_order.usuario_creador)
@@ -52,6 +53,7 @@ class PurchaseOrdersController < ApplicationController
   end
 
   def formulario_agregar_detalle_orden
+    @tipo_orden = PurchaseOrder.find_by(id: session["orden"]) #Se agregó en los métodos que se usa para registrar una orden de compra para identifucar el tipo de orden
     @purchase_detail = PurchaseDetail.new
     respond_to do |format|
     format.js
@@ -60,6 +62,8 @@ class PurchaseOrdersController < ApplicationController
 
   def guardar_detalle_orden
     @detalle = PurchaseDetail.detalle(params,session["orden"])
+    @tipo_orden = PurchaseOrder.find_by(id: session["orden"]) #Se agregó en los métodos que se usa para registrar una orden de compra para identifucar el tipo de orden
+
     if @detalle[1] == 4
       @encabezado = PurchaseOrder.find(@detalle[2])
       @purchase_details = @encabezado.purchase_details
@@ -78,6 +82,7 @@ class PurchaseOrdersController < ApplicationController
   def edit
     @purchase_details = @purchase_order.purchase_details
     session["orden"] = @purchase_order.id
+    @tipo_orden = PurchaseOrder.find_by(id: session["orden"]) #Se agregó en los métodos que se usa para registrar una orden de compra para identifucar el tipo de orden
     if @purchase_order
       @purchase_details = @purchase_order.purchase_details
     else
@@ -122,7 +127,6 @@ class PurchaseOrdersController < ApplicationController
             subtotal = @busqueda.to_f
             monto_iva = subtotal * 0.16
             total = subtotal + monto_iva
-            #byebug
             @purchase_order.update(subtotal:subtotal,monto_iva:monto_iva,total:total)
             format.html { redirect_to purchase_orders_path, notice: 'Registro finalizado con éxito.' }
             format.json { render :show, status: :ok, location: @purchase_order }
@@ -136,12 +140,21 @@ class PurchaseOrdersController < ApplicationController
     end
   end
   def eliminar_partida_orden
+    @tipo_orden = PurchaseOrder.find_by(id: session["orden"]) #Se agregó en los métodos que se usa para registrar una orden de compra para identifucar el tipo de orden
     @bandera = 0
     @mensaje = ""
     detalle = PurchaseDetail.find_by(id: params[:id_partida])
     if detalle
       id_pedido = detalle.purchase_order_id            
       if detalle.destroy
+
+        # Calculando de nuevo los totales de la orden -----------------------------------------
+        nuevo_subtotal = @tipo_orden.purchase_details.sum(:total_detalle)
+        nuevo_iva = (nuevo_subtotal*0.16)
+        nuevo_total = (nuevo_subtotal+nuevo_iva)
+        @tipo_orden.update(subtotal: nuevo_subtotal, monto_iva: nuevo_iva, total: nuevo_total )
+        # Calculando de nuevo los totales de la orden -----------------------------------------
+        
         @mensaje = "Datos eliminados correctamente."
         @purchase_details = PurchaseDetail.where(purchase_order_id: id_pedido)
       else
@@ -237,6 +250,25 @@ class PurchaseOrdersController < ApplicationController
       redirect_to purchase_orders_path
     end
   end  
+
+  def get_modelos_articulos
+    tipo = ""
+    if params[:tipo] == "Compra de llantas"
+        tipo = "Llanta"
+      elsif params[:tipo] == "Compra de baterías"
+        tipo = "Batería"
+      elsif params[:tipo] == "Compra de extintores"
+        tipo = "Extintor"
+    end
+    
+    @modelos_articulos = CatalogTiresBattery.listado_articulos(params[:brand_id], tipo)
+  end
+  
+  def get_precios_articulos
+    @articulo = CatalogTiresBattery.find_by(id: params[:catalog_tires_battery_id])
+    # byebug
+  end
+  
 
   private
     def validacion_menu

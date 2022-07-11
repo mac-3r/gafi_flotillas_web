@@ -448,6 +448,67 @@ class MaintenanceControlsController < ApplicationController
     send_data package.to_stream.read, type: "application/xlsx", filename: "Respuestas taller.xlsx"
   end
 
+  def importar_gastos_mantenimiento
+    require 'axlsx'
+    
+    spreadsheet = Roo::Spreadsheet.open(params[:file].path)
+    arreglo = Array.new()
+    header = spreadsheet.row(1)
+    #byebug
+        (2..spreadsheet.last_row).each do |i|
+            #if i == 0
+            #    byebug
+            #end
+            row = Hash[[header, spreadsheet.row(i)].transpose]
+            vehicle = Vehicle.find_by(numero_economico: row["vehicle_id"])
+            if !vehicle
+                arreglo.push(fila: row, error: "No se encontró el vehículo ingresado #{row["vehicle_id"]}")
+                next
+            end
+            proveedor = CatalogVendor.find_by(clave:row["clave taller"])
+            if !proveedor
+                arreglo.push(fila: row, error: "No se encontró el proveedor ingresado")
+                next
+            else
+                taller = CatalogWorkshop.find_by(catalog_vendor_id: proveedor.id)
+                if !taller
+                    arreglo.push(fila: row, error: "No se encontró el taller ingresado")
+                    next
+                end
+            end
+            reparacion = CatalogRepair.find_by(clave:row["clave repair"])
+            if !reparacion
+                arreglo.push(fila: row, error: "No se encontró la reparación ingresada")
+                next
+            end
+            begin
+                busqueda = MaintenanceControl.find_by(vehicle_id:vehicle.id,catalog_workshop_id:taller.id,catalog_repair_id:reparacion.id,mes_pago:row["mes_pago"],observaciones:row["observaciones"],fecha_factura:row["fecha_factura"],año:row["año"],importe:row["importe"],importe_iva:row["importe_iva"],ciudad:row["ciudad"],km_actual:row["km_actual"],dias_taller:row["dias_taller"])
+                if !busqueda
+                    registro = MaintenanceControl.create(vehicle_id:vehicle.id,catalog_workshop_id:taller.id,catalog_repair_id:reparacion.id,mes_pago:row["mes_pago"],observaciones:row["observaciones"],fecha_factura:row["fecha_factura"],año:row["año"],importe:row["importe"],importe_iva:row["importe_iva"],ciudad:row["ciudad"],km_actual:row["km_actual"],dias_taller:row["dias_taller"])         
+                end
+            rescue => exception
+                arreglo.push(fila: row, error: exception)
+                next
+            end
+        end
+    if arreglo.length > 0
+        package = Axlsx::Package.new
+        workbook = package.workbook
+        workbook.styles do |s|
+            workbook.add_worksheet(name: "registros") do |sheet|
+                sheet.add_row ["vehicle_id","clave taller","clave repair","error"]
+                 arreglo.each do |dato|
+                    sheet.add_row [dato[:fila]["vehicle_id"],dato[:fila]["clave taller"],dato[:fila]["clave repair"], dato[:error]]
+                end
+            end
+        end
+        send_data package.to_stream.read, type: "application/xlsx", filename: "Errores carga.xlsx"
+    else
+        redirect_to maintenance_programs_path, notice: "Finalizo el proceso de importacion"
+    end
+  end
+  
+
   private
     def validacion_menu
       session["menu1"] = "Mantenimiento"

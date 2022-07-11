@@ -1,0 +1,11 @@
+<% if @modelos_articulos.length > 0 %>
+    $("#catalog_tires_battery_id").empty();
+        $("#catalog_tires_battery_id").append("<option value='0'>Seleccione el modelo del artículo</option>")
+    <% @modelos_articulos.each do |modelo_articulo| %>
+        $("#catalog_tires_battery_id").append("<option value='<%= modelo_articulo.id %>'><%= modelo_articulo.modelo %></option>")
+    <% end %>
+    $("#catalog_tires_battery_id").attr("disabled", false);
+<% else %>
+    $("#catalog_tires_battery_id").attr("disabled", true);
+    $("#catalog_tires_battery_id").empty();
+<% end %>

@@ -1,0 +1,6 @@
+<% if @articulo %>
+    $("#purchase_detail_precio").val(<%= @articulo.precio.to_f %>);
+    operacion();
+<% else %>
+    $("#purchase_detail_precio").val("");
+<% end %>

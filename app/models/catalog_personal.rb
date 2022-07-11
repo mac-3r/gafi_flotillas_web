@@ -5,6 +5,7 @@ class CatalogPersonal < ApplicationRecord
     belongs_to :user ,optional: true
     validates :rfc, length: { maximum: 15 }
     has_one :responsable
+    validates :user_id, uniqueness: true
 
     def self.listado_personal
         CatalogPersonal.where(estatus: 1).order(nombre: :asc)

@@ -195,7 +195,8 @@ class Consumption < ApplicationRecord
         #byebug
         #ventas = encabezado.vehicle_consumptions.where(vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas").id).ids)
         valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
-        ventas = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas")),fecha: fecha_inicio..fecha_fin)
+        #ventas = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id, estatus: ["Por autorizar", "Pendiente"]},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas")),fecha: fecha_inicio..fecha_fin)
+        ventas = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id, estatus: ["Pendiente"]},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas")),fecha: fecha_inicio..fecha_fin)
         #byebug
         ventas.each do |i|
             hash_litros = Hash.new
@@ -243,7 +244,8 @@ class Consumption < ApplicationRecord
         arreglo_litros = Array.new()
         #byebug
         valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
-        admin = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Administrativo")),fecha: fecha_inicio..fecha_fin)
+        #admin = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id, estatus: ["Pendiente"]},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Administrativo")),fecha: fecha_inicio..fecha_fin)
+        admin = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id, estatus: ["Por autorizar", "Pendiente"]},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Administrativo")),fecha: fecha_inicio..fecha_fin)
         #byebug
         admin.each do |i|
             hash_litros = Hash.new
@@ -292,7 +294,8 @@ class Consumption < ApplicationRecord
         #byebug
         
         valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
-        almacen = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Almacén")),fecha: fecha_inicio..fecha_fin)
+        #almacen = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id, estatus: ["Pendiente"]},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Almacén")),fecha: fecha_inicio..fecha_fin)
+        almacen = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id, estatus: ["Por autorizar", "Pendiente"]},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Almacén")),fecha: fecha_inicio..fecha_fin)
         #byebug
         almacen.each do |i|
             hash_litros = Hash.new
@@ -342,7 +345,8 @@ class Consumption < ApplicationRecord
         #byebug
         #ventas = encabezado.vehicle_consumptions.where(vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas").id).ids)
         valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
-        ventas = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas")),fecha: fecha_inicio..fecha_fin)
+        #ventas = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {estatus: ["Pendiente"], catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas")),fecha: fecha_inicio..fecha_fin)
+        ventas = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {estatus: ["Pendiente", "Por autorizar"], catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Ventas")),fecha: fecha_inicio..fecha_fin)
         #byebug
         ventas.each do |i|
             hash_litros = Hash.new
@@ -390,7 +394,8 @@ class Consumption < ApplicationRecord
         arreglo_litros = Array.new()
         #byebug
         valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
-        admin = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Administrativo")),fecha: fecha_inicio..fecha_fin)
+        #admin = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {estatus: ["Pendiente"], catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Administrativo")),fecha: fecha_inicio..fecha_fin)
+        admin = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {estatus: ["Pendiente", "Por autorizar"], catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Administrativo")),fecha: fecha_inicio..fecha_fin)
         #byebug
         admin.each do |i|
             hash_litros = Hash.new
@@ -439,7 +444,8 @@ class Consumption < ApplicationRecord
         #byebug
         
         valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
-        almacen = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Almacén")),fecha: fecha_inicio..fecha_fin)
+        #almacen = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {estatus: ["Pendiente"], catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Almacén")),fecha: fecha_inicio..fecha_fin)
+        almacen = VehicleConsumption.joins(:consumption).joins(:vehicle).where(consumptions: {estatus: ["Pendiente", "Por autorizar"], catalog_branch_id: cedis,catalog_vendor_id:vendor, valuation_id: valuation.id},vehicle_id: Vehicle.where(catalog_area_id: CatalogArea.find_by(descripcion: "Almacén")),fecha: fecha_inicio..fecha_fin)
         #byebug
         almacen.each do |i|
             hash_litros = Hash.new

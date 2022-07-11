@@ -231,7 +231,7 @@ end
 
   def self.notificacion_captura_kilometraje_tarde(branch_id)
     sin_kilometraje = false
-    vehiculos = Vehicle.where(catalog_branch_id: branch_id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [3, 8, 10], vehicle_type_id: [6, 11])
+    vehiculos = Vehicle.where(catalog_branch_id: branch_id).where("catalog_personal_id is not null").where.not(vehicle_status_id: [4, 2, 3, 8, 10, 9], vehicle_type_id: [6, 11])
     arreglo_no_personal = Array.new
     arreglo_no_usuario = Array.new
     players_ids = []

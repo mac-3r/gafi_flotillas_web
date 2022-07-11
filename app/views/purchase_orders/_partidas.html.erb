@@ -9,13 +9,20 @@
     <thead>
       <tr>
         <th>Cantidad</th>
-            <th>Tipo vehículo</th>
-            <th>Línea</th>
-            <th>Modelo</th>
+          <th>Tipo vehículo</th>
+          <th>Línea</th>
+          <th>Modelo</th>
+          <% if @tipo_orden.tipo != "Compra de vehículo" %>
+            <th>Modelo del artículo </th>
+          <% end %>
+
       
-        <th>Precio</th>
-        <th>Total</th>
-        <th></th>
+          <th>Precio</th>
+          <th>Total</th>
+            <% if action_name != "show" %>
+          <th></th>
+            <% end %>
+
       </tr>
     </thead>
     <tbody>
@@ -25,9 +32,13 @@
           <td><%= purchase_detail.cantidad %></td>
             <td><%= purchase_detail.vehicle_type.descripcion %></td>
             <td><%= purchase_detail.catalog_brand.descripcion %></td>
-            <td><%= purchase_detail.catalog_model.descripcion %></td>          
+            <td><%= purchase_detail.catalog_model.descripcion %></td>
+            <% if @tipo_orden.tipo != "Compra de vehículo" %>
+              <td><%= purchase_detail.catalog_tires_battery.modelo %></td>
+            <% end %>
+
             <td><%= number_to_currency(purchase_detail.precio)%></td>
-            <% subtotal += purchase_detail.precio %>
+            <% subtotal += purchase_detail.total_detalle %>
             <td><%= number_to_currency(purchase_detail.total_detalle) %></td>
           <td>
             <% if action_name != "show" %>
@@ -39,15 +50,15 @@
       <% iva = subtotal * 0.16 
       total = subtotal + iva %> 
       <tr> 
-        <th colSpan="5">Subtotal</th>
+        <th colSpan=" <% if @tipo_orden.tipo != "Compra de vehículo" %> 6 <% else %> 5 <% end %>">Subtotal</th>
         <td><%=number_to_currency(subtotal) %></td>
       </tr>
       <tr> 
-        <th colSpan="5">IVA</th>
+        <th colSpan=" <% if @tipo_orden.tipo != "Compra de vehículo" %> 6 <% else %> 5 <% end %>">IVA</th>
         <td><%=number_to_currency(iva) %></td>
       </tr>
       <tr> 
-        <th colSpan="5">Total</th>
+        <th colSpan=" <% if @tipo_orden.tipo != "Compra de vehículo" %> 6 <% else %> 5 <% end %>">Total</th>
         <td><%=number_to_currency(total) %></td>
       </tr>             
     </tbody>

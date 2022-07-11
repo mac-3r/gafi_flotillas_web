@@ -313,7 +313,7 @@ class InsuranceReportTicketsController < ApplicationController
     vehiculo = params[:vehicle_id]
     anio = params[:anio]
     @bandera_error = false
-    @resultados = InsuranceReportTicket.consulta_siniestros_indicador(empresa,cedis,responsabilidad,area,vehiculo,anio)
+    @resultados = InsuranceReportTicket.consulta_siniestros_indicador_fecha(empresa,cedis,responsabilidad,area,vehiculo,anio)
     if @resultados == []
       @mensaje = "No se encontró información."
       @bandera_error = true

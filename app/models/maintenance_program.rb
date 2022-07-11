@@ -10,9 +10,9 @@ class MaintenanceProgram < ApplicationRecord
     (3..spreadsheet.last_row).each do |i|
       row = Hash[[header, spreadsheet.row(i)].transpose]
       begin
-        if row["No. Econ."] == 532
-          byebug
-        end
+        # if row["No. Econ."] == 532
+        #   byebug
+        # end
         if row["Frecuencia de mmto. (kms) **"] == ""
           arreglo_errores.push(linea: i, error: "No se capturó frecuencia de mantenimiento")
           next
@@ -72,6 +72,14 @@ class MaintenanceProgram < ApplicationRecord
           programa = MaintenanceProgram.new(maintenance_frecuency_id: consulta_frecuencia.id, vehicle_id: consulta_vehiculo.id, km_inicio_ano: 0, km_recorrido_curso: row["Kilometraje con el que termina la semana"], promedio_mensual: 0, frecuencia_mantenimiento: row["Frecuencia de mmto. (kms) **"], fecha_ultima_afinacion: row["Fecha"], kms_ultima_afinacion: row["Kms ult. Afinación"], fecha_proximo: row["Fecha aproximada\npara sig. servicio"], kms_proximo_servicio: row["Kms prox. Servicio"], km_actual: row["Kilometraje con el que termina la semana"])
           if programa.save
             
+            control_mantenimientos = MaintenanceControl.where(vehicle_id: programa.vehicle_id).order(km_actual: :asc) 
+            if control_mantenimientos.length == 0
+
+            elsif control_mantenimientos.length == 1
+                control_mantenimientos.first.update(km_actual: programa.km_actual)
+            else   
+                control_mantenimientos.last.update(km_actual: programa.km_actual)
+            end
           else
             mensaje = ""
             programa.errors.full_messages.each do |error|

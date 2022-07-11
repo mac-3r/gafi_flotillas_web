@@ -262,6 +262,7 @@ Rails.application.routes.draw do
     
     #control de mantenimiento
     post 'cargar_xml', to: "maintenance_controls#cargar_xml", as: "cargar_xml"
+    post 'importar_gastos_mantenimiento', to: "maintenance_controls#importar_gastos_mantenimiento", as: "importar_gastos_mantenimiento"
     get '/control_mantenimiento_excel', to: "maintenance_controls#control_mantenimiento_excel", as: "control_mantenimiento_excel"
     
     #venta
@@ -633,6 +634,8 @@ Rails.application.routes.draw do
 
   get 'modal_convertir_a_taller/:id', to: "catalog_vendors#modal_convertir_a_taller", as: "modal_convertir_a_taller"
   post 'convertir_a_taller/:id', to: "catalog_vendors#convertir_a_taller", as: "convertir_a_taller"
+  post 'get_modelos_articulos', to: "purchase_orders#get_modelos_articulos", as: "get_modelos_articulos"
+  post 'get_precios_articulos', to: "purchase_orders#get_precios_articulos", as: "get_precios_articulos"
 
 
 
