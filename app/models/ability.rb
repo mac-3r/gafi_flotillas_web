@@ -94,6 +94,8 @@ class Ability
     # alias_action :borrar_presupuesto_venta, to: :eliminar_pres_venta
     # alias_action :destroy, to: :eliminar_pres_dis
 
+    alias_action :index, :show, :vista_prueba, to: :ver_prueba_vehiculos
+
     alias_action :index, :show, to: :ver_presupuestos
     alias_action :index, :show, :new, :create, :edit, :add_item_budget, :save_item_budget, :update, :destroy, to: :registrar_presupuestos
     alias_action :index, :show, :request_budget, to: :solicitar_autorizacion_presupuestos

@@ -84,7 +84,7 @@ class IndicatorMailer < ApplicationMailer
     def reporte_combustible_acumulado(fecha_i,fecha_f,cedis,usuario)
         @nombre_cedis = cedis.decripcion
         @mes = I18n.l(fecha_i,format: '%B')
-        @resultados = VehicleConsumption.joins(:consumption).where("vehicle_consumptions.fecha between '#{fecha_i.strftime('%Y-%m-%d')}' and '#{fecha_f.strftime('%Y-%m-%d')}' and consumptions.estatus != 0 and consumptions.catalog_branch_id = #{cedis.id}")
+        @resultados = VehicleConsumption.joins(:consumption).where("vehicle_consumptions.fecha between '#{fecha_i.strftime('%Y-%m-%d')}' and '#{fecha_f.strftime('%Y-%m-%d')}' and consumptions.estatus != 0 and consumptions.catalog_branch_id = #{cedis.id}").where(consumptions: {estatus: 2})
         if @resultados != []
           mail(to: usuario.email, subject: "Reporte de control de combustible acumulado #{@nombre_cedis}", cc: "no_replay_flotillas@gafi.com.mx")    
         end
@@ -93,7 +93,7 @@ class IndicatorMailer < ApplicationMailer
     def reporte_mensual_reparto(fecha_i,fecha_f,fecha_i_ant,fecha_f_ant,cedis,usuario)
       @nombre_cedis = cedis.decripcion
       @mes = I18n.l(fecha_i,format: '%B')
-      @resultados = VehicleConsumption.joins(:vehicle).select("vehicle_id","vehicle_type_id as tipo","max(case when fecha between'#{fecha_i.strftime("%Y-%m-%d")}' and '#{fecha_f.strftime("%Y-%m-%d")}' then odometro end) as cierre" ,"catalog_branch_id as cedis","((max(case when fecha between '#{fecha_i.strftime("%Y-%m-%d")}' and '#{fecha_f.strftime("%Y-%m-%d")}' then odometro end) - max(case when fecha between '#{fecha_i_ant.strftime("%Y-%m-%d")}' and '#{fecha_f_ant.strftime("%Y-%m-%d")}' then odometro end))/(sum(case when fecha between '#{fecha_i.strftime("%Y-%m-%d")}' and '#{fecha_f.strftime("%Y-%m-%d")}' then cantidad end))) as rendimiento", "max(case when fecha between '#{fecha_i_ant.strftime("%Y-%m-%d")}' and '#{fecha_f_ant.strftime("%Y-%m-%d")}' then odometro end) as recorrido", "sum(case when fecha between '#{fecha_i.strftime("%Y-%m-%d")}' and '#{fecha_f.strftime("%Y-%m-%d")}' then cantidad end) as lts").where(vehicles:{reparto: true,catalog_branch_id:cedis.id}).group(:vehicle_id,:catalog_branch_id,:vehicle_type_id)
+      @resultados = VehicleConsumption.joins(:vehicle, :consumption).select("vehicle_id","vehicle_type_id as tipo","max(case when fecha between'#{fecha_i.strftime("%Y-%m-%d")}' and '#{fecha_f.strftime("%Y-%m-%d")}' then odometro end) as cierre" ,"catalog_branch_id as cedis","((max(case when fecha between '#{fecha_i.strftime("%Y-%m-%d")}' and '#{fecha_f.strftime("%Y-%m-%d")}' then odometro end) - max(case when fecha between '#{fecha_i_ant.strftime("%Y-%m-%d")}' and '#{fecha_f_ant.strftime("%Y-%m-%d")}' then odometro end))/(sum(case when fecha between '#{fecha_i.strftime("%Y-%m-%d")}' and '#{fecha_f.strftime("%Y-%m-%d")}' then cantidad end))) as rendimiento", "max(case when fecha between '#{fecha_i_ant.strftime("%Y-%m-%d")}' and '#{fecha_f_ant.strftime("%Y-%m-%d")}' then odometro end) as recorrido", "sum(case when fecha between '#{fecha_i.strftime("%Y-%m-%d")}' and '#{fecha_f.strftime("%Y-%m-%d")}' then cantidad end) as lts").where(vehicles:{reparto: true,catalog_branch_id:cedis.id}, consumptions: {estatus: 2}).group(:vehicle_id,:catalog_branch_id,:vehicle_type_id)
       #byebug
       mail(to: usuario.email, subject: "Reporte de rendimientos mensual de reparto #{@nombre_cedis}", cc: "no_replay_flotillas@gafi.com.mx")
     end
@@ -110,7 +110,7 @@ class IndicatorMailer < ApplicationMailer
         @nombre_cedis = cedis.decripcion
         cumple = 0
         no_cumple = 0
-        query = VehicleConsumption.joins(:vehicle).select("vehicle_id","catalog_branch_id as cedis","(sum(case when fecha between '#{anio_anterior}-01-01' and '#{anio_anterior}-12-31' then monto end) * 1.05) as presupuesto_anterior","(sum(case when fecha between '#{anio}-01-01' and '#{anio}-12-31' then monto end) * 1.05) as presupuesto_actual","(sum(case when fecha between '#{anio}-01-01' and '#{anio}-12-31' then cantidad end)) as litros_actual").where(vehicles:{catalog_branch_id:cedis.id}).group(:vehicle_id,:catalog_branch_id)
+        query = VehicleConsumption.joins(:vehicle, :consumption).select("vehicle_id","catalog_branch_id as cedis","(sum(case when fecha between '#{anio_anterior}-01-01' and '#{anio_anterior}-12-31' then monto end) * 1.05) as presupuesto_anterior","(sum(case when fecha between '#{anio}-01-01' and '#{anio}-12-31' then monto end) * 1.05) as presupuesto_actual","(sum(case when fecha between '#{anio}-01-01' and '#{anio}-12-31' then cantidad end)) as litros_actual").where(vehicles:{catalog_branch_id:cedis.id}, consumptions: {estatus: 2}).group(:vehicle_id,:catalog_branch_id)
         query.each do |que|
            if que.presupuesto_actual.to_f >= que.presupuesto_anterior.to_f 
               combustible = FuelBudget.find_by(vehicle_id: que.vehicle_id)
@@ -140,7 +140,7 @@ class IndicatorMailer < ApplicationMailer
         no_cumple = 0
         @resultados = Array.new
         @nombre_cedis = cedis.decripcion
-        query = VehicleConsumption.joins(:vehicle).select("vehicle_id","catalog_brand_id as linea","catalog_branch_id as cedis","sum(CASE WHEN fecha between '#{anio}-01-01' and '#{anio}-12-31' then monto end)/sum(CASE WHEN fecha between '#{anio}-01-01' and '#{anio}-12-31' then odometro end) as gasto").where(vehicles:{catalog_branch_id:cedis.id}).group(:vehicle_id,:catalog_branch_id,:catalog_brand_id)
+        query = VehicleConsumption.joins(:vehicle, :consumption).select("vehicle_id","catalog_brand_id as linea","catalog_branch_id as cedis","sum(CASE WHEN fecha between '#{anio}-01-01' and '#{anio}-12-31' then monto end)/sum(CASE WHEN fecha between '#{anio}-01-01' and '#{anio}-12-31' then odometro end) as gasto").where(vehicles:{catalog_branch_id:cedis.id}, consumptions: {estatus: 2}).group(:vehicle_id,:catalog_branch_id,:catalog_brand_id)
         query.each do |que|
           objetivo_gasto = ExpenseVehicleType.find_by(catalog_branch_id: que.cedis,catalog_brand_id:que.linea)
           if objetivo_gasto

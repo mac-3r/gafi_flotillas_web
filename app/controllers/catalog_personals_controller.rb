@@ -7,7 +7,7 @@ class CatalogPersonalsController < ApplicationController
   def index
     keyword = "#{params[:keyword]}"
     if keyword !=""
-      @catalog_personals = CatalogPersonal.where("nombre LIKE '%#{keyword}%'").order(nombre: :asc)
+      @catalog_personals = CatalogPersonal.where("nombre ILIKE '%#{keyword}%'").order(nombre: :asc)
     else
       @catalog_personals = CatalogPersonal.all.order(nombre: :asc)
     end 

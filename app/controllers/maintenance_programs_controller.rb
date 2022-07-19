@@ -18,6 +18,7 @@ class MaintenanceProgramsController < ApplicationController
     
     @sin_kilometraje = true
     @mostrar_btn = false
+    @parametro_kilometraje = Parameter.find_by(valor: "Valor para bitacora")
     # vehiculos.each do |vh|
     #   kilometraje = MileageIndicator.where(vehicle_id:vh.id).where("fecha between ? and ?", session["inicio_pro_mt"].to_s ,session["fin_pro_mt"].to_s)
     #   if kilometraje == []
@@ -35,6 +36,7 @@ class MaintenanceProgramsController < ApplicationController
     session["tipo_pro"] = params[:vehicle_type_id]
     session["linea_pro"] = params[:catalog_brand_id]
     session["area_pro"] = params[:catalog_area_id]
+    @parametro_kilometraje = Parameter.find_by(valor: "Valor para bitacora")
     # session["fecha_ini_pro"] = params[:fecha_inicio]
     # session["fecha_fin_pro"] = params[:fecha_fin]
     # @bandera_error = false

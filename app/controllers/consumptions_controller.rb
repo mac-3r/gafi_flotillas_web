@@ -41,20 +41,38 @@ class ConsumptionsController < ApplicationController
 
   def imprimir_solicitud
     @encabezado = Consumption.find_by(id: params[:consumption_id])
-    if params[:iva] == "8"
-      valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
-      @ventas =  Consumption.litros_consumo8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
-      @admin = Consumption.litros_admin8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
-      @almacen = Consumption.litros_almacen8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
-      @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
-      @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+    if @encabezado.estatus == "Autorizado"
+      if params[:iva] == "8"
+        valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
+        @ventas =  Consumption.litros_consumo8_autorizado(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
+        @admin = Consumption.litros_admin8_autorizado(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+        @almacen = Consumption.litros_almacen8_autorizado(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+        @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation.id, estatus: "Autorizado"},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+        @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+      else
+        valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
+        @ventas =  Consumption.litros_consumo16_autorizado(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
+        @admin = Consumption.litros_admin16_autorizado(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+        @almacen = Consumption.litros_almacen16_autorizado(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+        @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation.id, estatus: "Autorizado"},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+        @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+      end
     else
-      valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
-      @ventas =  Consumption.litros_consumo16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
-      @admin = Consumption.litros_admin16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
-      @almacen = Consumption.litros_almacen16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
-      @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
-      @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+      if params[:iva] == "8"
+        valuation = Valuation.find_by(tipo_zona: "IVA8GAS", estatus: true)
+        @ventas =  Consumption.litros_consumo8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
+        @admin = Consumption.litros_admin8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+        @almacen = Consumption.litros_almacen8(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+        @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+        @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+      else
+        valuation = Valuation.find_by(tipo_zona: "IVA15GAS", estatus: true)
+        @ventas =  Consumption.litros_consumo16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id, @encabezado)
+        @admin = Consumption.litros_admin16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+        @almacen = Consumption.litros_almacen16(@encabezado.fecha_inicio,@encabezado.fecha_fin,@encabezado.catalog_branch_id,@encabezado.catalog_vendor_id)
+        @monto = VehicleConsumption.joins(:consumption).where(consumptions: {catalog_branch_id:@encabezado.catalog_branch_id,catalog_vendor_id:@encabezado.catalog_vendor_id, valuation_id: valuation.id},fecha:@encabezado.fecha_inicio..@encabezado.fecha_fin).sum(:monto)
+        @competencia = CompetitionTable.where("catalog_branch_id = #{@encabezado.catalog_branch_id} and monto >= #{@monto} and tipo = 'Combustible'").order(monto: :asc)
+      end
     end
     @monto_competencia = @competencia.first
 		respond_to do |format|
@@ -316,7 +334,7 @@ class ConsumptionsController < ApplicationController
           #redirect_to vehicle_consumptions_path
         else
           busq.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
-          #VehicleConsumptionsMailer.solicitud_pago(user,busq.id).deliver_later
+          VehicleConsumptionsMailer.solicitud_pago(user,busq.id).deliver_later
           # flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
           # redirect_to vehicle_consumptions_path
         end
@@ -410,7 +428,7 @@ class ConsumptionsController < ApplicationController
           #redirect_to vehicle_consumptions_path
         else
           busq.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
-          #VehicleConsumptionsMailer.solicitud_pago(user,busq.id).deliver_later
+          VehicleConsumptionsMailer.solicitud_pago(user,busq.id).deliver_later
           # flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
           # redirect_to vehicle_consumptions_path
         end
@@ -473,7 +491,7 @@ class ConsumptionsController < ApplicationController
           #redirect_to vehicle_consumptions_path
         else
           busq.update(estatus: "Por autorizar",fecha_aplicacion: fecha,usuario_autorizante_id:user.id)
-          #VehicleConsumptionsMailer.solicitud_pago(user,busq.id).deliver_later
+          VehicleConsumptionsMailer.solicitud_pago(user,busq.id).deliver_later
           # flash[:notice] = "Solicitud enviada con éxito, se envió un correo al autorizante."
           # redirect_to vehicle_consumptions_path
         end

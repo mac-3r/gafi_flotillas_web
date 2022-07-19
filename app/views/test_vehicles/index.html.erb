@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Test Vehicles</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Numero</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @test_vehicles.each do |test_vehicle| %>
+      <tr>
+        <td><%= test_vehicle.nombre %></td>
+        <td><%= test_vehicle.numero %></td>
+        <td><%= link_to 'Show', test_vehicle %></td>
+        <td><%= link_to 'Edit', edit_test_vehicle_path(test_vehicle) %></td>
+        <td><%= link_to 'Destroy', test_vehicle, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Test Vehicle', new_test_vehicle_path %>

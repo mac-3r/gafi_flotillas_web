@@ -167,7 +167,7 @@ class VehicleConsumption < ApplicationRecord
               max(case when fecha between '#{fecha_ant.strftime("%Y-%m-%d")}' and '#{fecha_ant.end_of_month.strftime("%Y-%m-%d")}' then odometro end))/(sum(case when fecha between '#{fecha.strftime("%Y-%m-%d")}' and '#{fecha.end_of_month.strftime("%Y-%m-%d")}' then cantidad end))) as rendimiento
                     from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
                     INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                    where #{cadena} group by vehicle_id,numero_economico order by vehicles.numero_economico")
+                    where #{cadena} and consumptions.estatus = 2 group by vehicle_id,numero_economico order by vehicles.numero_economico")
         @arreglo_mes_datos.push(consulta)
         @arreglo_mes_fecha.push(fecha)
       end
@@ -200,7 +200,7 @@ class VehicleConsumption < ApplicationRecord
               max(case when fecha between '#{fecha_ant.strftime("%Y-%m-%d")}' and '#{fecha_ant.end_of_month.strftime("%Y-%m-%d")}' then odometro end))/(sum(case when fecha between '#{fecha.strftime("%Y-%m-%d")}' and '#{fecha.end_of_month.strftime("%Y-%m-%d")}' then cantidad end))) as rendimiento
                     from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
                     INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                    where #{cadena} group by vehicle_id,numero_economico order by vehicles.numero_economico")
+                    where #{cadena} and consumptions.estatus = 2 group by vehicle_id,numero_economico order by vehicles.numero_economico")
         @arreglo_mes_datos.push(consulta)
         @arreglo_mes_fecha.push(fecha)
       end
@@ -228,7 +228,7 @@ class VehicleConsumption < ApplicationRecord
               max(case when fecha between '#{fecha_ant.strftime("%Y-%m-%d")}' and '#{fecha_ant.end_of_month.strftime("%Y-%m-%d")}' then odometro end))/(sum(case when fecha between '#{fecha.strftime("%Y-%m-%d")}' and '#{fecha.end_of_month.strftime("%Y-%m-%d")}' then cantidad end))) as rendimiento
                     from vehicle_consumptions INNER JOIN vehicles ON vehicles.id = vehicle_consumptions.vehicle_id
                     INNER JOIN consumptions ON consumptions.id = vehicle_consumptions.consumption_id
-                    where #{cadena} group by vehicle_id,numero_economico order by vehicles.numero_economico")
+                    where #{cadena} and consumptions.estatus = 2 group by vehicle_id,numero_economico order by vehicles.numero_economico")
         @arreglo_mes_datos.push(consulta)
         @arreglo_mes_fecha.push(fecha)
       end

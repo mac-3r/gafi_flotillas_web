@@ -119,7 +119,7 @@
                                                         <% if enc.vehicle_id != nil %>
                                                         <td><%=enc.vehicle ? enc.vehicle.numero_economico : "No se asignó"%></td>
                                                         <td><%=enc.vehicle ? enc.vehicle.catalog_branch.decripcion : "No se asignó"%></td>
-                                                        <td><%=enc.vehicle ? enc.vehicle.catalog_area.descripcion : "No se asignó"%></td>
+                                                        <td><%=enc.vehicle and enc.vehicle.catalog_area ? enc.vehicle.catalog_area.descripcion : "No se asignó"%></td>
                                                         <td><%=enc.vehicle.vehicle_type ? enc.vehicle.vehicle_type.descripcion : "No se asignó"%></td>
                                                         <td><%=enc.vehicle.catalog_brand ? enc.vehicle.catalog_brand.descripcion : "No se asignó"%></td>
                                                         <td><%=enc.vehicle.responsable ? enc.vehicle.responsable.nombre : "No se asignó"%></td>

@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Nombre:</strong>
+  <%= @test_vehicle.nombre %>
+</p>
+
+<p>
+  <strong>Numero:</strong>
+  <%= @test_vehicle.numero %>
+</p>
+
+<%= link_to 'Edit', edit_test_vehicle_path(@test_vehicle) %> |
+<%= link_to 'Back', test_vehicles_path %>

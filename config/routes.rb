@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :test_vehicles
   resources :insurance_policies
   resources :valuations
   resources :jde_logs
@@ -636,6 +637,8 @@ Rails.application.routes.draw do
   post 'convertir_a_taller/:id', to: "catalog_vendors#convertir_a_taller", as: "convertir_a_taller"
   post 'get_modelos_articulos', to: "purchase_orders#get_modelos_articulos", as: "get_modelos_articulos"
   post 'get_precios_articulos', to: "purchase_orders#get_precios_articulos", as: "get_precios_articulos"
+
+  get 'vista_de_prueba', to: "test_vehicles#vista_prueba", as: "vista_prueba"
 
 
 

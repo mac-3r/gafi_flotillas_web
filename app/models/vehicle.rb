@@ -686,6 +686,7 @@ class Vehicle < ApplicationRecord
               responsable_id: row["Responsable *"], 
               catalog_personal_id: row["Usuario *"],  
               celular_responsable: row["Celular responsable"], 
+              celular: row["Celular usuario"], 
               vehicle_status_id: row["Estatus del vehículo *"], 
               vehicle_type_id: row["Tipo de vehículo *"], 
               numero_serie: row["Número de serie"], 

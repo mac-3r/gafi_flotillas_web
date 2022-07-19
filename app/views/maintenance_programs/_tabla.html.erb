@@ -52,26 +52,36 @@
             <td><%= maintenance_program.vehicle.catalog_branch.decripcion %></td>
             <td><%= maintenance_program.fecha_ultima_afinacion.strftime("%d/%m/%y") %></td>
             <td><%= number_with_precision(maintenance_program.kms_ultima_afinacion,precision: 0)%></td>
-            <td><%= number_with_precision(maintenance_program.kms_proximo_servicio,precision: 0) %></td>
+            <% if maintenance_program.kms_ultima_afinacion %>
+              <% if maintenance_program.vehicle.reparto and (maintenance_program.km_actual >= (maintenance_program.kms_proximo_servicio - 500))  %>
+                <td style="background-color: tomato;"><%= number_with_precision(maintenance_program.kms_proximo_servicio,precision: 0) %></td>
+               <% else %>
+                <td><%= number_with_precision(maintenance_program.kms_proximo_servicio,precision: 0) %></td>
+               <% end %>
+            <% else %>
+              <td><%= number_with_precision(maintenance_program.kms_proximo_servicio,precision: 0) %></td>
+            <% end %>
             <% @fecha_actualizacion =  MileageIndicator.where(vehicle_id: maintenance_program.vehicle_id).last 
                 if @fecha_actualizacion
                   @fecha = @fecha_actualizacion.fecha.to_date
                  #byebug
                 end
             %>
-            <% if @fecha %>
-                <% if  maintenance_program.fecha_proximo == @fecha + 15.day  %>
-                <td style="background-color: yellowgreen;"><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y")  %></td>
-                <% elsif maintenance_program.fecha_proximo == @fecha + 8.day %>
-                <td style="background-color: yellow;"><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y") %></td>
-                <% elsif  @fecha >= maintenance_program.fecha_proximo %>
-                <td style="background-color: tomato;"><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y") %></td>
-                <% else %>
-                <td><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y")%></td>
-                <% end %>
-            <% else %>
+            <!--<%# if @fecha %>
+                <%# if  maintenance_program.fecha_proximo <= @fecha + 15.day and  maintenance_program.fecha_proximo > @fecha + 8.day %>
+                <%# if  maintenance_program.fecha_proximo == @fecha + 15.day  %>
+                  <td style="background-color: yellowgreen;"><%#= maintenance_program.fecha_proximo.strftime("%d/%m/%y")  %></td>
+                <%# elsif  maintenance_program.fecha_proximo <= @fecha + 8.day and  maintenance_program.fecha_proximo > @fecha %>
+                <%# elsif maintenance_program.fecha_proximo == @fecha + 8.day %>
+                <td style="background-color: yellow;"><%#= maintenance_program.fecha_proximo.strftime("%d/%m/%y") %></td>
+                <%# elsif  @fecha >= maintenance_program.fecha_proximo %>
+                <td style="background-color: tomato;"><%#= maintenance_program.fecha_proximo.strftime("%d/%m/%y") %></td>
+                <%# else %>
+                <td><%#= maintenance_program.fecha_proximo.strftime("%d/%m/%y")%></td>
+                <%# end %>
+            <%# else %>-->
               <td><%= maintenance_program.fecha_proximo.strftime("%d/%m/%y")%></td>
-            <% end %>
+            <%# end %>
           
             <td><%= number_with_precision(maintenance_program.km_actual,precision: 0) %></td>
             <td><%= maintenance_program.observaciones %></td>
