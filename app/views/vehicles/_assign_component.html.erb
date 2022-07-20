@@ -1,0 +1,136 @@
+<br>
+<br>
+
+
+<% case view %>    
+<%when "assign" %>   
+  <% url_local=register_assign_vehicle_path(vehicle.id) %>
+<%when "assigned" %>   
+  <% url_local=register_assign_vehicle_path(vehicle.id) %>
+<%else%>                
+  <% url_local="" %>
+<%end%>   
+
+<%= form_for('', method: "POST", url: url_local, authenticity_token: true) do |f| %>
+
+
+<div class="Content">
+  <div class="row">
+     <div class="col-md-3"></div>
+     <div class="col col-md-6">
+          <div class="card text-center">
+            <div class="card-footer text-muted">
+                <div class="card-header">
+                  <h1 style="color:black"> Vehículo </h1>
+                </div>
+                <div class="card-body">
+                  <ul class="list-group">
+                      <li class=" list-group-item d-flex justify-content-between align-items-center">
+                        N° económico:
+                        <span class="badge  badge-pill"><%=vehicle.numero_economico %></span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Tipo de vehículo:
+                        <span class="badge  badge-pill"><%=  vehicle.vehicle_type.descripcion %></span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Línea:
+                        <span class="badge  badge-pill"><%=  vehicle.catalog_brand.descripcion%></span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Modelo::
+                        <span class="badge  badge-pill"><%=  vehicle.catalog_model.descripcion%></span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Personal Existente:
+                        
+                        <span class="badge  badge-pill"><%= f.check_box :personal_existente, {checked: true} %></span>
+                      </li>
+                      <li class="select_personal list-group-item d-flex justify-content-between align-items-center">
+                        Personal:
+                        <span class="badge  badge-pill">
+                            <%= collection_select('',:user_id ,User.listado_usuarios, :id, :nombre_completo, {prompt:"Seleccione un usuario"}, {:class => " form-control m-input m-input--air uneditable-input chosen-select",style: "width:100% !important;"})%>
+                        </span>
+                      </li>
+  
+                      <li class="capturar hidden  list-group-item d-flex justify-content-between align-items-center">
+                        Nombre:
+                        <span class="badge  badge-pill">
+                          <%= f.text_field :personal_nombre , {:class => " form-control"} %>
+                        </span>
+                      </li>
+  
+                      <li class="capturar hidden list-group-item d-flex justify-content-between align-items-center">
+                        Apellidos:
+                        <span class="badge  badge-pill">
+                          <%= f.text_field :personal_apellidos , {:class => " form-control"} %>
+                        </span>
+                      </li>
+  
+                      <li class="capturar hidden list-group-item d-flex justify-content-between align-items-center">
+                        RFC:
+                        <span class="badge  badge-pill">
+                          <%= f.text_field :personal_rfc , {:class => " form-control"} %>
+                        </span>
+                      </li>
+  
+                      <li class="capturar hidden list-group-item d-flex justify-content-between align-items-center">
+                        correo:
+                        <span class="badge  badge-pill">
+                          <%= f.email_field :personal_correo , {:class => " form-control"} %>
+                        </span>
+                      </li>
+  
+                    </ul>
+          
+              </div>
+
+              <div class="card-footer text-muted">
+                <div class="row">
+                  <div class="col-md-6" >
+                    <%= link_to 'Cancelar', show_assign_vehicle_path, class: "btn btn-danger"%>
+                  </div>
+                  <div class="col-md-6" ><%= f.submit "Asginar", class: "btn btn-success"%></div>
+                </div>
+                
+              </div>
+
+                
+            </div>
+          </div>
+     </div>
+  </div>
+</div>
+
+<% end %>
+<style>
+  .hidden{ 
+    display: none !important; 
+  }
+</style>
+<script> 
+  $(document).ready(function() {
+
+    $("#personal_existente").on("change",function() {
+      console.log("Objeto:",$(this));
+
+      if ( $(this).prop('checked') ){
+        $(".capturar").addClass("hidden")
+        //$(".select_personal").addClass("visible")
+        $(".select_personal").removeClass("hidden")
+        //$(".capturar").removeClass("visible")
+          console.log("Agregar Clase")
+      } else{
+        $(".select_personal").addClass("hidden")
+        //$(".select_personal").removeClass("visible")
+        //$(".capturar").addClass("visible")
+        $(".capturar").removeClass("hidden")
+        console.log("Remover Clase")
+      }
+
+
+    })
+  })
+
+</script>
+  

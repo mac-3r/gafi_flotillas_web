@@ -106,6 +106,9 @@ Rails.application.routes.draw do
   post 'firma_usuario', to: "movil_api#firma_usuario"
   get 'ver_licencias/:user_id', to: "movil_api#ver_licencias"
   get 'ver_evidencia_check/:checklist_response_id', to: "movil_api#ver_evidencia_check"
+  
+  
+
   put 'firma_venta/:vehicle_id', to: "movil_api#firma_venta"
   get 'ver_firma_venta/:vehicle_id', to: "movil_api#ver_firma_venta"
   post 'agregar_img_llantas', to: "movil_api#agregar_img_llantas"
@@ -220,6 +223,50 @@ Rails.application.routes.draw do
   post '/filtrado_incidentes', to: "responsible_incident_report#filtrado_incidentes", as: "filtrado_incidentes"
   get '/responsible_incident_excel', to: "responsible_incident_report#excel_incidentes", as: "responsible_incident_excel"
   
+  #*******************************route agregadas Solidu Systems **********  
+  get 'show_vehicle_receive', to: "vehicles#show_vehicle_receive", as: "show_vehicle_receive"
+  get 'show_assign_vehicle', to: "vehicles#show_assign_vehicle", as: "show_assign_vehicle"
+  get 'show_in_transit', to: "vehicles#show_in_transit", as: "show_in_transit"
+  get 'show_assigned', to: "vehicles#show_assigned", as: "show_assigned"
+  get 'show_vehicles_sales', to: "vehicles#show_vehicles_sales", as: "show_vehicles_sales"
+  get 'show_vehicles_verification', to: "vehicles#show_vehicles_verification", as: "show_vehicles_verification"
+
+  get 'vehicle_receive_data/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#vehicle_receive_data", as: "vehicle_receive_data"
+  get 'assign_vehicle_data/:id', to: "vehicles#assign_vehicle_data", as: "assign_vehicle_data"
+  get 'in_transit_data/:id', to: "vehicles#in_transit_data", as: "in_transit_data"
+  get 'assigned_vehicle_data/:id', to: "vehicles#assigned_vehicle_data", as: "assigned_vehicle_data"
+  
+  get 'vehicle_verification_data/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type(/:verificacion)', to: "vehicles#vehicle_verification_data", as: "vehicle_verification_data"
+  
+
+  post 'checklist_registration/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type(/:verificacion)', to: "vehicles#registrar_checklist_vehiculo", as: "registrar_checklist_vehiculo"
+  post 'register_assign_vehicle/:id', to: "vehicles#register_assign_vehicle", as: "register_assign_vehicle"
+  post 'register_assigned_vehicle/:id', to: "vehicles#register_assigned_vehicle", as: "register_assigned_vehicle"
+  post 'register_verification/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type(/:verificacion)', to: "vehicles#register_verification", as: "register_verification"
+  
+  
+
+
+  get 'ver_evidencia_imagenes/:checklist_response_id', to: "vehicle_checklists#ver_evidencia_imagenes"
+  get 'ver_evidencia_bimonthly/:bimonthly_verification_id', to: "vehicle_checklists#ver_evidencia_bimonthly"
+
+  
+
+  get 'show_vehicle_consumptions', to: "consumptions#show_vehicle_consumptions", as: "show_vehicle_consumptions"
+  get 'solicitud_pago/:semana/:catalog_branch_id/:catalog_vendor_id', to: "consumptions#solicitud_pago", as: "solicitud_pago"
+  
+
+
+  post "update_request_consumptions", to: "consumptions#update_request_consumptions"
+
+  #solicitud_pago?semana=1&catalog_branch_id=11&catalog_vendor_id=505
+
+
+  #*******************************route agregadas Solidu Systems **********  
+  
+  
+  #*******************************route agregadas **********  
+
   # 2.29 Informe de siniestrabilidad
   get 'claim_report', to: "claim_report#index", as: "claim_report"
   post 'filtro_informe_sin', to: "claim_report#filtro_informe_sin", as: "filtro_informe_sin"
@@ -542,7 +589,8 @@ Rails.application.routes.draw do
   # Reasignación, asignación y aceptación
   get 'vehicles_assignation', to: "vehicles#reasignacion_vehiculos", as: "asignacion_vehiculos"
   get 'assignation_checklist/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#checklist_asignacion", as: "checklist_asignacion"
-  post 'checklist_registration/:id_vehiculo/vehicle/:numero_economico/identifier/:vehicle_type_id/type', to: "vehicles#registrar_checklist_vehiculo", as: "registrar_checklist_vehiculo"
+  
+  
   #reporte de documentos
   get '/reporte_documentos', to: 'vehicles#reporte_documentos', as: "reporte_documentos"
   post '/filtrado_documentos', to: "vehicles#filtrado_documentos", as: "filtrado_documentos"

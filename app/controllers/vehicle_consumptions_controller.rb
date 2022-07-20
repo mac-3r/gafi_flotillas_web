@@ -2,6 +2,7 @@ class VehicleConsumptionsController < ApplicationController
   before_action :set_vehicle_consumption, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
   before_action :validacion_menu
+
   # except: [:reporte_acumulado,:detalle,:generar_excel_acumulado,:filtrado_acumulado,:filtrado_km,:indicador_presupuesto,:indicador_km]
 
   # GET /vehicle_consumptions
@@ -15,7 +16,10 @@ class VehicleConsumptionsController < ApplicationController
   
     @encabezado = Consumption.consulta_cargas(session["fecha_inicio"], session["fecha_fin"],session["proveedor"], session["cedis"], session["estatus"])
   end
- 
+
+
+
+
   def filtrado_cargas
     session["proveedor"] = params[:catalog_vendor_id]
     session["cedis"] = params[:catalog_branch_id]
@@ -723,7 +727,7 @@ class VehicleConsumptionsController < ApplicationController
     end
     # Use callbacks to share common setup or constraints between actions.
     def set_vehicle_consumption
-      @vehicle_consumption = VehicleConsumption.find(params[:id])
+      @vehicle_consumption = nil.try(VehicleConsumption.find(params[:id]))
     end
 
     # Only allow a list of trusted parameters through.

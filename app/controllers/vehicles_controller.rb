@@ -1,5 +1,5 @@
 class VehiclesController < ApplicationController
-  before_action :set_vehicle, only: [:show, :edit, :update, :destroy, :vehicle_expenses, :gastos_vehiculo_x_fecha]
+  before_action  :set_vehicle, only: [:show, :edit, :update, :destroy, :vehicle_expenses, :gastos_vehiculo_x_fecha]
   rescue_from ActiveRecord::InvalidForeignKey, with: :invalid_foreign_key
   load_and_authorize_resource except: [:index,:generar_excel,:filtrado_maestro, :reasignacion_vehiculos, :checklist_asignacion, :importar_maestro_vehiculos, :imprimir_adaptacion]
   after_action :validacion_menu
@@ -764,6 +764,24 @@ class VehiclesController < ApplicationController
     end
   end
 
+    # Asignación, reaignación y aceptación
+  
+  def reasignacion_vehiculos
+    if current_user.catalog_personal
+      @personal = current_user.catalog_personal
+      if  @personal.responsable != nil
+        @responsable = @personal.responsable
+        @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7]).limit(100)
+        #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false )
+      else
+        flash[:alert] = "El usuario no es reponsable."
+      end
+    else
+      flash[:alert] = "El usuario no tiene empleado asignado."
+    end
+  end
+
+
   def reasignar_responsable
     @bandera_error = false
     @mensaje = ""
@@ -798,23 +816,671 @@ class VehiclesController < ApplicationController
   end
 
 
-  # Asignación, reaignación y aceptación
-  
-  def reasignacion_vehiculos
-    if current_user.catalog_personal
-      @personal = current_user.catalog_personal
-      if  @personal.responsable != nil
-        @responsable = @personal.responsable
-        @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false )
+  def show_vehicles_verification
+      session["menu1"] = "Vehículo"
+      session["menu2"] = "Verificaciones"      
+      @verificaciones  =  Vehicle.where("proxima_verificacion <= ?", Time.zone.now).where(catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+
+      #@verificaciones  =  Vehicle.joins(:vehicle_status).where("proxima_verificacion <= ?", Time.zone.now).where(vehicle_status_id: [1,5,6,7]).order(numero_economico: :asc).limit(20)
+ end
+
+  def show_vehicles_sales
+    self.set_responsable
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Ventas"      
+    @vehicle_para_venta = Vehicle.joins(:vehicle_status).where(vehicle_statuses: {descripcion:"Proceso de venta"})
+  end
+
+
+
+
+  def show_assigned
+      self.set_responsable
+
+      session["menu1"] = "Vehículo"
+      session["menu2"] = "Asignados"    
+
+      bandera_rol = false
+      arreglo_areas = Array.new
+      roles_reasignacion = Parameter.where("valor iLike 'rol_reasign%'").order(valor_extendido: :asc, valor: :asc)
+      if roles_reasignacion.length > 0
+          consulta_roles = CatalogRolesUser.where(user_id: current_user.id, catalog_role_id: roles_reasignacion.map{|x| x.valor_extendido})
+          if consulta_roles.length > 0
+              params_nvo = Parameter.where("valor iLike 'rol_reasign%'").where(valor_extendido: consulta_roles.map{|x| x.catalog_role_id}).order(valor_extendido: :asc, valor: :asc)
+
+              if params_nvo.length > 0
+                  params_nvo.each do |param|
+                      split_rol = param.valor.split("_")
+                      if split_rol[2] == nil
+                          bandera_rol = true
+                          break
+                      else
+                          area = CatalogArea.find_by(abreviacion: split_rol[2])
+                          if area
+                              arreglo_areas.push(area)
+                          else
+                              next
+                          end                            
+                      end
+                  end
+                    if bandera_rol == true
+                      @vehiculos_entregados = Vehicle.where(vehicle_status_id:  1, catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+                      #@vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id).order(numero_economico: :asc)
+                  else
+                      @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, catalog_area_id: arreglo_areas.map{|x| x.id}, catalog_branch_id: @current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+                  end
+              else
+                  @vehiculos_entregados = Vehicle.none
+              end
+          else
+              if @responsable != nil
+                  @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id).order(numero_economico: :asc)
+              else
+                  @vehiculos_entregados = Vehicle.none
+              end
+          end
       else
-        flash[:alert] = "El usuario no es reponsable."
+          if @responsable != nil
+              @vehiculos_entregados = Vehicle.where(vehicle_status_id: 1, responsable_id: @responsable.id).order(numero_economico: :asc)
+          else
+              @vehiculos_entregados = Vehicle.none
+          end
       end
+      
+
+  end 
+
+
+  def show_in_transit
+    self.set_responsable
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Transito"
+
+    if @responsable != nil
+        @en_transito = Vehicle.where(responsable_id: @responsable.id, catalog_route_id: 2).order(numero_economico: :asc)
     else
-      flash[:alert] = "El usuario no tiene empleado asignado."
+        @en_transito = Vehicle.where(catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}, catalog_route_id: 2).order(numero_economico: :asc)
     end
+    #@en_transito = Vehicle.where(catalog_route_id: 2).order(numero_economico: :asc).limit(20)
+
+  end 
+
+
+  def in_transit_data
+
+    respond_to do |format|
+      format.html { redirect_to show_in_transit_url, alert:  "Cargando"  }
+
+    end
+
+  end
+
+  def register_assign_vehicle
+    bandera_list_error=false
+    @mensaje ="Se guardo correctamente el registro"
+    Vehicle.transaction do
+      if params[:personal_existente] == true or params[:personal_existente] == "1" or params[:personal_existente] == 1
+          id=params[:id]
+          @vehicle = Vehicle.find(params[:id])
+          catalog_personal = CatalogPersonal.find_by(user_id:params[:user_id]) #id del catalog_personal_id
+          if @vehicle.recibido == true
+              if (@vehicle.vehicle_status_id == 5  &&  @vehicle.catalog_route_id.to_i == 2) ||  @vehicle.vehicle_status_id == 5  
+                  if catalog_personal != nil
+                      responsable = Responsable.find_by(catalog_personal_id: catalog_personal.id)
+                      if responsable != nil
+                          if@vehicle.update(catalog_personal_id:catalog_personal.id, responsable_id: responsable.id, vehicle_status_id: 7, recibido:false) 
+                              envio_jde = enviar_jde(@vehicle.id)
+                              #envio_jde = [true]
+                              if envio_jde[0] == true
+                                  RolesMailer.correo_asignacion_vehiculo(@vehicle.id, catalog_personal.id).deliver_later(wait: 20.seconds)
+                                  @vehicle
+                                  @mensaje = "Asignado correctamente."
+                              else
+                                 mensaje = ""
+                                  envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
+                                      mensaje += "#{error}. "
+                                 end
+                                  mensaje="Error en la solicitud a JD Edwards: #{mensaje}"
+                                  raise ActiveRecord::Rollback
+                              end
+                          else
+                              #@mensaje="Error al asignar vehiculo #{@vehicle.errors.full_messages}"
+                              @mensaje="Error al asignar vehiculo 1"
+                              bandera_list_error=true
+                          end
+                      else
+                          @mensaje="El usuario seleccionado debe de estar en el catalogo de responsables"
+                          bandera_list_error=true
+                      end
+              
+                  else
+                      @mensaje="El usuario seleccionado debe de estar en el catalogo de personal"
+                      bandera_list_error=true                      
+                  end
+
+              else
+                  if@vehicle.update(catalog_personal_id:catalog_personal.id, vehicle_status_id: 1, recibido:false) 
+                      envio_jde = enviar_jde(@vehicle.id)
+                      #envio_jde = [true]
+                      if envio_jde[0] == true
+                          RolesMailer.correo_asignacion_vehiculo(@vehicle.id, catalog_personal.id).deliver_later(wait: 20.seconds)
+                          @vehicle
+                          @mensaje = "Asignado correctamente."
+                      else
+                          mensaje = ""
+                          envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
+                              mensaje += "#{error}. "
+                          end
+                          mensaje="Error en la solicitud a JD Edwards: #{mensaje}"
+                          raise ActiveRecord::Rollback
+                      end
+                  else
+                      #@mensaje="Error al asignar vehiculo #{@vehicle.errors.full_messages}"
+                      @mensaje="Error al asignar vehiculo"
+                      bandera_list_error=true
+                    end
+
+              end
+          else
+              @mensaje="Primero debe de responder el checklist antes de reasignar"
+              bandera_list_error=true
+          end
+      
+
+        else
+          usuario = User.new(email: params[:personal_correo], name: params[:personal_nombre], last_name: params[:personal_apellidos], user: params[:personal_rfc], password: params[:personal_rfc])
+          if usuario.save
+              personal = CatalogPersonal.new(nombre: "#{params[:personal_nombre]} #{params[:personal_apellidos]}", rfc: params[:personal_rfc], correo: params[:personal_correo], estatus: 1, user_id: usuario.id)
+              if personal.save
+                  usuario_cedis = CatalogBranchesUser.new(user_id: usuario.id, catalog_branch_id: params[:catalog_branch_id])
+                  if usuario_cedis.save
+                      vehicle = params[:vehicle]
+                      @vehicle = Vehicle.find(vehicle[:vehicle_id])
+                      catalog_personal = personal
+                      if @vehicle.recibido == true
+                          if (@vehicle.vehicle_status_id == 5  &&  @vehicle.catalog_route_id.to_i == 2) ||  @vehicle.vehicle_status_id == 5  
+                              if catalog_personal != nil
+                                  responsable = Responsable.find_by(catalog_personal_id: catalog_personal.id)
+                                  if responsable != nil
+                                      if@vehicle.update(catalog_personal_id:catalog_personal.id, responsable_id: responsable.id, vehicle_status_id: 7, recibido:false) 
+                                          envio_jde = enviar_jde(@vehicle.id)
+                                          #envio_jde = [true]
+                                          if envio_jde[0] == true
+                                              RolesMailer.correo_asignacion_vehiculo(@vehicle.id, catalog_personal.id).deliver_later(wait: 20.seconds)
+                                              @vehicle
+                                              @mensaje = "Asignado correctamente."
+                                          else
+                                              mensaje = ""
+                                              envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
+                                                  mensaje += "#{error}. "
+                                              end
+                                              error!("Error en la solicitud a JD Edwards: #{mensaje}", 200)
+                                              raise ActiveRecord::Rollback
+                                          end
+                                      else
+                                          mensaje="Error al asignar vehiculo #{@vehicle.errors.full_messages}"
+                                          raise ActiveRecord::Rollback
+                                      end
+                                  else
+                                      mensaje = "El usuario seleccionado debe de estar en el catalogo de responsables"
+                                      raise ActiveRecord::Rollback
+                                  end
+                          
+                              else
+                                  mensaje="El usuario seleccionado debe de estar en el catalogo de personal"
+                                  raise ActiveRecord::Rollback
+                              end
+
+                          else
+                              if@vehicle.update(catalog_personal_id:catalog_personal.id, vehicle_status_id: 1, recibido:false) 
+                                  envio_jde = enviar_jde(@vehicle.id)
+                                  #envio_jde = [true]
+                                  if envio_jde[0] == true
+                                      RolesMailer.correo_asignacion_vehiculo(@vehicle.id, catalog_personal.id).deliver_later(wait: 20.seconds)
+                                      @vehicle
+                                      @mensaje = "Asignado correctamente."
+                                  else
+                                      mensaje = ""
+                                      envio_jde[1].map{|x| x["Mensaje"]}.each do |error|
+                                          mensaje += "#{error}. "
+                                      end
+                                      mensaje="Error en la solicitud a JD Edwards: #{mensaje}"
+                                      raise ActiveRecord::Rollback
+                                  end
+                              else
+                                  mensaje="Error al asignar vehiculo #{@vehicle.errors.full_messages}"
+                                  raise ActiveRecord::Rollback
+                              end
+
+                          end
+                      else
+                          mensaje="Primero debe de responder el checklist antes de reasignar"
+                          raise ActiveRecord::Rollback
+                      end
+                  else
+                      mensaje = ""
+                      usuario_cedis.errors.full_messages.each do |error|
+                          mensaje += "#{error}. "
+                      end
+                      mensaje = "Error al asignar el empleado al cedis: #{mensaje}"
+                      raise ActiveRecord::Rollback
+                  end
+              else
+                  mensaje = ""
+                  personal.errors.full_messages.each do |error|
+                      mensaje += "#{error}. "
+                  end
+                  mensaje= "Error al generar el empleado: #{mensaje}"
+                  raise ActiveRecord::Rollback
+              end
+          else
+              mensaje = ""
+              usuario.errors.full_messages.each do |error|
+                  mensaje += "#{error}. "
+              end
+              mensaje="Error al generar el usuario: #{mensaje}"
+              raise ActiveRecord::Rollback
+          end
+
+        end
+
+  end # Transaction
+
+
+  end 
+
+  def show_assign_vehicle 
+    self.set_responsable
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Asignar"
+
+    if @responsable != nil
+        @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], responsable_id: @responsable.id).order(numero_economico: :asc)
+    else
+        @vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7], catalog_branch_id: current_user.catalog_branches_user.map{|x| x.catalog_branch_id}).order(numero_economico: :asc)
+    end
+
+  #@vehicle_pendientes_entrega = Vehicle.where(vehicle_status_id: [5,6,7]).order(numero_economico: :asc).limit(10)
+  end; 
+
+
+
+  def show_vehicle_receive    
+    self.set_responsable
+
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Recibir"
+    puts "*******************************************************",@personal
+    if (@personal)
+        @vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], catalog_personal_id: @personal.id, recibido:false ).order(numero_economico: :asc)
+    else 
+        @vehicle_pendientes_recibir = []
+    end
+
+    #@vehicle_pendientes_recibir = Vehicle.where(vehicle_status_id: [1,5,6,7], recibido:false ).order(numero_economico: :asc).limit(10)
+
+
+  end 
+
+  def vehicle_receive_data  
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Recibir"
+     @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
+    if @vehiculo
+      @id_vehiculo = params[:id_vehiculo]
+      @num_economico = params[:numero_economico]
+      @tipo_vehiculo = params[:vehicle_type_id]
+      bandera_parametro = false
+        bandera_bateria = false    
+        bandera_llantas = false
+        bandera_extintor = false
+        tipo = ""
+        @vehicle_checklists = []
+        @vehicle_checklist = []
+        @params = Parameter.where(nombre:"Checklist")
+        vehicle_checklists = VehicleChecklist.select(:clasificacionvehiculo).distinct.where(vehicle_type_id:params[:vehicle_type_id])
+        vehicle_checklists.each do |vcs| 
+            hash_checklists = Hash.new
+            vehicle_checklist = VehicleChecklist.where(clasificacionvehiculo: vcs.clasificacionvehiculo,vehicle_type_id:params[:vehicle_type_id])
+            vehicle_checklist.each do |vc|
+                hash_checklist = Hash.new
+                tipo = ""
+                bandera_bateria = false    
+                bandera_llantas = false
+                bandera_extintor = false
+                bandera_parametro = false
+                if  @params != []
+                    @params.each do |param|
+                        if param.valor == vc.conceptovehiculo
+                            bandera_parametro = true    
+                            if bandera_parametro
+                                if param.valor == "BATERIA"
+                                    bandera_bateria = true
+                                elsif param.valor == "LLANTAS"
+                                    bandera_llantas = true
+                                elsif param.valor == "EXTINGUIDOR"
+                                    bandera_extintor = true
+                                end
+                            end
+                            tipo = param.valor_extendido
+                        end
+                    end
+                end 
+                if bandera_parametro
+                    hash_checklist["bandera_ticket"] = bandera_parametro
+                    hash_checklist["tipo"] = vc.conceptovehiculo
+                else
+                    hash_checklist["bandera_ticket"] = bandera_parametro
+                    hash_checklist["tipo"] = ""
+                end
+                hash_checklist["bandera_bateria"] =bandera_bateria
+                hash_checklist["bandera_llantas"] =bandera_llantas
+                hash_checklist["bandera_extintor"] =bandera_extintor
+            # @encabezado = vc.clasificacionvehiculo
+                hash_checklist["id"] = vc.id
+                hash_checklist["conceptovehiculo"] = vc.conceptovehiculo
+                hash_checklist["vehicle_type_id"] = vc.vehicle_type_id
+                hash_checklist["vehicle_type_name"] = vc.vehicle_type.descripcion
+                hash_checklist["valor"] = nil
+                @vehicle_checklist << hash_checklist
+            end
+            
+            hash_checklists["encabezado"] = vcs.clasificacionvehiculo
+            hash_checklists["descripcion"] = @vehicle_checklist
+            @vehicle_checklists << hash_checklists 
+            @vehicle_checklist = []
+        end     
+    else
+      flash[:alert] = "No se encontró el vehículo o no se puede asignar."
+      redirect_to show_vehicle_receive_path
+    end
+  end 
+  
+  def register_verification
+
+        session["menu1"] = "Vehículo"
+        session["menu2"] = "Verificaciones"    
+        body_send = []
+        bandera_list_error = false
+        bimonthly_check_list = params[:vehicle_check_list]
+        imagenes=[]
+        vehicle = Vehicle.find_by(id:params[:id_vehiculo])
+
+        imagenes.push(params[:foto_herramienta])
+        imagenes.push(params[:foto_vehiculo1])
+        imagenes.push(params[:foto_vehiculo2])
+        mensaje = ""
+        BimonthlyVerification.transaction do
+           
+              biomonthly_verification =   BimonthlyVerification.new(
+                  vehicle_id: vehicle.id,
+                  catalog_personal_id:vehicle.catalog_personal_id,
+                  user_id: @current_user.id,
+                  fecha_captura: Date.today,
+                  motivo:params[:observaciones]
+              )
+              if  biomonthly_verification.save 
+                      body_send.push(imagenes: imagenes, bimonthly_verification_id: biomonthly_verification.id, vehicle_id: vehicle.id)
+                      bimonthly_check_list.each do |index, vl|
+                    biomonthly_detail = BimonthlyDetail.new(
+                          bimonthly_verification_id: biomonthly_verification.id,
+                          vehicle_checklist_id:index,
+                          estatus:vl
+                      )
+                      if !biomonthly_detail.save 
+                          
+                          mensaje = "#{biomonthly_detail.errors.full_messages}" 
+                          bandera_list_error = true
+                      end
+                  end
+              else
+                  bandera_list_error = true
+              end
+              response = BimonthlyImg.insertar_imagenWeb(body_send[0])
+              if bandera_list_error == false
+                rango_dias = Parameter.find_by(valor: "frecuencia de verificacion")                
+                vehicle.update(ultima_verificacion: Time.zone.now, proxima_verificacion:Time.zone.now + rango_dias.valor_extendido.to_i.days)
+                RolesMailer.correo_verificacion_vehiculo(biomonthly_verification.id).deliver_later
+              end
+   
+
+      end      
+      if bandera_list_error 
+          error!("Ocurrió un eror #{mensaje}",200)
+      else
+        @mensaje = "Datos agregados correctamente"
+      end
+
+      respond_to do |format|
+        if !bandera_list_error
+              format.html { redirect_to show_vehicles_verification_url, notice: 'Se creó correctamente' }
+              format.json { render :show, status: :created, location: @vehicle }
+        else 
+              format.html { redirect_to show_vehicles_verification_url, alert: @mensaje}
+        end 
+      end
+  end
+
+  def registrar_checklist_vehiculo
+    session["menu1"] = "Vehículo"    
+    vehicle_check_list = params[:vehicle_check_list]
+    body_send = []
+    bandera_list_error = false
+    @mensaje = ""
+    vehicle = Vehicle.find_by(id:params[:id_vehiculo])
+    #verificacion=params[:id_vehiculo]
+    imagenes=[]
+
+    imagenes.push(params[:foto_herramienta])
+    imagenes.push(params[:foto_vehiculo1])
+    imagenes.push(params[:foto_vehiculo2])
+
+    if true
+      ChecklistResponse.transaction do
+        checklist_response =   ChecklistResponse.new 
+        checklist_response.vehicle_id=vehicle[:id]
+        checklist_response.catalog_personal_id = vehicle.catalog_personal_id
+        checklist_response.fecha_captura =  Date.today
+        checklist_response.motivo = params[:observaciones]
+        if  checklist_response.save 
+            body_send.push(imagenes: imagenes, checklist_response_id: checklist_response.id, vehicle_id: vehicle[:id])
+            vehicle.update(vehicle_status_id: 5)
+            vehicle_check_list.each do |index, vl|
+                checklis_response_detail = ChecklistResponseDetail.new(
+                            checklist_response_id: checklist_response.id,
+                            vehicle_checklist_id:index,
+                            estatus:vl
+                        )
+                if !checklis_response_detail.save 
+                        @mensaje= "#{checklis_response_detail.errors.full_messages}" 
+                        bandera_list_error = true
+                end
+            end
+
+            response = VehicleEvidence.insertar_imagenWeb(body_send[0])
+
+            if bandera_list_error
+              @mensaje="Ocurrió un eror #{@mensaje}"
+              bandera_list_error = true
+            else
+                if vehicle.update(recibido:1)
+                    @mensaje = "Datos agregados correctamente"
+                    #RolesMailer.correo_checklist_vehiculo(id_generado).deliver_later(wait: 20.seconds)
+                    #Vehicle.carta_porte(params)
+                else
+                    @mensaje = "No se ha podido actualizar correctamente el estatus del checklist #{vehicle.errrors.full_messages}"
+                end
+            end
+
+        else 
+          @mensaje = "Mensaje: #{checklist_response.errors.full_messages}"     
+        end       
+      end 
+
+    end
+    
+
+    respond_to do |format|
+      if !bandera_list_error
+            format.html { redirect_to show_vehicle_receive_url, notice: 'Se creó correctamente' }
+            format.json { render :show, status: :created, location: @vehicle }
+          else 
+            format.html { redirect_to show_vehicle_receive_url, alert: @mensaje}
+            #format.html { redirect_to vehicle_receive_data_path(@vehicle.id,@vehicle.numero_economico, @vehicle.vehicle_type_id) }
+            #format.json { render json: @checklist_response.errors, status: :unprocessable_entity }
+            # format.json { render json: @mensaje, status: :unprocessable_entity }    
+      end 
+    end
+
+
+    #**********************************************/
+    #bandera_list_error = false
+    #mensaje = ""
+    #vehicle = Vehicle.find_by(id:params[:id_vehiculo])
+    # if vehicle.recibido == false
+
+    # ChecklistResponse.transaction do
+    #     vehicle_check_list.each do |vl|
+    #       imagenes =vl[:recibir][:imagenes]
+    #     checklist_response =   ChecklistResponse.new(
+    #           vehicle_id: vl[:vehicle_id],
+    #           catalog_personal_id:vl[:catalog_personal_id],
+    #           fecha_captura: Date.today,
+    #           motivo: vl[:recibir][:motivo]
+    #       )
+    #       if  checklist_response.save 
+    #             vh = Vehicle.find(vl[:vehicle_id])
+    #             vh.update(vehicle_status_id: 1)
+    #               body_send.push(imagenes: imagenes, checklist_response_id: checklist_response.id, vehicle_id: vl[:vehicle_id])
+    #           vl[:detalle].each do |det|
+    #               checklis_response_detail = ChecklistResponseDetail.new(
+    #                   checklist_response_id: checklist_response.id,
+    #                   vehicle_checklist_id:det[:vehicle_checklist],
+    #                   estatus:det[:estatus]
+    #               )
+    #               if !checklis_response_detail.save 
+                      
+    #                   mensaje = "#{checklis_response_detail.errors.full_messages}" 
+    #                   bandera_list_error = true
+    #               end
+    #           end
+    #       else
+    #           bandera_list_error = true
+    #       end
+    #   end
+
+    # end
+
+  end
+
+
+  def reporte_auditorias
+    session["menu2"] = "Reporte de auditorías"
+    session["vehiculo_verificacion"] = ""
+    session["empresa_verificacion"] = ""
+    session["cedis_verificacion"] = ""
+    session["usuario_verificacion"] = ""
+    session["tipo_verificacion"] = ""
+    session["area_verificacion"] = ""
+    @resultados = BimonthlyVerification.consulta_auditorias(session["vehiculo_verificacion"],session["empresa_verificacion"], session["cedis_verificacion"], session["usuario_verificacion"],session["tipo_verificacion"], session["area_verificacion"])
+  end
+
+  def assign_vehicle_data
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Asignar"
+    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo])
+  end 
+
+  def assigned_vehicle_data
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Asignado"
+
+    #@personal = CatalogPersonal.joins(:user).joins(user: [:catalog_branches_user]).where(catalog_branches_users: {catalog_branch_id: params[:catalog_branch_id]})
+
+    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo])
+  end 
+
+
+  def vehicle_verification_data
+
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Verificaciones"
+    @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico])
+    @verificacion=params[:verificacion]
+    if @vehiculo
+      @id_vehiculo = params[:id_vehiculo]
+      @num_economico = params[:numero_economico]
+      @tipo_vehiculo = params[:vehicle_type_id]
+      bandera_parametro = false
+        bandera_bateria = false    
+        bandera_llantas = false
+        bandera_extintor = false
+        tipo = ""
+        @vehicle_checklists = []
+        @vehicle_checklist = []
+        @params = Parameter.where(nombre:"Checklist")
+        vehicle_checklists = VehicleChecklist.select(:clasificacionvehiculo).distinct.where(vehicle_type_id:params[:vehicle_type_id])
+        vehicle_checklists.each do |vcs| 
+            hash_checklists = Hash.new
+            vehicle_checklist = VehicleChecklist.where(clasificacionvehiculo: vcs.clasificacionvehiculo,vehicle_type_id:params[:vehicle_type_id])
+            vehicle_checklist.each do |vc|
+                hash_checklist = Hash.new
+                tipo = ""
+                bandera_bateria = false    
+                bandera_llantas = false
+                bandera_extintor = false
+                bandera_parametro = false
+                if  @params != []
+                    @params.each do |param|
+                        if param.valor == vc.conceptovehiculo
+                            bandera_parametro = true    
+                            if bandera_parametro
+                                if param.valor == "BATERIA"
+                                    bandera_bateria = true
+                                elsif param.valor == "LLANTAS"
+                                    bandera_llantas = true
+                                elsif param.valor == "EXTINGUIDOR"
+                                    bandera_extintor = true
+                                end
+                            end
+                            tipo = param.valor_extendido
+                        end
+                    end
+                end 
+                if bandera_parametro
+                    hash_checklist["bandera_ticket"] = bandera_parametro
+                    hash_checklist["tipo"] = vc.conceptovehiculo
+                else
+                    hash_checklist["bandera_ticket"] = bandera_parametro
+                    hash_checklist["tipo"] = ""
+                end
+                hash_checklist["bandera_bateria"] =bandera_bateria
+                hash_checklist["bandera_llantas"] =bandera_llantas
+                hash_checklist["bandera_extintor"] =bandera_extintor
+            # @encabezado = vc.clasificacionvehiculo
+                hash_checklist["id"] = vc.id
+                hash_checklist["conceptovehiculo"] = vc.conceptovehiculo
+                hash_checklist["vehicle_type_id"] = vc.vehicle_type_id
+                hash_checklist["vehicle_type_name"] = vc.vehicle_type.descripcion
+                hash_checklist["valor"] = nil
+                @vehicle_checklist << hash_checklist
+            end
+            
+            hash_checklists["encabezado"] = vcs.clasificacionvehiculo
+            hash_checklists["descripcion"] = @vehicle_checklist
+            @vehicle_checklists << hash_checklists 
+            @vehicle_checklist = []
+        end     
+    else
+      flash[:alert] = "No se encontró el vehículo o no se puede asignar."
+      redirect_to show_vehicles_verification_path
+    end
+    
   end
 
   def checklist_asignacion
+    session["menu1"] = "Vehículo"
+    session["menu2"] = "Asignar"
     @vehiculo = Vehicle.find_by(id: params[:id_vehiculo], numero_economico: params[:numero_economico], vehicle_status_id: [1,5,6,7])
     if @vehiculo
       @id_vehiculo = params[:id_vehiculo]
@@ -886,54 +1552,6 @@ class VehiclesController < ApplicationController
     end
   end
 
-  def registrar_checklist_vehiculo
-    # bandera_list_error = false
-    # mensaje = ""
-    # vehicle = Vehicle.find_by(id:vehicle_check_list[0][:vehicle_id])
-    # if vehicle.recibido == false
-
-    # ChecklistResponse.transaction do
-    #     vehicle_check_list.each do |vl|
-    #       imagenes =vl[:recibir][:imagenes]
-    #     checklist_response =   ChecklistResponse.new(
-    #           vehicle_id: vl[:vehicle_id],
-    #           catalog_personal_id:vl[:catalog_personal_id],
-    #           fecha_captura: Date.today,
-    #           motivo: vl[:recibir][:motivo]
-    #       )
-    #       if  checklist_response.save 
-    #             vh = Vehicle.find(vl[:vehicle_id])
-    #             vh.update(vehicle_status_id: 1)
-    #               body_send.push(imagenes: imagenes, checklist_response_id: checklist_response.id, vehicle_id: vl[:vehicle_id])
-    #           vl[:detalle].each do |det|
-    #               checklis_response_detail = ChecklistResponseDetail.new(
-    #                   checklist_response_id: checklist_response.id,
-    #                   vehicle_checklist_id:det[:vehicle_checklist],
-    #                   estatus:det[:estatus]
-    #               )
-    #               if !checklis_response_detail.save 
-                      
-    #                   mensaje = "#{checklis_response_detail.errors.full_messages}" 
-    #                   bandera_list_error = true
-    #               end
-    #           end
-    #       else
-    #           bandera_list_error = true
-    #       end
-    #   end
-
-    # end
-  end
-  def reporte_auditorias
-    session["menu2"] = "Reporte de auditorías"
-    session["vehiculo_verificacion"] = ""
-    session["empresa_verificacion"] = ""
-    session["cedis_verificacion"] = ""
-    session["usuario_verificacion"] = ""
-    session["tipo_verificacion"] = ""
-    session["area_verificacion"] = ""
-    @resultados = BimonthlyVerification.consulta_auditorias(session["vehiculo_verificacion"],session["empresa_verificacion"], session["cedis_verificacion"], session["usuario_verificacion"],session["tipo_verificacion"], session["area_verificacion"])
-  end
 
   def filtrado_auditorias
     session["vehiculo_verificacion"] = params[:vehicle_id]
@@ -1609,8 +2227,40 @@ class VehiclesController < ApplicationController
     end
   end
   
+
   
+  
+  def set_responsable
+    @personal = current_user.catalog_personal
+    puts "****************current_user: #{@current_user}"
+    puts "****************current_user.catalog_personal: #{@current_user.email}"
+    
+    puts "****************Personal: #{@personal}"
+    if current_user.catalog_branches
+      @user_branch = @current_user.catalog_branches.map{|x| x.id}
+    else
+      @user_branch = nil
+    end
+    if current_user.catalog_personal   
+      @tipo_usuario = 1
+      @personal = @current_user.catalog_personal
+      if   @personal.responsable != nil
+        @responsable = @personal.responsable
+      else
+        @responsable = nil
+      end
+      puts "****************Responsable: #{@responsable}"
+    end 
+  
+  end
+
   private
+    def enviar_jde(vehiculo)
+      #if request.host_with_port == "gafi-api.apbsoluciones.com:8081"
+          Vehicle.carta_porte_reasignacion(vehiculo)
+      #end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_vehicle
       @vehicle = Vehicle.find(params[:id])
@@ -1620,6 +2270,7 @@ class VehiclesController < ApplicationController
       session["menu1"] = "Maestro de vehículos"
       session["menu2"] = "Maestro"
     end
+
 
     # Only allow a list of tvehicle_brand_idrusted parameters through.
     def vehicle_params

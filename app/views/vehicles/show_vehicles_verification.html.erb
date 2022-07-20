@@ -1,0 +1,117 @@
+<div class="container">
+    <br>
+    <br>
+    <h1><center>             
+          Verificación de Vehículos                   
+        </center> </h1>
+          <br>
+    <% if (false) %>  
+    <div class="list-group">
+        <% ( @verificaciones || []).each do |vpr| %>
+            
+      
+            <a class="contenedor" href="<%= vehicle_verification_data_path(vpr.id, vpr.numero_economico, vpr.vehicle_type_id,1) %>" class="list-group-item list-group-item-action">
+       
+            <ul class="">
+                    <li class="list-group-item vehicle">
+                        <div class="card" style="border:white 0px">
+                            <div class="card-body">
+                                <h6 class="card-title"><label>Tipo de vehículo: <%=  vpr.vehicle_type.descripcion %> </label></h6>
+                                <h5 class="card-subtitle mb-2 text-muted"><label>TN° de vehículo: <%=  vpr.numero_economico%></label></h5>
+                                <div class="row">
+                                    <div class="col-md-6  col-sm-12">
+                                        <ul class="">
+                                            <li class="list-group-item">Línea: <%= vpr.catalog_brand.descripcion %></li>
+                                            <li class="list-group-item">Placas: <%=  vpr.numero_placa %></li>
+                                            <li class="list-group-item">CEDIS: <%=  vpr.catalog_branch.decripcion %></li>
+                                            
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6  col-sm-12">
+                                        <ul class="">
+                                            <li class="list-group-item">Modelo: <%=  vpr.catalog_model.descripcion %></li>
+                                            <li class="list-group-item">Valor de compra: <%=  number_to_currency(vpr.valor_compra, precision: 2) %></li>
+                                            <li class="list-group-item">Última verificación: <%=  vpr.ultima_verificacion %></li>
+                                                                                 
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>            
+                    </li>
+        
+                </ul>
+            </a>
+        <% end %>
+    </div>
+    <%end%>
+
+    <div class="card card-custom">
+        <div class="card-body">
+
+            <% if (true) %>
+                <%= render :partial => 'vehicle_filter' %>
+            <%end%>
+
+            <br>
+
+            <div class="table-responsive" style="max-width: 100%; overflow: auto; min-height: 500px !important;">            
+                <table class="table table-bordered table-sm text-center">
+                <thead>
+                    <th>CEDIS</th>
+                    <th>Compañia</th>
+                    <th>Área</th>
+
+                    <th>Tipo de vehículo</th>
+                    <th>TN° de vehículo</th>
+                    <th>Placas</th>
+                    <th>Estatus</th>
+                    <th>Fecha compra</th>
+                    <th>Valor de compra</th>
+                    <th>Última verificación</th>
+                    <th>Acción</th>
+
+                </thead>
+                <% ( @verificaciones || []).each do |vpr| %>
+                    <tr class="contenedor">
+                        <td class="cedis"><%=  vpr.catalog_branch.decripcion %></td>
+                        <td class="company"><%=  vpr.catalog_company.nombre %></td>
+                        <td class="area"><%=  vpr.catalog_area.descripcion %></td>
+
+                        <td class="tipo"> <%=  vpr.vehicle_type.descripcion %></td>
+                        <td class="numero_economico"> <%=  vpr.numero_economico%></td>
+                        <td class="placa"><%=  vpr.numero_placa %></td>
+                        <td class="status"><%= vpr.vehicle_status.descripcion %></td>
+                        <td class="fecha_compra"""><%=  vpr.fecha_compra %></td>
+                        <td class="valor_compra"><%=  number_to_currency(vpr.valor_compra, precision: 2) %></td>
+                        <td><%=  vpr.ultima_verificacion %></td>
+                        <td>
+                             
+                                    <a href="<%= vehicle_verification_data_path(vpr.id, vpr.numero_economico, vpr.vehicle_type_id,1) %>" class="">
+                               
+                                    <span class="svg-icon svg-icon-md"> 
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                        viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <rect x="0" y="0" width="24" height="24"></rect>
+                                                <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
+                                                    fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
+                                                </path>
+                                                <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
+                                            </g>
+                                        </svg> 
+                                    </span>
+                                </a>
+                            
+                        </td>                    
+                    </tr>
+                <%end%>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<%= render :partial => 'vehicle_filter_js' %>

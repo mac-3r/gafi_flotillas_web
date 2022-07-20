@@ -43,7 +43,11 @@
                         <li class="nav-item mr-2">
                             <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Seguridad" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_5">Seguridad</a>  
                         </li>
-                    <% else %>
+                        <li class="nav-item mr-2">
+                            <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Siniestralidad" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_6">Vehículos</a>  
+                        </li>
+
+                        <% else %>
                         <li class="nav-item mr-3">
                             <a href="#" class="nav-link py-4 px-6 <% if session["menu1"] == "Mantenimiento" %>active<% end %>"data-toggle="tab" data-target="#kt_header_tab_4">Mantenimiento</a>  
                         </li>
@@ -305,6 +309,15 @@
                                     <% end %>
                                 </li>
                                 <% end %>
+
+                                <% if can? :show_vehicle_consumptions, Consumption %>
+                                <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Autorizacion"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
+                                    <%= link_to show_vehicle_consumptions_path, class: "menu-link" do %>
+                                        <span style="width: 120px;" class="menu-text">Autorización</span>
+                                    <% end %>
+                                </li>
+                                <% end %>
+
                                 <% if can? :indice_solicitud, Consumption %>
                                 <li class="menu-item menu-item-submenu menu-item-rel <% if session["menu2"] == "Solicitudes Autorizadas"%> menu-item-active <% end %>" data-menu-toggle="click" aria-haspopup="true">
                                     <%= link_to indice_solicitud_path, class: "menu-link" do %>
@@ -454,6 +467,14 @@
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
                             <ul class="menu-nav">
                                 <%= render  "layouts/partials/menu_seguridad" %>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between <% if session["menu1"] == "Vehículo" %> show active <% end %>" id="kt_header_tab_6">
+                        <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+                            <ul class="menu-nav">
+                                <%= render  "layouts/partials/menu_asignacion" %>
 
                             </ul>
                         </div>
